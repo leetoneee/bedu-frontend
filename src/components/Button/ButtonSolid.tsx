@@ -20,7 +20,7 @@ const ButtonSolid = ({
       onClick={onClick}
       className={classNames(
         'text-on-primary',
-        isPrimary ? 'bg-secondary' : 'bg-primary',
+        // isPrimary ? 'bg-secondary' : 'bg-primary',
         className
       )}
     />
