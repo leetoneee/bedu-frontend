@@ -1,5 +1,5 @@
 import { classNames } from './classNames';
-import Card from '@/components/card/card';
+import ProgramCard from '@/components/programCard/ProgramCard';
 import Rating from '@/components/rating';
 
-export { classNames, Card, Rating };
+export { classNames, ProgramCard, Rating };
