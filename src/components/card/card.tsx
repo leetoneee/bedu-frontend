@@ -18,15 +18,13 @@ import { MdOutlineDateRange } from "react-icons/md";
 
 const Card = ({ props }: { props: any }) => {
   const data = { ...props };
-  console.log('data: ', data);
-
   return (
-    <div className="w-[350px] rounded-xl border-[1px] border-Outline text-xs">
+    <div className="w-[400px] rounded-xl border-[1px] border-Outline text-xs">
       <div>
         <Image
-          src={'/icons/course_img.png'}
+          src={'/icons/course_img.svg'}
           alt="Course image"
-          width={350}
+          width={400}
           height={200}
         />
       </div>
@@ -37,7 +35,7 @@ const Card = ({ props }: { props: any }) => {
         </p>
       </div>
       <div className="ml-3 mt-2">
-        <p className="text-xl font-bold text-OutlineFocus">{data.name}</p>
+        <p className="text-xl font-bold text-OutlineFocus truncate overflow-hidden">{data.name}</p>
       </div>
       <div className='flex items-center ml-3 mt-3 gap-2'>
         <LuBookMinus className='text-OnSurface'/>
