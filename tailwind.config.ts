@@ -14,7 +14,7 @@ const config: Config = {
         'Secondary': '#FFFEFA',
         'OnSecondary': '#FE914C',
         'Surface': '#f5f6fa',
-        'OnSurface': '#0071F9',
+        'OnSurface': '#494949',
         'Highlight': '#EBF5FF',
         'Outline': '#C5C6C9',
         'OutlineFocus': '#295782',
