@@ -2,7 +2,11 @@
 
 import { Breadcrumb } from '@/components';
 import { getCourseById } from '@/data/course.data';
-import { columns, getLessonsByCourseId } from '@/data/lesson.data';
+import {
+  columns,
+  getLessonsByClassId,
+  getLessonsByCourseId
+} from '@/data/lesson.data';
 import { Crumb } from '@/types';
 import { Course } from '@/types/course.type';
 import { Lesson, statusColorMap } from '@/types/lesson.type';
@@ -42,31 +46,32 @@ import {
   TrashIcon
 } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
+import { EClass } from '@/types/class.type';
+import { getClassById } from '@/data/class.data';
 
-const CourseDetail = ({ params }: any) => {
+const EClassDetail = ({ params }: any) => {
   const param: { id: string } = use(params);
   const { id } = param;
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  console.log('🚀 ~ CourseDetail ~ lessons:', Number(id));
-  const [course, setCourse] = useState<Course>();
+  const [eclass, setEClass] = useState<EClass>();
   const crumbs: Crumb[] = useMemo(() => {
     return [
       {
-        label: 'Courses',
-        href: '/manager/courses'
+        label: 'Live Program',
+        href: '/manager/live-program'
       },
       {
-        label: `${course?.title}`,
-        href: `/courses/${id}`
+        label: `${eclass?.name}`,
+        href: `/live-program/${id}`
       }
     ];
-  }, [id, course]);
+  }, [id, eclass]);
 
   useEffect(() => {
-    const data: Lesson[] = getLessonsByCourseId(Number(id));
-    const data2: Course = getCourseById(Number(id));
+    const data: Lesson[] = getLessonsByClassId(Number(id));
+    const data2: EClass = getClassById(Number(id));
     setLessons(data);
-    setCourse(data2);
+    setEClass(data2);
   }, [id]);
 
   const router = useRouter();
@@ -295,10 +300,10 @@ const CourseDetail = ({ params }: any) => {
       <div className="flex h-full w-full flex-col gap-2 rounded border border-on-surface/20 bg-white p-5 shadow-sm">
         <div className="flex min-h-max w-full flex-col gap-4">
           <div className="flex w-full flex-row gap-20">
-            {/* Course Name */}
-            <div className="flex w-full basis-[40%] shrink flex-col gap-2">
+            {/* Name */}
+            <div className="flex w-full shrink basis-[40%] flex-col gap-2">
               <span className="text-xl font-semibold text-on-surface">
-                Course Name
+                Class Name
               </span>
               <Input
                 type="text"
@@ -307,7 +312,7 @@ const CourseDetail = ({ params }: any) => {
                 size="lg"
                 readOnly
                 placeholder="Enter your project name"
-                value={course?.title}
+                value={eclass?.name}
                 // onChange={(e) => setProjectName(e.target.value)}
               />
             </div>
@@ -324,7 +329,7 @@ const CourseDetail = ({ params }: any) => {
                   size="lg"
                   readOnly
                   placeholder="Enter your project name"
-                  value={course?.type}
+                  value={eclass?.code}
                   // onChange={(e) => setProjectName(e.target.value)}
                 />
               </div>
@@ -340,7 +345,7 @@ const CourseDetail = ({ params }: any) => {
                   size="lg"
                   readOnly
                   placeholder="Enter your project name"
-                  value={course?.code}
+                  value={eclass?.code}
                   // onChange={(e) => setProjectName(e.target.value)}
                 />
               </div>
@@ -351,11 +356,11 @@ const CourseDetail = ({ params }: any) => {
                 </span>
                 <Chip
                   className="h-full w-full rounded-sm capitalize"
-                  color={course?.isPublish ? 'success' : 'default'}
+                  color={eclass?.isPublish ? 'success' : 'default'}
                   size="lg"
                   variant="flat"
                 >
-                  {course?.isPublish ? 'Published' : 'Unpublished'}
+                  {eclass?.isPublish ? 'Published' : 'Unpublished'}
                 </Chip>
               </div>
             </div>
@@ -372,7 +377,7 @@ const CourseDetail = ({ params }: any) => {
                 placeholder="Enter your description"
                 className="col-span-12 mb-6 md:col-span-6 md:mb-0"
                 readOnly
-                value={course?.description}
+                value={eclass?.description}
                 // onChange={(e) => setDescription(e.target.value)}
               />
             </div>
@@ -388,7 +393,7 @@ const CourseDetail = ({ params }: any) => {
                   size="lg"
                   readOnly
                   placeholder="Enter your project name"
-                  value={course?.lessonQuantity.toString()}
+                  value={eclass?.lessonQuantity.toString()}
                   // onChange={(e) => setProjectName(e.target.value)}
                 />
               </div>
@@ -403,7 +408,7 @@ const CourseDetail = ({ params }: any) => {
                   size="lg"
                   readOnly
                   placeholder="Enter your project name"
-                  value={course?.timePerLesson.toString()}
+                  value={eclass?.timePerLesson.toString()}
                   // onChange={(e) => setProjectName(e.target.value)}
                 />
               </div>
@@ -418,7 +423,7 @@ const CourseDetail = ({ params }: any) => {
                   size="lg"
                   readOnly
                   placeholder="Enter your project name"
-                  value={course?.price.toString()}
+                  value={eclass?.price.toString()}
                   // onChange={(e) => setProjectName(e.target.value)}
                 />
               </div>
@@ -511,4 +516,4 @@ const CourseDetail = ({ params }: any) => {
   );
 };
 
-export default CourseDetail;
+export default EClassDetail;

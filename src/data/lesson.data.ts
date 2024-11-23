@@ -137,3 +137,9 @@ export const getLessonsByCourseId = (courseId: number) => {
     return lesson.courseId === courseId;
   });
 };
+
+export const getLessonsByClassId = (classId: number) => {
+  return lessons.filter((lesson) => {
+    return lesson.classId === classId;
+  });
+};

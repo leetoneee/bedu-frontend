@@ -145,4 +145,12 @@ const classes: EClass[] = [
   }
 ];
 
-export { classes, columns };
+const getClassById = (classId: number): EClass => {
+  const eclass = classes.find((eclass) => eclass.id === classId);
+  if (!eclass) {
+    throw new Error(`Course with id ${classId} not found`);
+  }
+  return eclass;
+};
+
+export { classes, columns, getClassById };

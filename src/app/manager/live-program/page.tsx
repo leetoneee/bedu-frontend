@@ -166,7 +166,7 @@ export default function LiveProgramPage() {
               <Tooltip content="Details" className="bg-on-primary" delay={1000}>
                 <span
                   className="cursor-pointer text-lg text-on-primary active:opacity-50"
-                  onClick={() => router.push(`projects/${eclass.id}`)}
+                  onClick={() => router.push(`live-program/${eclass.id}`)}
                 >
                   <EyeIcon className="size-5" />
                 </span>
