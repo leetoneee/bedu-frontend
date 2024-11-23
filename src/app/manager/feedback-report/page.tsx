@@ -1,4 +1,4 @@
-import Breadcrumb from '@/components/Breadcrumb';
+import { Breadcrumb } from '@/components';
 import { Crumb } from '@/types';
 
 export default function SSP() {
@@ -9,7 +9,7 @@ export default function SSP() {
     }
   ];
   return (
-    <main className="flex flex-col items-center p-3 sm:items-start">
+    <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
       <Breadcrumb crumbs={crumbs} />
     </main>
   );

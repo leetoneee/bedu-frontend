@@ -1,13 +1,14 @@
 export type Lesson = {
   id: number;
+  name: string;
   startDate: string;
   endDate: string;
   type: string;
   videoUrl: string;
-  ClassId: number;
-  CourseId: number;
-  ExamId: number;
-  TeacherId: number;
+  classId: number;
+  courseId: number;
+  examId: number;
+  teacherId: number;
 };
 
 export const statusColorMap: Record<

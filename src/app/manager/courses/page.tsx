@@ -1,7 +1,6 @@
 'use client';
 
-import { ButtonSolid } from '@/components';
-import Breadcrumb from '@/components/Breadcrumb';
+import { ButtonSolid, Breadcrumb } from '@/components';
 import { Crumb } from '@/types';
 import {
   EyeIcon,
@@ -155,7 +154,7 @@ export default function CoursesPage() {
               <Tooltip content="Details" className="bg-on-primary" delay={1000}>
                 <span
                   className="cursor-pointer text-lg text-on-primary active:opacity-50"
-                  onClick={() => router.push(`projects/${course.id}`)}
+                  onClick={() => router.push(`courses/${course.id}`)}
                 >
                   <EyeIcon className="size-5" />
                 </span>

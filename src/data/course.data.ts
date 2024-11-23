@@ -140,4 +140,12 @@ const courses: Course[] = [
   }
 ];
 
-export { courses, statusOptions, columns };
+const getCourseById = (courseId: number): Course => {
+  const course = courses.find((course) => course.id === courseId);
+  if (!course) {
+    throw new Error(`Course with id ${courseId} not found`);
+  }
+  return course;
+};
+
+export { courses, statusOptions, columns, getCourseById };

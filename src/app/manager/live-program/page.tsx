@@ -1,6 +1,6 @@
 'use client';
 
-import Breadcrumb from '@/components/Breadcrumb';
+import { Breadcrumb } from '@/components';
 import { Crumb } from '@/types';
 import { EClass, statusColorMap, statusOptions } from '@/types/class.type';
 import {
