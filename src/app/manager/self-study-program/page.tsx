@@ -155,7 +155,7 @@ export default function SSP() {
               <Tooltip content="Details" className='bg-on-primary' delay={1000}>
                 <span
                   className="cursor-pointer text-lg text-on-primary active:opacity-50"
-                  onClick={() => router.push(`projects/${program.id}`)}
+                  onClick={() => router.push(`self-study-program/${program.id}`)}
                 >
                   <EyeIcon className="size-5" />
                 </span>

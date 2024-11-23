@@ -17,7 +17,7 @@ const statusOptions = [
 
 const ssPrograms: SSProgram[] = [
   {
-    id: 101,
+    id: 1,
     title: 'IELTS Academic Preparation',
     code: 'IELTS-AC-2024',
     description:
@@ -198,4 +198,12 @@ const ssPrograms: SSProgram[] = [
   }
 ];
 
-export { ssPrograms, statusOptions };
+const getProgramById = (programId: number): SSProgram => {
+  const program = ssPrograms.find((program) => program.id === programId);
+  if (!program) {
+    throw new Error(`Program with id ${programId} not found`);
+  }
+  return program;
+};
+
+export { ssPrograms, statusOptions, getProgramById };

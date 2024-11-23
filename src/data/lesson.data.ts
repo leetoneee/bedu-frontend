@@ -113,7 +113,7 @@ export const lessons = [
     endDate: '2024-12-17T10:15:00Z',
     type: 'Speaking Fluency',
     videoUrl: 'https://example.com/lesson9.mp4',
-    classId: 105,
+    classId: 1,
     courseId: 5,
     examId: 209,
     teacherId: 309
@@ -125,7 +125,7 @@ export const lessons = [
     endDate: '2024-12-19T10:20:00Z',
     type: 'Test-Taking Strategies',
     videoUrl: 'https://example.com/lesson10.mp4',
-    classId: 105,
+    classId: 1,
     courseId: 5,
     examId: 210,
     teacherId: 310

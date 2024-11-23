@@ -1,12 +1,10 @@
 'use client';
 
 import { Breadcrumb } from '@/components';
-import {
-  columns,
-  getLessonsByClassId,
-} from '@/data/lesson.data';
+import { columns } from '@/data/program-course.data';
 import { Crumb } from '@/types';
-import { Lesson } from '@/types/lesson.type';
+import { Course } from '@/types/course.type';
+import { statusColorMap } from '@/types/lesson.type';
 import {
   Button,
   CalendarDate,
@@ -23,7 +21,8 @@ import {
   TableHeader,
   TableRow,
   Textarea,
-  Tooltip
+  Tooltip,
+  useDisclosure
 } from '@nextui-org/react';
 import React, {
   Key,
@@ -37,51 +36,64 @@ import React, {
 import Image from 'next/image';
 import {
   EyeIcon,
-  PencilIcon,
   PlusIcon,
   TrashIcon
 } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
-import { EClass } from '@/types/class.type';
-import { getClassById } from '@/data/class.data';
+import { SSProgram } from '@/types/program.type';
+import { getProgramById } from '@/data/program.data';
+import { getCoursesByProgramId } from '@/data/program-course.data';
+import AddCoursesModal from './add-course.modal';
 
-const EClassDetail = ({ params }: any) => {
+const ProgramDetail = ({ params }: any) => {
   const param: { id: string } = use(params);
   const { id } = param;
-  const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [eclass, setEClass] = useState<EClass>();
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [program, setProgram] = useState<SSProgram>();
   const crumbs: Crumb[] = useMemo(() => {
     return [
       {
-        label: 'Live Program',
-        href: '/manager/live-program'
+        label: 'Self-study Program',
+        href: '/manager/self-study-program'
       },
       {
-        label: `${eclass?.name}`,
-        href: `/live-program/${id}`
+        label: `${program?.title}`,
+        href: `/self-study-program/${id}`
       }
     ];
-  }, [id, eclass]);
+  }, [id, program]);
 
   useEffect(() => {
-    const data: Lesson[] = getLessonsByClassId(Number(id));
-    console.log("🚀 ~ useEffect ~ data:", data)
-    const data2: EClass = getClassById(Number(id));
-    setLessons(data);
-    setEClass(data2);
+    const data: Course[] = getCoursesByProgramId(Number(id));
+    const data2: SSProgram = getProgramById(Number(id));
+    setCourses(data);
+    setProgram(data2);
   }, [id]);
 
   const router = useRouter();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const [filterLessonName, setFilterLessonName] = useState<string>('');
-  const hasSearchFilterName = Boolean(filterLessonName);
+  // State for filter
+  const [filterCourseName, setFilterCourseName] = useState<string>('');
+  const hasSearchFilterName = Boolean(filterCourseName);
   const [filterStartDate, setFilterStartDate] = useState<CalendarDate>();
   const [filterEndDate, setFilterEndDate] = useState<CalendarDate>();
+  //
+
+  const handleDelete = useCallback(
+    (courseId: number) => {
+      console.log('🚀 ~ ProgramDetail ~ courseId:', courseId);
+      setCourses((prevCourses) =>
+        prevCourses.filter((course) => course.id !== courseId)
+      );
+    },
+    [setCourses]
+  );
 
   const renderCell = useCallback(
-    (lesson: Lesson, columnKey: Key): ReactNode => {
+    (course: Course, columnKey: Key): ReactNode => {
       const cellValue =
-        columnKey !== 'actions' ? lesson[columnKey as keyof Lesson] : 'actions';
+        columnKey !== 'actions' ? course[columnKey as keyof Course] : 'actions';
 
       switch (columnKey) {
         case 'id':
@@ -90,7 +102,7 @@ const EClassDetail = ({ params }: any) => {
               <p className="text-bold text-sm capitalize">{cellValue}</p>
             </div>
           );
-        case 'type':
+        case 'code':
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">{cellValue}</p>
@@ -102,29 +114,22 @@ const EClassDetail = ({ params }: any) => {
               <p className="text-bold text-sm capitalize">{cellValue}</p>
             </div>
           );
-        case 'startDate':
+        case 'isPublish':
           return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">
-                {new Date(cellValue).toLocaleDateString('vi-VE', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric'
-                })}
-              </p>
-            </div>
-          );
-        case 'endDate':
-          return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">
-                {new Date(cellValue).toLocaleDateString('vi-VE', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric'
-                })}
-              </p>
-            </div>
+            <Chip
+              className="capitalize"
+              color={
+                statusColorMap[
+                  (course.isPublish
+                    ? 'Published'
+                    : 'Unpublished') as keyof typeof statusColorMap
+                ]
+              }
+              size="sm"
+              variant="flat"
+            >
+              {course.isPublish ? 'Published' : 'Unpublished'}
+            </Chip>
           );
         case 'lessonQuantity':
           return (
@@ -154,18 +159,16 @@ const EClassDetail = ({ params }: any) => {
               <Tooltip content="Details" className="bg-on-primary" delay={1000}>
                 <span
                   className="cursor-pointer text-lg text-on-primary active:opacity-50"
-                  onClick={() => router.push(`lessons/${lesson.id}`)}
+                  onClick={() => router.push(`courses/${course.id}`)}
                 >
                   <EyeIcon className="size-5" />
                 </span>
               </Tooltip>
-              <Tooltip content="Edit" color="warning" delay={1000}>
-                <span className="cursor-pointer text-lg text-on-secondary active:opacity-50">
-                  <PencilIcon className="size-5" />
-                </span>
-              </Tooltip>
               <Tooltip color="danger" content="Delete" delay={1000}>
-                <span className="cursor-pointer text-lg text-danger active:opacity-50">
+                <span
+                  className="cursor-pointer text-lg text-danger active:opacity-50"
+                  onClick={() => handleDelete(course.id)}
+                >
                   <TrashIcon className="size-5" />
                 </span>
               </Tooltip>
@@ -184,43 +187,22 @@ const EClassDetail = ({ params }: any) => {
   });
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 6;
 
-  const pages = Math.ceil(lessons.length / rowsPerPage);
+  const pages = Math.ceil(courses.length / rowsPerPage);
 
   const filteredItems = React.useMemo(() => {
-    let filteredLessons = [...lessons];
+    let filteredCourses = [...courses];
     setPage(1);
 
     if (hasSearchFilterName) {
-      filteredLessons = filteredLessons.filter((lesson) =>
-        lesson.name.toLowerCase().includes(filterLessonName.toLowerCase())
+      filteredCourses = filteredCourses.filter((course) =>
+        course.title.toLowerCase().includes(filterCourseName.toLowerCase())
       );
     }
 
-    if (filterStartDate) {
-      const startDate = new Date(
-        filterStartDate.year,
-        filterStartDate.month,
-        filterStartDate.day
-      );
-      filteredLessons = filteredLessons.filter(
-        (lesson) => new Date(lesson.startDate) >= startDate
-      );
-    }
-    if (filterEndDate) {
-      const endDate = new Date(
-        filterEndDate.year,
-        filterEndDate.month,
-        filterEndDate.day
-      );
-      filteredLessons = filteredLessons.filter(
-        (lesson) => new Date(lesson.endDate) <= endDate
-      );
-    }
-
-    return filteredLessons;
-  }, [lessons, filterLessonName, filterStartDate, filterEndDate]);
+    return filteredCourses;
+  }, [courses, filterCourseName]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -230,9 +212,9 @@ const EClassDetail = ({ params }: any) => {
   }, [page, filteredItems]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: Lesson, b: Lesson) => {
-      const first = a[sortDescriptor.column as keyof Lesson] as number;
-      const second = b[sortDescriptor.column as keyof Lesson] as number;
+    return [...items].sort((a: Course, b: Course) => {
+      const first = a[sortDescriptor.column as keyof Course] as number;
+      const second = b[sortDescriptor.column as keyof Course] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
@@ -252,8 +234,8 @@ const EClassDetail = ({ params }: any) => {
             size={'md'}
             type=""
             placeholder="Find your team member"
-            value={filterLessonName}
-            onChange={(e) => setFilterLessonName(e.target.value)}
+            value={filterCourseName}
+            onChange={(e) => setFilterCourseName(e.target.value)}
           />
         </div>
         {/* Filter Start date */}
@@ -282,13 +264,13 @@ const EClassDetail = ({ params }: any) => {
           className="my-auto ml-auto h-14 rounded-2xl bg-on-primary text-white shadow-md"
           startContent={<PlusIcon className="size-6 text-white" />}
           size="lg"
-          // onClick={onOpen}
+          onClick={onOpen}
         >
           Add
         </Button>
       </div>
     );
-  }, [filterLessonName]);
+  }, [filterCourseName]);
 
   return (
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
@@ -300,7 +282,7 @@ const EClassDetail = ({ params }: any) => {
             {/* Name */}
             <div className="flex w-full shrink basis-[40%] flex-col gap-2">
               <span className="text-xl font-semibold text-on-surface">
-                Class Name
+                Program Name
               </span>
               <Input
                 type="text"
@@ -309,27 +291,11 @@ const EClassDetail = ({ params }: any) => {
                 size="lg"
                 readOnly
                 placeholder="Enter your project name"
-                value={eclass?.name}
+                value={program?.title}
                 // onChange={(e) => setProjectName(e.target.value)}
               />
             </div>
             <div className="flex w-full basis-[60%] flex-row gap-20">
-              {/* Type */}
-              <div className="flex w-full shrink flex-col gap-2">
-                <span className="text-xl font-semibold text-on-surface">
-                  Type
-                </span>
-                <Input
-                  type="text"
-                  variant="bordered"
-                  className="min-w-max"
-                  size="lg"
-                  readOnly
-                  placeholder="Enter your project name"
-                  value={eclass?.code}
-                  // onChange={(e) => setProjectName(e.target.value)}
-                />
-              </div>
               {/* Code */}
               <div className="flex w-full shrink flex-col gap-2">
                 <span className="text-xl font-semibold text-on-surface">
@@ -342,7 +308,7 @@ const EClassDetail = ({ params }: any) => {
                   size="lg"
                   readOnly
                   placeholder="Enter your project name"
-                  value={eclass?.code}
+                  value={program?.code}
                   // onChange={(e) => setProjectName(e.target.value)}
                 />
               </div>
@@ -353,18 +319,18 @@ const EClassDetail = ({ params }: any) => {
                 </span>
                 <Chip
                   className="h-full w-full rounded-sm capitalize"
-                  color={eclass?.isPublish ? 'success' : 'default'}
+                  color={program?.isPublish ? 'success' : 'default'}
                   size="lg"
                   variant="flat"
                 >
-                  {eclass?.isPublish ? 'Published' : 'Unpublished'}
+                  {program?.isPublish ? 'Published' : 'Unpublished'}
                 </Chip>
               </div>
             </div>
           </div>
           <div className="flex w-full flex-row gap-28">
             {/* Description */}
-            <div className="flex w-full basis-[30%] flex-col gap-2">
+            <div className="flex w-full basis-[50%] flex-col gap-2">
               <span className="text-xl font-semibold text-on-surface">
                 Description
               </span>
@@ -374,14 +340,14 @@ const EClassDetail = ({ params }: any) => {
                 placeholder="Enter your description"
                 className="col-span-12 mb-6 md:col-span-6 md:mb-0"
                 readOnly
-                value={eclass?.description}
+                value={program?.description}
                 // onChange={(e) => setDescription(e.target.value)}
               />
             </div>
-            <div className="flex w-full basis-[70%] flex-row gap-28">
+            <div className="flex w-full basis-[50%] flex-row gap-28">
               <div className="flex w-full shrink flex-col gap-2">
                 <span className="text-xl font-semibold text-on-surface">
-                  Lesson Quantity
+                  Session Quantity
                 </span>
                 <Input
                   type="text"
@@ -390,22 +356,7 @@ const EClassDetail = ({ params }: any) => {
                   size="lg"
                   readOnly
                   placeholder="Enter your project name"
-                  value={eclass?.lessonQuantity.toString()}
-                  // onChange={(e) => setProjectName(e.target.value)}
-                />
-              </div>
-              <div className="flex w-full shrink flex-col gap-2">
-                <span className="text-xl font-semibold text-on-surface">
-                  Time per Lesson
-                </span>
-                <Input
-                  type="text"
-                  variant="bordered"
-                  className="w-full"
-                  size="lg"
-                  readOnly
-                  placeholder="Enter your project name"
-                  value={eclass?.timePerLesson.toString()}
+                  value={program?.sessionQuantity.toString()}
                   // onChange={(e) => setProjectName(e.target.value)}
                 />
               </div>
@@ -420,7 +371,7 @@ const EClassDetail = ({ params }: any) => {
                   size="lg"
                   readOnly
                   placeholder="Enter your project name"
-                  value={eclass?.price.toString()}
+                  value={program?.price.toString()}
                   // onChange={(e) => setProjectName(e.target.value)}
                 />
               </div>
@@ -430,11 +381,11 @@ const EClassDetail = ({ params }: any) => {
           <div className="flex w-full flex-col">
             {/* Title */}
             <span className="text-xl font-semibold text-on-surface">
-              Lesson List
+              Course List
             </span>
 
             {/* Table Content*/}
-            <div className="flex h-[430px] flex-col gap-2">
+            <div className="flex h-[490px] flex-col gap-2">
               {/* Table */}
               <div className="h-full shrink overflow-hidden rounded-xl shadow-xl">
                 <Table
@@ -490,10 +441,10 @@ const EClassDetail = ({ params }: any) => {
           </div>
         </div>
 
-        {/* Save Button */}
-        {/* <div className="flex w-full">
+        {/* Save Button  */}
+        <div className="flex w-full">
           <Button
-            className="bg-on-primary ml-auto h-14 rounded-2xl text-white"
+            className="ml-auto h-14 rounded-2xl bg-on-primary text-white"
             startContent={
               <Image
                 src={'/icons/save.svg'}
@@ -507,10 +458,17 @@ const EClassDetail = ({ params }: any) => {
           >
             Save
           </Button>
-        </div> */}
+        </div>
       </div>
+      <AddCoursesModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+        courses={courses}
+        setCourses={setCourses}
+      />
     </main>
   );
 };
 
-export default EClassDetail;
+export default ProgramDetail;

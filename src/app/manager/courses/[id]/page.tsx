@@ -5,7 +5,7 @@ import { getCourseById } from '@/data/course.data';
 import { columns, getLessonsByCourseId } from '@/data/lesson.data';
 import { Crumb } from '@/types';
 import { Course } from '@/types/course.type';
-import { Lesson, statusColorMap } from '@/types/lesson.type';
+import { Lesson } from '@/types/lesson.type';
 import {
   Button,
   CalendarDate,
@@ -33,10 +33,8 @@ import React, {
   useMemo,
   useState
 } from 'react';
-import Image from 'next/image';
 import {
   EyeIcon,
-  MagnifyingGlassIcon,
   PencilIcon,
   PlusIcon,
   TrashIcon
