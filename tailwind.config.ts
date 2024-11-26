@@ -1,5 +1,5 @@
-import {nextui} from '@nextui-org/theme';
 import type { Config } from "tailwindcss";
+import { nextui } from "@nextui-org/react";
 
 const config: Config = {
   content: [
@@ -7,7 +7,8 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@nextui-org/theme/dist/components/(button|modal|ripple|spinner).js",
-    "./node_modules/flowbite/**/*.js"
+    "./node_modules/flowbite/**/*.js",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     extend: {
@@ -27,6 +28,7 @@ const config: Config = {
         'button-si': '#00FF84',
         background: "var(--background)",
         foreground: "var(--foreground)",
+
       },
     },
   },
@@ -34,5 +36,6 @@ const config: Config = {
     require('flowbite/plugin'),
     nextui()
   ],
+  darkMode: "class",
 };
 export default config;
