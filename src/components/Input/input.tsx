@@ -19,46 +19,54 @@ function Input({
   };
 
   const borderClass =
-    valid === 'error'
+    valid === 'error_AtLeast' || valid === 'error_SameName'
       ? 'border-error'
       : valid === 'success'
-      ? 'border-success'
-      : 'border-outline';
+        ? 'border-success'
+        : 'border-outline';
 
   return (
-    <div className="relative my-2">
-      <p className="absolute -top-2 left-2 bg-surface px-1 text-center text-xs text-outline">
-        {title} <span className="text-error"> {required && '*'} </span>
-      </p>
-      <input
-        className={classNames(
-          'w-full rounded border bg-surface p-2 focus:border-outline-focus focus:outline focus:outline-4 focus:outline-primary-container',
-          borderClass
-        )}
-        value={value}
-        placeholder={placeholder}
-        id={title}
-        readOnly={readOnly}
-        disabled={readOnly}
-        onChange={handleInputChange}
-        required={required}
-        type={type}
-      />
-      {valid === 'error' && (
-        <XMarkIcon className="absolute right-2 top-2 h-6 w-6 cursor-pointer text-error" />
-      )}
-      {valid === 'success' && (
-        <CheckIcon className="absolute right-2 top-2 h-6 w-6 text-success" />
-      )}
-      <p
-        className={classNames(
-          'h-4 pl-1 text-xs',
-          suport ? (valid === 'error' ? 'text-error' : 'visible') : 'invisible'
-        )}
-      >
-        {suport}
-      </p>
-    </div>
+    <>
+      <div className="relative flex flex-row items-center">
+        <p className="w-[180px] bg-white text-sm font-medium items-center mb-4">
+          {title} <span className="text-error"> {required && '*'} </span>
+        </p>
+        <div className='w-full my-auto'>
+          <input
+            className={classNames(
+              'w-full rounded border border-outline p-2 focus:border-black focus:outline focus:outline-primary',
+              borderClass
+            )}
+            value={value}
+            placeholder={placeholder}
+            id={title}
+            readOnly={readOnly}
+            disabled={readOnly}
+            onChange={handleInputChange}
+            required={required}
+            type={type}
+          />
+          {(valid === 'error_AtLeast' || valid === 'error_SameName') && (
+            <XMarkIcon className="absolute right-5 top-2 h-6 w-6 cursor-pointer text-error" />
+          )}
+          {valid === 'success' && (
+            <CheckIcon className="absolute right-5 top-2 h-6 w-6 text-success" />
+          )}
+          <p
+            className={classNames(
+              'h-4 pl-1 text-xs mt-1',
+              suport
+                ? valid === 'error_AtLeast' || valid === 'error_SameName'
+                  ? 'text-error'
+                  : 'visible'
+                : 'invisible'
+            )}
+          >
+            {suport}
+          </p>
+        </div>
+      </div>
+    </>
   );
 }
 

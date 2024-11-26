@@ -1,7 +1,20 @@
 import { classNames } from './classNames';
-import Modal_taoBT from './Modal/addModal';
+import AddProgramModal from './ModalProgram/program.add';
+import EditProgramModal from './ModalProgram/EditProgram';
+import DeleteProgramModal from './ModalProgram/DeleteProgram';
+import AddCourseModal from './ModalCourse/course.add';
+import EditCourseModal from './ModalCourse/EditCourse';
+import DeleteCourseModal from './ModalCourse/DeleteCourse';
+import AddClassModal from './ModalClass/class.add';
+import EditClassModal from './ModalClass/EditClass';
+import DeleteClassModal from './ModalClass/DeleteClass';
 import Input from './Input/input';
+import InputFile from './Input/input-file';
+import Checkbox from './Checkbox';
 
 export { classNames };
-export { Modal_taoBT};
-export { Input };
+export { AddProgramModal, EditProgramModal, DeleteProgramModal};
+export {AddCourseModal, EditCourseModal, DeleteCourseModal};
+export {AddClassModal, EditClassModal, DeleteClassModal};
+export { Input, InputFile };
+export {Checkbox};
