@@ -199,7 +199,7 @@ export default function EditProgramModal({ onSubmit }: EditProgramModal_Props) {
           <div className="rounded-xl shadow-xl">
             <ModalContent>
               <ModalHeader className="w-full rounded-t-xl border">
-                <div className="h-11 w-11 content-center rounded-lg border-3 border-primary">
+                <div className="h-11 w-11 content-center rounded-lg border-3 border-b-primary">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

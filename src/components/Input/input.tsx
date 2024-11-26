@@ -50,7 +50,7 @@ function Input({
             <XMarkIcon className="absolute right-5 top-2 h-6 w-6 cursor-pointer text-error" />
           )}
           {valid === 'success' && (
-            <CheckIcon className="absolute right-5 top-2 h-6 w-6 text-success" />
+            <CheckIcon className="absolute right-5 top-2 h-6 w-6 text-b-success" />
           )}
           <p
             className={classNames(

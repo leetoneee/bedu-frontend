@@ -161,12 +161,17 @@ export default function AddProgramModal({ onSubmit }: AddProgramModal_Props) {
           Open Modal
         </Button>
       </div>
-      <Modal size={size} isOpen={isOpen} onOpenChange={onOpenChange} onClose={handleClose}>
+      <Modal
+        size={size}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        onClose={handleClose}
+      >
         <div className="flex justify-center">
           <div className="rounded-xl shadow-xl">
             <ModalContent>
               <ModalHeader className="w-full rounded-t-xl border">
-                <div className="h-11 w-11 content-center rounded-lg border-3 border-primary">
+                <div className="h-11 w-11 content-center rounded-lg border-3 border-b-primary">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

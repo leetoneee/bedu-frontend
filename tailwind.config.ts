@@ -13,9 +13,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'primary': '#F9FAFB',
+        'b-primary': '#F9FAFB',
         'on-primary': '#00adef',
-        'secondary': '#FFFEFA',
+        'b-secondary': '#FFFEFA',
         'on-secondary': '#FE914C',
         'surface': '#f5f6fa',
         'on-surface': '#494949',
@@ -23,12 +23,11 @@ const config: Config = {
         'outline': '#C5C6C9',
         'outline-focus': '#295782',
         'error': '#D32F2F',
-        'success': '#388E3C',
-        'warning': '#F57C00',
+        'b-success': '#388E3C',
+        'b-warning': '#F57C00',
         'button-si': '#00FF84',
         background: "var(--background)",
         foreground: "var(--foreground)",
-
       },
     },
   },
