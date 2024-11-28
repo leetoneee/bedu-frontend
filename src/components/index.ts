@@ -6,8 +6,8 @@ import ButtonSolid from './Button/ButtonSolid';
 import ButtonOutline from './Button/ButtonOutline';
 import ButtonBase from './Button/ButtonBase';
 import Breadcrumb from './Breadcrumb';
-import ProgramCard from '@/components/programCard/ProgramCard';
-import Rating from '@/components/rating';
+import { SelfStudyProgramCard, LiveProgramCard } from '@/components/ProgramCard';
+import Rating from '@/components/Rating';
 
 export { classNames };
 export { Sidebar };
@@ -15,4 +15,4 @@ export { Header };
 export { TooltipItem };
 export { ButtonBase, ButtonOutline, ButtonSolid };
 export { Breadcrumb };
-export { ProgramCard, Rating };
+export { SelfStudyProgramCard, LiveProgramCard, Rating };
