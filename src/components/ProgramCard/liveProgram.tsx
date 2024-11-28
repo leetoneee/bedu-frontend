@@ -1,5 +1,19 @@
 'use client';
 
+// {
+//   id: 1,
+//   rating: 4.9,
+//   feedback: 320,
+//   title: 'IELTS Preparation Course',
+//   lessonQuantity: 100,
+//   studentQuantity: 45,
+//   startDate: '2025-01-05T17:00:00Z',
+//   schedule: ['Monday', 'Wednesday', 'Friday'],
+//   timeStart: '5pm',
+//   timeEnd: '7pm',
+//   price: 12000000,
+// },
+
 import Image from 'next/image';
 import Rating from '@/components/Rating';
 import { LuBookMinus, LuClock3 } from 'react-icons/lu';

@@ -3,6 +3,15 @@ import Image from 'next/image';
 import { LuBookMinus, LuClock3 } from 'react-icons/lu';
 import { RiUserLine } from 'react-icons/ri';
 
+// {
+//   id: 100,
+//   title: 'IELTS Preparation Course',
+//   lessonQuantity: 100,
+//   studentQuantity: 45,
+//   totalTime: 100,
+//   price: 12000000,
+// },
+
 const SelfStudyProgramCard = ({ props }: { props: any }) => {
   const data = { ...props };
 
