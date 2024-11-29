@@ -15,7 +15,7 @@
 // },
 
 import Image from 'next/image';
-import Rating from '@/components/Rating';
+import { Rating } from '@/components';
 import { LuBookMinus, LuClock3 } from 'react-icons/lu';
 import { RiUserLine } from 'react-icons/ri';
 import { MdOutlineDateRange } from 'react-icons/md';
@@ -32,23 +32,23 @@ const LiveProgramCard = ({ props }: { props: any }) => {
   const formattedNumber = (number: number): string => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'decimal',
-      maximumFractionDigits: 0, // Optional: Số chữ số sau dấu thập phân
+      maximumFractionDigits: 0 // Optional: Số chữ số sau dấu thập phân
     }).format(number);
   };
 
   const formatSchedule = (schedule: string[]): string => {
     return schedule.join(', '); // Nối tất cả phần tử bằng dấu phẩy và khoảng trắng
   };
-  
+
   const formattedDate = (startDate: string) => {
-    return  new Intl.DateTimeFormat('en-US', {
+    return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'long', // Tháng dạng chữ (January)
       day: 'numeric',
-      timeZone: 'UTC', // Đảm bảo múi giờ UTC
+      timeZone: 'UTC' // Đảm bảo múi giờ UTC
     }).format(new Date(startDate));
-  }
-  
+  };
+
   return (
     <div
       // onClick={handleNavigate}
@@ -103,13 +103,18 @@ const LiveProgramCard = ({ props }: { props: any }) => {
           <div className="flex items-center gap-2 text-sm text-on-surface">
             <LuClock3 />
             <p>
-              Class time: <b>{data.timeStart} - {data.timeEnd}</b>
+              Class time:{' '}
+              <b>
+                {data.timeStart} - {data.timeEnd}
+              </b>
             </p>
           </div>
         </div>
 
         {/* Giá */}
-        <p className="mt-3 text-lg font-bold text-outline-focus">{formattedNumber(data.price)} VND</p>
+        <p className="mt-3 text-lg font-bold text-outline-focus">
+          {formattedNumber(data.price)} VND
+        </p>
       </div>
     </div>
   );
