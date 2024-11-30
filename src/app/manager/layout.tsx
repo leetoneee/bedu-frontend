@@ -1,4 +1,7 @@
 import { Header, Sidebar } from '@/components';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { NextResponse } from 'next/server';
 
 export default function RootLayout({
   children
