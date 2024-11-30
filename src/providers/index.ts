@@ -1,3 +1,3 @@
 import { NUIProviders } from './NextUIProvider';
-
-export { NUIProviders };
+import SProviders from './SProviders';
+export { NUIProviders, SProviders };
