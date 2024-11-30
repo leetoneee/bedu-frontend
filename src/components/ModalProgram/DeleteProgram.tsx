@@ -9,10 +9,13 @@ import {
   ModalFooter,
   useDisclosure,
   ModalContent
-} from '@nextui-org/modal';
-import { Button } from '@nextui-org/button';
+} from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import { Input, InputFile, Checkbox } from '@/components';
-import { DeleteProgramModal_Props } from '@/types';
+
+type DeleteProgramModal_Props = {
+  onSubmit?: () => void;
+};
 
 export default function DeleteProgramModal({ onSubmit }: DeleteProgramModal_Props) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();

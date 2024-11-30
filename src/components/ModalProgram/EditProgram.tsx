@@ -9,10 +9,13 @@ import {
   ModalFooter,
   useDisclosure,
   ModalContent
-} from '@nextui-org/modal';
-import { Button } from '@nextui-org/button';
+} from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import { Input, InputFile, Checkbox } from '@/components';
-import { EditProgramModal_Props } from '@/types';
+
+type EditProgramModal_Props = {
+  onSubmit?: () => void;
+};
 
 // Program mẫu
 const inputdata = {

@@ -9,10 +9,13 @@ import {
   ModalFooter,
   useDisclosure,
   ModalContent
-} from '@nextui-org/modal';
-import { Button } from '@nextui-org/button';
+} from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import { Input, InputFile, Checkbox } from '@/components';
-import { AddProgramModal_Props } from '@/types';
+
+type AddProgramModal_Props = {
+  onSubmit?: () => void;
+};
 
 // Danh sách các nhóm bài
 const PronameList = [
