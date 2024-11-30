@@ -1,9 +1,11 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { CheckboxProps } from '@/types';
 
 export default function Checkbox({
   isSelected = false,
-  onToggle,
+  onToggle
 }: CheckboxProps) {
   const [selected, setSelected] = useState(isSelected);
 

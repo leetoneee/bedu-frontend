@@ -16,7 +16,7 @@ const Header = () => {
   const { data: session } = useSession();
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between bg-primary px-4 drop-shadow md:px-6">
+    <header className="flex h-16 shrink-0 items-center justify-between bg-b-primary px-4 drop-shadow md:px-6">
       <div className="flex min-w-max flex-row items-center">
         <Image src="../icons/logo.svg" alt="logo" width={100} height={100} />
         <span className="text-2xl font-bold text-on-primary">BEDU</span>

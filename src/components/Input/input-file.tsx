@@ -1,3 +1,5 @@
+'use client';
+
 import button, { useEffect, useState } from 'react';
 import { useEdgeStore } from '@/lib/edgestore';
 import { InputFileProps } from '@/types';
