@@ -1,6 +1,7 @@
 import { classNames } from './classNames';
 import Sidebar from './Sidebar/Sidebar';
-import Header from './Header';
+import Header from './Header/Header';
+import NavHeader from './Header/NavHeader';
 import TooltipItem from './Tooltip';
 import ButtonSolid from './Button/ButtonSolid';
 import ButtonOutline from './Button/ButtonOutline';
@@ -23,7 +24,7 @@ import Checkbox from './Checkbox';
 
 export { classNames };
 export { Sidebar };
-export { Header };
+export { Header, NavHeader };
 export { TooltipItem };
 export { ButtonBase, ButtonOutline, ButtonSolid };
 export { Breadcrumb };
