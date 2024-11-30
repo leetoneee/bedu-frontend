@@ -62,8 +62,8 @@ const SignUpPage = () => {
     );
 
   return (
-    <div className="absolute top-0 flex h-full w-full items-center justify-center bg-primary">
-      <div className="container flex max-w-[540px] flex-col gap-3 rounded-[20px] border border-outline bg-secondary px-11 py-5 sm:px-6">
+    <div className="absolute top-0 flex h-full w-full items-center justify-center bg-b-primary">
+      <div className="container flex max-w-[540px] flex-col gap-3 rounded-[20px] border border-outline bg-b-secondary px-11 py-5 sm:px-6">
         <span className="text-3xl font-bold text-outline-focus">Sign up</span>
         <Divider />
         <div className="flex flex-col gap-7">
@@ -78,7 +78,7 @@ const SignUpPage = () => {
                   <input
                     type="text"
                     className={classNames(
-                      'h-16 w-full rounded-[10px] border border-outline bg-primary p-5 text-2xl sm:h-12 sm:text-xl',
+                      'h-16 w-full rounded-[10px] border border-outline bg-b-primary p-5 text-2xl sm:h-12 sm:text-xl',
                       !name ? 'pl-14' : ''
                     )}
                     placeholder="Le Toan"
@@ -103,7 +103,7 @@ const SignUpPage = () => {
                   <input
                     type="text"
                     className={classNames(
-                      'h-16 w-full rounded-[10px] border border-outline bg-primary p-5 text-2xl sm:h-12 sm:text-xl',
+                      'h-16 w-full rounded-[10px] border border-outline bg-b-primary p-5 text-2xl sm:h-12 sm:text-xl',
                       !username ? 'pl-14' : ''
                     )}
                     placeholder="leetone"
@@ -131,7 +131,7 @@ const SignUpPage = () => {
                   <input
                     type="email"
                     className={classNames(
-                      'h-16 w-full rounded-[10px] border border-outline bg-primary p-5 text-2xl sm:h-12 sm:text-xl',
+                      'h-16 w-full rounded-[10px] border border-outline bg-b-primary p-5 text-2xl sm:h-12 sm:text-xl',
                       !email ? 'pl-14' : ''
                     )}
                     placeholder="123@email.com"
@@ -156,7 +156,7 @@ const SignUpPage = () => {
                   <input
                     type="text"
                     className={classNames(
-                      'h-16 w-full rounded-[10px] border border-outline bg-primary p-5 text-2xl sm:h-12 sm:text-xl',
+                      'h-16 w-full rounded-[10px] border border-outline bg-b-primary p-5 text-2xl sm:h-12 sm:text-xl',
                       !phone ? 'pl-14' : ''
                     )}
                     placeholder="0123456789"
@@ -184,7 +184,7 @@ const SignUpPage = () => {
                   <input
                     type="password"
                     className={classNames(
-                      'h-16 w-full rounded-[10px] border border-outline bg-primary p-5 text-2xl sm:h-12 sm:text-xl',
+                      'h-16 w-full rounded-[10px] border border-outline bg-b-primary p-5 text-2xl sm:h-12 sm:text-xl',
                       !password ? 'pl-14' : ''
                     )}
                     placeholder=""
@@ -209,7 +209,7 @@ const SignUpPage = () => {
                   <input
                     type="password"
                     className={classNames(
-                      'h-16 w-full rounded-[10px] border border-outline bg-primary p-5 text-2xl sm:h-12 sm:text-xl',
+                      'h-16 w-full rounded-[10px] border border-outline bg-b-primary p-5 text-2xl sm:h-12 sm:text-xl',
                       !confirmPass ? 'pl-14' : ''
                     )}
                     placeholder=""

@@ -265,7 +265,7 @@ export default function LiveProgramPage() {
       <Divider />
       <div className="flex h-full w-full flex-col gap-2 rounded border border-on-surface/20 bg-white p-5 shadow-sm">
         {/* Search & Filter */}
-        <div className="flex w-full flex-col gap-5 rounded-2xl bg-primary p-8 shadow-md">
+        <div className="flex w-full flex-col gap-5 rounded-2xl bg-b-primary p-8 shadow-md">
           {/* Thống kê */}
           <div className="flex w-full flex-row gap-16">
             <Chip
@@ -384,7 +384,7 @@ export default function LiveProgramPage() {
             isCompact
             showControls
             showShadow
-            color="default"
+            color="primary"
             page={page}
             total={pages}
             onChange={(page) => setPage(page)}

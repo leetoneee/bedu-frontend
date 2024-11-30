@@ -23,8 +23,8 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="absolute top-0 flex h-full w-full items-center justify-center bg-primary">
-      <div className="container flex max-w-[540px] flex-col gap-3 rounded-[20px] border border-outline bg-secondary px-11 py-5 sm:w-96 sm:px-6">
+    <div className="absolute top-0 flex h-full w-full items-center justify-center bg-b-primary">
+      <div className="container flex max-w-[540px] flex-col gap-3 rounded-[20px] border border-outline bg-b-secondary px-11 py-5 sm:w-96 sm:px-6">
         <span className="text-3xl font-bold text-outline-focus">Sign in</span>
         <Divider />
         <div className="flex flex-col gap-7">
@@ -36,7 +36,7 @@ const LoginPage = () => {
               <input
                 type="text"
                 className={classNames(
-                  'h-16 w-full rounded-[10px] border border-outline bg-primary p-5 text-2xl sm:h-12 sm:text-xl',
+                  'h-16 w-full rounded-[10px] border border-outline bg-b-primary p-5 text-2xl sm:h-12 sm:text-xl',
                   !username ? 'pl-14' : ''
                 )}
                 placeholder="leetone"
@@ -56,7 +56,7 @@ const LoginPage = () => {
               <input
                 type="password"
                 className={classNames(
-                  'h-16 w-full rounded-[10px] border border-outline bg-primary p-5 text-2xl sm:h-12 sm:text-xl',
+                  'h-16 w-full rounded-[10px] border border-outline bg-b-primary p-5 text-2xl sm:h-12 sm:text-xl',
                   !password ? 'pl-14' : ''
                 )}
                 placeholder="your password"
