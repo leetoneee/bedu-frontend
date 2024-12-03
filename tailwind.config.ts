@@ -26,6 +26,7 @@ const config: Config = {
         'b-success': '#388E3C',
         'b-warning': '#F57C00',
         'button-si': '#00FF84',
+        'categories': '#D3E6F9',
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
