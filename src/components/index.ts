@@ -21,6 +21,7 @@ import DeleteClassModal from './ModalClass/DeleteClass';
 import Input from './Input/input';
 import InputFile from './Input/input-file';
 import Checkbox from './Checkbox';
+import Navigation from './Navigation/Navigation';
 
 export { classNames };
 export { Sidebar };
@@ -34,3 +35,4 @@ export { AddCourseModal, EditCourseModal, DeleteCourseModal };
 export { AddClassModal, EditClassModal, DeleteClassModal };
 export { Input, InputFile };
 export { Checkbox };
+export { Navigation };

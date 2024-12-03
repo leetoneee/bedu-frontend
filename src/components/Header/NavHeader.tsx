@@ -18,7 +18,6 @@ import { classNames } from '../classNames';
 const NavHeader = () => {
   const { data: session } = useSession();
   const navItems = NavItems();
-  console.log("🚀 ~ NavHeader ~ navItems:", navItems)
   const router = useRouter();
 
   return (
@@ -34,21 +33,23 @@ const NavHeader = () => {
               <span
                 className={classNames(
                   'text-xl font-medium',
-                  item.active ? 'text-on-primary' : 'hover:cursor-pointer hover:underline text-on-surface'
+                  item.active
+                    ? 'text-on-primary'
+                    : 'text-on-surface hover:cursor-pointer hover:underline'
                 )}
                 onClick={() => router.replace(item.href)}
               >
                 {item.name}
               </span>
             </Fragment>
-          );  
+          );
         })}
       </div>
       {session && session.user ? (
         <div className="flex flex-row items-center gap-4">
           <div className="flex flex-col items-end">
             <span className="font-semibold">{session.user?.firstName}</span>
-            <span className="capitalize">{session.user.email}</span>
+            <span className="capitalize">{session.user.role}</span>
           </div>
           <Dropdown>
             <DropdownTrigger>
@@ -61,6 +62,12 @@ const NavHeader = () => {
               ></div>
             </DropdownTrigger>
             <DropdownMenu aria-label="Static Actions">
+              <DropdownItem
+                key="myprofile"
+                onClick={() => router.replace('/my/profile')}
+              >
+                My profile
+              </DropdownItem>
               <DropdownItem
                 key="signout"
                 onClick={() => signOut({ callbackUrl: '/' })}

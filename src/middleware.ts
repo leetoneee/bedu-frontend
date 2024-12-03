@@ -1,7 +1,7 @@
 // import withAuth from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getToken } from "next-auth/jwt";
+import { getToken } from 'next-auth/jwt';
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get('next-auth.session-token');
@@ -15,7 +15,10 @@ export async function middleware(request: NextRequest) {
   console.log('Pathname:', request.nextUrl.pathname);
   console.log('Token Role:', token.role);
 
-  if (!request.nextUrl.pathname.startsWith('/manager') && token.role === 'manager') {
+  if (
+    !request.nextUrl.pathname.startsWith('/manager') &&
+    token.role === 'manager'
+  ) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
@@ -28,6 +31,5 @@ export async function middleware(request: NextRequest) {
 // }
 
 export const config = {
-  matcher: ['/manager/:path*']
+  matcher: ['/manager/:path*', '/my/:path*']
 };
-

@@ -227,7 +227,7 @@ const SignUpPage = () => {
             </div>
           </div>
           <button
-            className="h-16 w-full rounded-md bg-button-si sm:h-12"
+            className="h-16 w-full rounded-md bg-button-si hover:brightness-110 sm:h-12"
             onClick={onSubmit}
           >
             <span className="text-2xl font-medium text-outline-focus">
