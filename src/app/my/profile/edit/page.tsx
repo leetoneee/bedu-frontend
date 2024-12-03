@@ -1,10 +1,10 @@
-import { Breadcrumb, NavHeader, Navigation } from '@/components';
-import React from 'react';
+import { Breadcrumb, Navigation } from '@/components';
 import { Crumb } from '@/types';
 import { Divider } from '@nextui-org/react';
-import Profile from './profile';
+import React from 'react';
+import EditInfo from './edit-info';
 
-const ProfilePage = () => {
+const EditInfoPage = () => {
   const crumbs: Crumb[] = [
     {
       label: 'Homepage',
@@ -13,6 +13,10 @@ const ProfilePage = () => {
     {
       label: 'Profile',
       href: '/my/profile'
+    },
+    {
+      label: 'Edit Profile',
+      href: '/my/profile/edit'
     }
   ];
 
@@ -24,10 +28,10 @@ const ProfilePage = () => {
         <div className="w-72">
           <Navigation />
         </div>
-        <Profile />
+        <EditInfo />
       </div>
     </main>
   );
 };
 
-export default ProfilePage;
+export default EditInfoPage;

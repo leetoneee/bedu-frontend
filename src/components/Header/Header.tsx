@@ -11,10 +11,11 @@ import {
   DropdownTrigger
 } from '@nextui-org/react';
 import SignUpButton from '../Button/SignUpButton';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
   const { data: session } = useSession();
-
+  const router = useRouter();
   return (
     <header className="flex h-16 shrink-0 items-center justify-between bg-b-primary px-4 drop-shadow md:px-6">
       <div className="flex min-w-max flex-row items-center">
@@ -28,7 +29,7 @@ const Header = () => {
         <div className="flex flex-row items-center gap-4">
           <div className="flex flex-col items-end">
             <span className="font-semibold">{session.user?.firstName}</span>
-            <span className="capitalize">{session.user.email}</span>
+            <span className="capitalize">{session.user.role}</span>
           </div>
           <Dropdown>
             <DropdownTrigger>
@@ -41,6 +42,12 @@ const Header = () => {
               ></div>
             </DropdownTrigger>
             <DropdownMenu aria-label="Static Actions">
+              <DropdownItem
+                key="myprofile"
+                onClick={() => router.replace('/my/profile')}
+              >
+                My profile
+              </DropdownItem>
               <DropdownItem
                 key="signout"
                 onClick={() => signOut({ callbackUrl: '/' })}
