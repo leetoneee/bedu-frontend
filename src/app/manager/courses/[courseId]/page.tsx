@@ -42,10 +42,10 @@ import {
 import { useRouter } from 'next/navigation';
 
 const CourseDetail = ({ params }: any) => {
-  const param: { id: string } = use(params);
-  const { id } = param;
+  const param: { courseId: string } = use(params);
+  const { courseId } = param;
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  console.log('🚀 ~ CourseDetail ~ lessons:', Number(id));
+  console.log('🚀 ~ CourseDetail ~ lessons:', Number(courseId));
   const [course, setCourse] = useState<Course>();
   const crumbs: Crumb[] = useMemo(() => {
     return [
@@ -55,17 +55,17 @@ const CourseDetail = ({ params }: any) => {
       },
       {
         label: `${course?.title}`,
-        href: `/courses/${id}`
+        href: `/courses/${courseId}`
       }
     ];
-  }, [id, course]);
+  }, [courseId, course]);
 
   useEffect(() => {
-    const data: Lesson[] = getLessonsByCourseId(Number(id));
-    const data2: Course = getCourseById(Number(id));
+    const data: Lesson[] = getLessonsByCourseId(Number(courseId));
+    const data2: Course = getCourseById(Number(courseId));
     setLessons(data);
     setCourse(data2);
-  }, [id]);
+  }, [courseId]);
 
   const router = useRouter();
 

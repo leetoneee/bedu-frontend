@@ -125,7 +125,7 @@ const Sidebar = () => {
         <div className="relative mt-[calc(calc(90vh)-40px)] z-50">
           <button
             type="button"
-            className="border-muted-foreground/20 bg-primary absolute bottom-32 right-[-12px] flex h-6 w-6 items-center justify-center rounded-full border shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg"
+            className="border-muted-foreground/20 bg-b-primary absolute bottom-32 right-[-12px] flex h-6 w-6 items-center justify-center rounded-full border shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg"
             onClick={toggleSidebar}
           >
             {isSidebarExpanded ? (
