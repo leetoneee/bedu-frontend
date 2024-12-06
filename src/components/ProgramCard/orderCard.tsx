@@ -1,8 +1,26 @@
 import ButtonSolid from '@/components/Button/ButtonSolid';
+import { LiveProgramCardProps } from '@/types/programCard.type';
 import Image from 'next/image';
 
-const OrderCard = ({ props }: { props: any }) => {
-  const data = { ...props };
+const OrderCard = ({
+  classInfo
+}: {
+  classInfo: LiveProgramCardProps;
+}) => {
+  const {
+    id,
+    code,
+    description,
+    image,
+    lessonQuantity,
+    name,
+    price,
+    startDate,
+    studyForm,
+    timePerLesson,
+    rating,
+    feedbacks
+  } = classInfo;
 
   const formattedNumber = (price: number): string => {
     return new Intl.NumberFormat('vi-VN', {
@@ -23,7 +41,7 @@ const OrderCard = ({ props }: { props: any }) => {
       </div>
       <div className="pl-4 pr-4 pb-4">
         <p className="mt-3 text-2xl font-bold text-outline-focus">
-          {formattedNumber(data.price)} VND
+          {formattedNumber(price)} VND
         </p>
       </div>
       <div className='pl-4 pr-4 pb-4'>

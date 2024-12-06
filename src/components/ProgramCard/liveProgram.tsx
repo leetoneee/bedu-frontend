@@ -1,33 +1,35 @@
 'use client';
-
-// {
-//   id: 1,
-//   rating: 4.9,
-//   feedback: 320,
-//   title: 'IELTS Preparation Course',
-//   lessonQuantity: 100,
-//   studentQuantity: 45,
-//   startDate: '2025-01-05T17:00:00Z',
-//   schedule: ['Monday', 'Wednesday', 'Friday'],
-//   timeStart: '5pm',
-//   timeEnd: '7pm',
-//   price: 12000000,
-// },
-
 import Image from 'next/image';
 import { Rating } from '@/components';
 import { LuBookMinus, LuClock3 } from 'react-icons/lu';
-import { RiUserLine } from 'react-icons/ri';
 import { MdOutlineDateRange } from 'react-icons/md';
 import { useRouter } from 'next/router';
+import { LiveProgramCardProps } from '@/types/programCard.type';
 
-const LiveProgramCard = ({ props }: { props: any }) => {
+const LiveProgramCard = ({
+  classInfo
+}: {
+  classInfo: LiveProgramCardProps;
+}) => {
   // const router = useRouter();
   // const handleNavigate = () => {
   //   router.push(`/course/${data.id}`)
   // }
 
-  const data = { ...props };
+  const {
+    id,
+    code,
+    description,
+    image,
+    lessonQuantity,
+    name,
+    price,
+    startDate,
+    studyForm,
+    timePerLesson,
+    rating,
+    feedbacks
+  } = classInfo;
 
   const formattedNumber = (number: number): string => {
     return new Intl.NumberFormat('vi-VN', {
@@ -45,7 +47,7 @@ const LiveProgramCard = ({ props }: { props: any }) => {
       year: 'numeric',
       month: 'long', // Tháng dạng chữ (January)
       day: 'numeric',
-      timeZone: 'UTC' // Đảm bảo múi giờ UTC
+      timeZone: 'UTC'
     }).format(new Date(startDate));
   };
 
@@ -67,53 +69,40 @@ const LiveProgramCard = ({ props }: { props: any }) => {
       <div className="p-4">
         {/* Rating và Feedback */}
         <div className="flex items-center gap-2">
-          <Rating rating={data.rating} maxStar={5} />
+          <Rating rating={rating} maxStar={5} />
           <p className="text-sm font-medium text-on-surface">
-            ({data.feedbacks} feedbacks)
+            ({feedbacks} feedbacks)
           </p>
         </div>
 
         {/* Tên khóa học */}
         <h3 className="mt-3 truncate text-xl font-bold text-outline-focus">
-          {data.title}
+          {name}
         </h3>
 
         {/* Thông tin bổ sung */}
         <div className="mt-3 space-y-2">
           <div className="flex items-center gap-2 text-sm text-on-surface">
             <LuBookMinus />
-            <p>{data.lessonQuantity} lessons</p>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-on-surface">
-            <RiUserLine />
-            <p>{data.studentQuantity} students</p>
+            <p>{lessonQuantity} lessons</p>
           </div>
           <div className="flex items-center gap-2 text-sm text-on-surface">
             <MdOutlineDateRange />
             <p>
-              Opening: <b>{formattedDate(data.startDate)}</b>
-            </p>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-on-surface">
-            <MdOutlineDateRange />
-            <p>
-              Class schedule: <b>{formatSchedule(data.schedule)}</b>
+              Opening: <b>{formattedDate(startDate)}</b>
             </p>
           </div>
           <div className="flex items-center gap-2 text-sm text-on-surface">
             <LuClock3 />
             <p>
-              Class time:{' '}
-              <b>
-                {data.timeStart} - {data.timeEnd}
-              </b>
+              Time per lesson: <b>{timePerLesson} minutes</b>
             </p>
           </div>
         </div>
 
         {/* Giá */}
         <p className="mt-3 text-lg font-bold text-outline-focus">
-          {formattedNumber(data.price)} VND
+          {formattedNumber(price)} VND
         </p>
       </div>
     </div>
