@@ -13,7 +13,7 @@ const ButtonBase = ({
   return (
     <button
       className={classNames(
-        'flex gap-2 items-center rounded-full px-4 py-2 text-base font-semibold hover:brightness-110 disabled:cursor-default disabled:opacity-50 disabled:brightness-100',
+        'flex gap-2 items-center justify-center rounded-full px-4 py-2 text-base font-semibold hover:brightness-110 disabled:cursor-default disabled:opacity-50 disabled:brightness-100',
         content ? '' : isPrimary? 'text-secondary' : 'text-primary',
         className
       )}
