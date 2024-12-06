@@ -7,15 +7,11 @@ import ButtonSolid from './Button/ButtonSolid';
 import ButtonOutline from './Button/ButtonOutline';
 import ButtonBase from './Button/ButtonBase';
 import Breadcrumb from './Breadcrumb';
-
 import {
   SelfStudyProgramCard,
   LiveProgramCard,
   OrderCard
 } from '@/components/ProgramCard';
-import Rating from '@/components/Rating';
-=======
-import ProgramCard from '@/components/programCard/ProgramCard';
 import Rating from '@/components/rating';
 import AddProgramModal from './ModalProgram/program.add';
 import EditProgramModal from './ModalProgram/EditProgram';
@@ -32,17 +28,13 @@ import Checkbox from './Checkbox';
 import Navigation from './Navigation/Navigation';
 import Footer from './Footer';
 
-
 export { classNames };
 export { Sidebar };
 export { Header, NavHeader };
 export { TooltipItem };
 export { ButtonBase, ButtonOutline, ButtonSolid };
 export { Breadcrumb };
-
 export { SelfStudyProgramCard, LiveProgramCard, OrderCard, Rating };
-=======
-export { ProgramCard, Rating };
 export { AddProgramModal, EditProgramModal, DeleteProgramModal };
 export { AddCourseModal, EditCourseModal, DeleteCourseModal };
 export { AddClassModal, EditClassModal, DeleteClassModal };
