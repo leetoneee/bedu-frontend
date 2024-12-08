@@ -16,7 +16,7 @@ const CourseAccordion = ({ course }: courseAccordionProps) => {
   };
 
   return (
-    <div className="mt-4 w-full">
+    <div className="pt-4 w-full">
       <div
         className="flex h-[80px] cursor-pointer items-center justify-between rounded-xl border-2 border-outline-focus bg-outline-focus px-4 py-2 text-surface"
         onClick={() => toggleDropDown()}
