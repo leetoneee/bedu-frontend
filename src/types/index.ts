@@ -13,6 +13,7 @@ export type ButtonProps = {
 export type Crumb = {
   label: string;
   href: string;
+  className?: string;
 }
 
 export type InputProps = {
