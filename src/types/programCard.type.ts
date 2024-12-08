@@ -1,3 +1,4 @@
+// type = 1
 export type LiveProgramCardProps = {
   id: number;
   code: string;
@@ -10,18 +11,16 @@ export type LiveProgramCardProps = {
   lessonQuantity: number;
   timePerLesson: number;
   price: number;
+  isPublish: boolean;
   image: string;
+  type?: number;
 };
 
 export type OrderCardProps = {
-  id: number;
-  code: string;
-  title: string;
-  description: string;
-  price: number;
-  image: string;
+  detail: SSProgramCardProps | LiveProgramCardProps;
 }
 
+//type = 2
 export type SSProgramCardProps = {
   id: number;
   code: string;
@@ -32,4 +31,8 @@ export type SSProgramCardProps = {
   totalTime: number;
   price: number;
   image: string;
+  type?: number;
+  isPublish: boolean;
+  rating: number;
+  feedbacks: number;
 }
