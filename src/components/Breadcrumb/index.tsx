@@ -1,3 +1,4 @@
+import { classNames } from '@/components/classNames';
 import { Crumb } from '@/types';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -18,12 +19,12 @@ const Breadcrumb = ({ crumbs }: Props) => {
             <li key={crumb.href} className='flex flex-row'>
               {!isLast ? (
                 <Link href={crumb.href}>
-                  <span className="text-2xl font-bold text-on-primary hover:underline truncate w-72">
+                  <span className={classNames("text-2xl font-bold text-on-primary hover:underline truncate w-72", crumb.className ? crumb.className : "")}>
                     {crumb.label}
                   </span>
                 </Link>
               ) : (
-                <span className="text-2xl font-bold text-on-primary truncate w-72">
+                <span className={classNames("text-2xl font-bold text-on-primary truncate w-72", crumb.className ? crumb.className : "")}>
                   {crumb.label}
                 </span>
               )}

@@ -27,6 +27,7 @@ import InputFile from './Input/input-file';
 import Checkbox from './Checkbox';
 import Navigation from './Navigation/Navigation';
 import Footer from './Footer';
+import { Accordion } from '@/components/Accordion';
 
 export { classNames };
 export { Sidebar };
@@ -42,4 +43,4 @@ export { Input, InputFile };
 export { Checkbox };
 export { Navigation };
 export { Footer };
-
+export { Accordion };

@@ -14,7 +14,9 @@ const classesCard: LiveProgramCardProps[] = [
     lessonQuantity: 15,
     timePerLesson: 30,
     price: 5999000, // 5,999,000 VND
-    image: '/images/ielts-listening-speaking.jpg'
+    image: '/images/ielts-listening-speaking.jpg',
+    type: 1,
+    isPublish: true,
   },
   {
     id: 2,
@@ -29,7 +31,9 @@ const classesCard: LiveProgramCardProps[] = [
     lessonQuantity: 12,
     timePerLesson: 25,
     price: 4799000, // 4,799,000 VND
-    image: '/images/toeic-grammar-vocab.jpg'
+    image: '/images/toeic-grammar-vocab.jpg',
+    type: 1,
+    isPublish: true,
   },
   {
     id: 3,
@@ -44,7 +48,9 @@ const classesCard: LiveProgramCardProps[] = [
     lessonQuantity: 10,
     timePerLesson: 40,
     price: 7199000, // 7,199,000 VND
-    image: '/images/ielts-writing-reading.jpg'
+    image: '/images/ielts-writing-reading.jpg',
+    type: 1,
+    isPublish: true,
   },
   {
     id: 4,
@@ -59,7 +65,9 @@ const classesCard: LiveProgramCardProps[] = [
     lessonQuantity: 20,
     timePerLesson: 35,
     price: 8399000, // 8,399,000 VND
-    image: '/images/toefl-full-prep.jpg'
+    image: '/images/toefl-full-prep.jpg',
+    type: 1,
+    isPublish: true,
   },
   {
     id: 5,
@@ -74,7 +82,9 @@ const classesCard: LiveProgramCardProps[] = [
     lessonQuantity: 18,
     timePerLesson: 20,
     price: 4599000, // 4,599,000 VND
-    image: '/images/general-english.jpg'
+    image: '/images/general-english.jpg',
+    type: 1,
+    isPublish: true,
   },
   {
     id: 6,
@@ -89,7 +99,9 @@ const classesCard: LiveProgramCardProps[] = [
     lessonQuantity: 10,
     timePerLesson: 30,
     price: 5999000, // 5,999,000 VND
-    image: '/images/business-english.jpg'
+    image: '/images/business-english.jpg',
+    type: 1,
+    isPublish: true,
   },
   {
     id: 7,
@@ -104,7 +116,9 @@ const classesCard: LiveProgramCardProps[] = [
     lessonQuantity: 5,
     timePerLesson: 45,
     price: 3599000, // 3,599,000 VND
-    image: '/images/ielts-mock-tests.jpg'
+    image: '/images/ielts-mock-tests.jpg',
+    type: 1,
+    isPublish: true,
   },
   {
     id: 8,
@@ -119,7 +133,9 @@ const classesCard: LiveProgramCardProps[] = [
     lessonQuantity: 12,
     timePerLesson: 30,
     price: 5299000, // 5,299,000 VND
-    image: '/images/toeic-speaking-listening.jpg'
+    image: '/images/toeic-speaking-listening.jpg',
+    type: 1,
+    isPublish: true,
   },
   {
     id: 9,
@@ -134,7 +150,9 @@ const classesCard: LiveProgramCardProps[] = [
     lessonQuantity: 20,
     timePerLesson: 15,
     price: 2399000, // 2,399,000 VND
-    image: '/images/english-for-kids.jpg'
+    image: '/images/english-for-kids.jpg',
+    type: 1,
+    isPublish: true,
   },
   {
     id: 10,
@@ -149,7 +167,9 @@ const classesCard: LiveProgramCardProps[] = [
     lessonQuantity: 8,
     timePerLesson: 50,
     price: 6999000, // 6,999,000 VND
-    image: '/images/academic-writing.jpg'
+    image: '/images/academic-writing.jpg',
+    type: 1,
+    isPublish: true,
   }
 ];
 

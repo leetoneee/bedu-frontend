@@ -12,7 +12,11 @@ const ssProgramsCard: SSProgramCardProps[] = [
     studentQuantity: 25,
     totalTime: 40,
     price: 7000000,
-    image: '/images/ielts-academic.jpg'
+    image: '/images/ielts-academic.jpg',
+    type: 2,
+    isPublish: true,
+    rating: 4.5,
+    feedbacks: 150,
   },
   {
     id: 102,
@@ -24,7 +28,11 @@ const ssProgramsCard: SSProgramCardProps[] = [
     studentQuantity: 30,
     totalTime: 30,
     price: 6000000,
-    image: '/images/toeic-intensive.jpg'
+    image: '/images/toeic-intensive.jpg',
+    type: 2,
+    isPublish: true,
+    rating: 4.7,
+    feedbacks: 120,
   },
   {
     id: 103,
@@ -36,7 +44,11 @@ const ssProgramsCard: SSProgramCardProps[] = [
     studentQuantity: 20,
     totalTime: 36,
     price: 6500000,
-    image: '/images/ielts-general.jpg'
+    image: '/images/ielts-general.jpg',
+    type: 2,
+    isPublish: true,
+    rating: 4.6,
+    feedbacks: 180,
   },
   {
     id: 104,
@@ -48,7 +60,11 @@ const ssProgramsCard: SSProgramCardProps[] = [
     studentQuantity: 15,
     totalTime: 20,
     price: 4500000,
-    image: '/images/toeic-starter.jpg'
+    image: '/images/toeic-starter.jpg',
+    type: 2,
+    isPublish: true,
+    rating: 4.4,
+    feedbacks: 110,
   },
   {
     id: 105,
@@ -60,7 +76,11 @@ const ssProgramsCard: SSProgramCardProps[] = [
     studentQuantity: 18,
     totalTime: 24,
     price: 5000000,
-    image: '/images/ielts-speaking.jpg'
+    image: '/images/ielts-speaking.jpg',
+    type: 2,
+    isPublish: true,
+    rating: 4.8,
+    feedbacks: 200,
   },
   {
     id: 106,
@@ -72,7 +92,11 @@ const ssProgramsCard: SSProgramCardProps[] = [
     studentQuantity: 22,
     totalTime: 28,
     price: 5500000,
-    image: '/images/toeic-listening.jpg'
+    image: '/images/toeic-listening.jpg',
+    type: 2,
+    isPublish: true,
+    rating: 4.6,
+    feedbacks: 130,
   },
   {
     id: 107,
@@ -84,7 +108,11 @@ const ssProgramsCard: SSProgramCardProps[] = [
     studentQuantity: 10,
     totalTime: 20,
     price: 6000000,
-    image: '/images/ielts-writing.jpg'
+    image: '/images/ielts-writing.jpg',
+    type: 2,
+    isPublish: true,
+    rating: 4.5,
+    feedbacks: 160,
   },
   {
     id: 108,
@@ -96,7 +124,11 @@ const ssProgramsCard: SSProgramCardProps[] = [
     studentQuantity: 12,
     totalTime: 16,
     price: 3500000,
-    image: '/images/toeic-vocabulary.jpg'
+    image: '/images/toeic-vocabulary.jpg',
+    type: 2,
+    isPublish: true,
+    rating: 4.4,
+    feedbacks: 140,
   },
   {
     id: 109,
@@ -108,7 +140,11 @@ const ssProgramsCard: SSProgramCardProps[] = [
     studentQuantity: 25,
     totalTime: 30,
     price: 5000000,
-    image: '/images/ielts-listening.jpg'
+    image: '/images/ielts-listening.jpg',
+    type: 2,
+    isPublish: true,
+    rating: 4.7,
+    feedbacks: 210,
   },
   {
     id: 110,
@@ -120,7 +156,11 @@ const ssProgramsCard: SSProgramCardProps[] = [
     studentQuantity: 20,
     totalTime: 10,
     price: 2500000,
-    image: '/images/toeic-test.jpg'
+    image: '/images/toeic-test.jpg',
+    type: 2,
+    isPublish: true,
+    rating: 4.6,
+    feedbacks: 180,
   }
 ];
 
