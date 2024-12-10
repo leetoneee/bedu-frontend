@@ -52,23 +52,23 @@ export default function DetailProgramPage() {
     {
       label: 'Homepage',
       href: '/',
-      className: 'text-lg font-normal text-on-surface'
+      className: 'text-lg font-semibold'
     },
     {
       label: 'Self-study Program',
       href: '/self-study-program',
-      className: ' text-lg font-semibold text-on-surface'
+      className: ' text-lg font-semibold'
     },
     {
-      label: 'Name program',
+      label: `${dataProgramAPI(Number(Id)).title}`,
       href: `/self-study-program/${Id}`,
-      className: ' text-lg font-semibold text-on-surface'
+      className: ' text-lg font-semibold'
     }
   ];
   return (
     <div className="flex flex-col">
       <NavHeader />
-      <div className="flex w-full justify-center bg-highlight py-3">
+      <div className="flex w-full bg-highlight py-3 xsm:px-4 sm:px-10 md:px-24 lg:px-36">
         <Breadcrumb crumbs={crumbs} />
       </div>
       <div className="w-full bg-primary">
@@ -80,7 +80,7 @@ export default function DetailProgramPage() {
             className="object-cover"
           />
 
-          <div className="xsm:px-4 absolute left-0 top-0 flex h-full w-full flex-col justify-center gap-4 p-16 text-surface sm:px-10 md:px-24 lg:px-36">
+          <div className="absolute left-0 top-0 flex h-full w-full flex-col justify-center gap-4 p-16 text-surface xsm:px-4 sm:px-10 md:px-24 lg:px-36">
             <div className="truncate text-3xl font-bold">{`${dataProgramAPI(Number(Id) ?? 0).title}`}</div>{' '}
             {/**Chỗ cần sửa */}
             <div className="flex items-center gap-4">
@@ -100,12 +100,12 @@ export default function DetailProgramPage() {
       </div>
       <div className="flex flex-row bg-b-primary pb-16">
         <div className="h-full w-2/3 bg-b-primary">
-          <div className="xsm:px-4 py-10 text-3xl font-bold text-on-surface sm:px-10 md:px-24 lg:px-36">
+          <div className="py-10 text-3xl font-bold text-on-surface xsm:px-4 sm:px-10 md:px-24 lg:px-36">
             Overview of the learning path
           </div>
           <div className="flex flex-col sm:gap-6 md:gap-10 lg:gap-14">
-            <div className="xsm:px-4 xsm:flex-col flex justify-between sm:flex-col sm:gap-6 sm:px-10 md:flex-col md:px-24 lg:flex-row lg:px-36">
-              <div className="xsm:w-[300px] flex h-[106px] w-[450px] justify-between rounded-[20px] border-2 border-outline sm:w-[400px] md:w-[400px]">
+            <div className="flex justify-between xsm:flex-col xsm:px-4 sm:flex-col sm:gap-6 sm:px-10 md:flex-col md:px-24 lg:flex-row lg:px-36">
+              <div className="flex h-[106px] w-[450px] justify-between rounded-[20px] border-2 border-outline xsm:w-[300px] sm:w-[400px] md:w-[400px]">
                 <div className="flex flex-col justify-center truncate px-6">
                   <div className="truncate font-semibold text-on-primary sm:text-lg md:text-2xl lg:text-3xl">
                     {`${currCourse.length} milestone`} {/**Chỗ cần sửa */}
@@ -124,7 +124,7 @@ export default function DetailProgramPage() {
                   />
                 </div>
               </div>
-              <div className="xsm:w-[300px] flex h-[106px] w-[450px] justify-between rounded-[20px] border-2 border-outline sm:w-[400px] md:w-[400px]">
+              <div className="flex h-[106px] w-[450px] justify-between rounded-[20px] border-2 border-outline xsm:w-[300px] sm:w-[400px] md:w-[400px]">
                 <div className="flex flex-col justify-center truncate px-6">
                   <div className="truncate font-semibold text-on-primary sm:text-lg md:text-2xl lg:text-3xl">
                     {`${lessonCourse.length} lessons`} {/**Chỗ cần sửa */}
@@ -144,8 +144,8 @@ export default function DetailProgramPage() {
                 </div>
               </div>
             </div>
-            <div className="xsm:px-4 xsm:flex-col flex justify-between sm:flex-col sm:gap-6 sm:px-10 md:flex-col md:px-24 lg:flex-row lg:px-36">
-              <div className="xsm:w-[300px] flex h-[106px] w-[450px] justify-between rounded-[20px] border-2 border-outline sm:w-[400px] md:w-[400px]">
+            <div className="flex justify-between xsm:flex-col xsm:px-4 sm:flex-col sm:gap-6 sm:px-10 md:flex-col md:px-24 lg:flex-row lg:px-36">
+              <div className="flex h-[106px] w-[450px] justify-between rounded-[20px] border-2 border-outline xsm:w-[300px] sm:w-[400px] md:w-[400px]">
                 <div className="flex flex-col justify-center truncate px-6">
                   <div className="truncate font-semibold text-on-primary sm:text-lg md:text-2xl lg:text-3xl">
                     {`4 hours`} {/**Chỗ cần sửa */}
@@ -164,8 +164,8 @@ export default function DetailProgramPage() {
                   />
                 </div>
               </div>
-              <div className="xsm:w-[300px] flex h-[106px] w-[450px] justify-between rounded-[20px] border-2 border-outline sm:w-[400px] md:w-[400px]">
-                <div className="flex w-full flex-col justify-center truncate px-6">
+              <div className="flex h-[106px] w-[450px] justify-between rounded-[20px] border-2 border-outline xsm:w-[300px] sm:w-[400px] md:w-[400px]">
+                <div className="flex flex-col justify-center truncate px-6">
                   <div className="truncate font-semibold text-on-primary sm:text-lg md:text-2xl lg:text-3xl">
                     Toeic 700+ {/**Chỗ cần sửa */}
                   </div>
@@ -187,7 +187,7 @@ export default function DetailProgramPage() {
             </div>
           </div>
           <div>
-            <div className="pt-10 pb-6 text-3xl font-bold text-on-surface xsm:px-4  sm:px-10 md:px-24 lg:px-36">
+            <div className="pb-6 pt-10 text-3xl font-bold text-on-surface xsm:px-4 sm:px-10 md:px-24 lg:px-36">
               Program detail
             </div>
             <div className="h-full xsm:px-4 sm:px-10 md:px-24 lg:px-36">
