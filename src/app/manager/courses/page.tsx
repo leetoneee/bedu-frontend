@@ -27,13 +27,18 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  Pagination
+  Pagination,
+  Spinner
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import React, { Key, ReactNode, useCallback, useEffect } from 'react';
 import { useState } from 'react';
-import { courses as data, columns, statusOptions } from '@/data/course.data';
+import { columns, statusOptions } from '@/data/course.data';
 import { Course, statusColorMap } from '@/types/course.type';
+import axios from '@/libs/axiosInstance';
+import useSWR, { mutate } from 'swr';
+
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export default function CoursesPage() {
   const router = useRouter();
@@ -44,9 +49,9 @@ export default function CoursesPage() {
       href: '/manager/Courses'
     }
   ];
+
   const [courses, setCourses] = useState<Course[]>([]);
-  const [publishedCourses, setPublishedCourses] = useState<number>(0);
-  const [unpublishedCourses, setUnpublishedCourses] = useState<number>(0);
+  const [filter, setFilter] = useState<string | null>(null); // 'ielts', 'toeic', 'toefl', or null
   const [totalCourses, setTotalCourses] = useState<number>(0);
   const [filterCourseName, setFilterCourseName] = useState<string>('');
   const hasSearchFilter = Boolean(filterCourseName);
@@ -65,23 +70,28 @@ export default function CoursesPage() {
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
 
-  const pages = Math.ceil(courses.length / rowsPerPage);
+  const endpoint = `/courses/all${filter ? `/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
+
+  const { data, error, isLoading } = useSWR(endpoint, fetcher, {
+    keepPreviousData: true
+  });
+
+  // const pages = React.useMemo(() => {
+  //   return data?.count ? Math.ceil(data.count / rowsPerPage) : 0;
+  // }, [data?.count, rowsPerPage]);
+
+  const pages = 2;
+  const loadingState =
+    isLoading || data?.metadata.length === 0 ? 'loading' : 'idle';
 
   // Load data
   useEffect(() => {
-    setCourses(data);
-
-    return () => {};
-  }, [data]);
+    if (error) setCourses([]);
+    else if (data) setCourses(data.metadata);
+  }, [data, filter]);
   //
 
   useEffect(() => {
-    setPublishedCourses(
-      courses.filter((course) => course.isPublish === true).length
-    );
-    setUnpublishedCourses(
-      courses.filter((course) => course.isPublish === false).length
-    );
     setTotalCourses(courses.length);
   }, [courses]);
 
@@ -109,13 +119,21 @@ export default function CoursesPage() {
               <p className="text-bold text-sm capitalize">{cellValue}</p>
             </div>
           );
+        case 'courseType':
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toString().toUpperCase()}
+              </p>
+            </div>
+          );
         case 'isPublish':
           return (
             <Chip
               className="capitalize"
               color={
                 statusColorMap[
-                  (course.isPublish
+                  (course.isActive
                     ? 'Published'
                     : 'Unpublished') as keyof typeof statusColorMap
                 ]
@@ -123,7 +141,7 @@ export default function CoursesPage() {
               size="sm"
               variant="flat"
             >
-              {course.isPublish ? 'Published' : 'Unpublished'}
+              {course.isActive ? 'Published' : 'Unpublished'}
             </Chip>
           );
         case 'lessonQuantity':
@@ -209,7 +227,6 @@ export default function CoursesPage() {
 
   const filteredItems = React.useMemo(() => {
     let filteredCourses = [...courses];
-    setPage(1);
 
     if (hasSearchFilter) {
       filteredCourses = filteredCourses.filter((course) =>
@@ -223,29 +240,34 @@ export default function CoursesPage() {
     ) {
       filteredCourses = filteredCourses.filter((course) =>
         Array.from(selectedStatus).includes(
-          course.isPublish ? 'Published' : 'Unpublished'
+          course.isActive ? 'Published' : 'Unpublished'
         )
       );
     }
     return filteredCourses;
   }, [courses, filterCourseName, selectedValue, selectedStatus]);
 
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+  // const items = React.useMemo(() => {
+  //   const start = (page - 1) * rowsPerPage;
+  //   const end = start + rowsPerPage;
 
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems]);
+  //   return filteredItems.slice(start, end);
+  // }, [page, filteredItems]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: Course, b: Course) => {
+    return [...filteredItems].sort((a: Course, b: Course) => {
       const first = a[sortDescriptor.column as keyof Course] as number;
       const second = b[sortDescriptor.column as keyof Course] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
     });
-  }, [sortDescriptor, items]);
+  }, [sortDescriptor, filteredItems]);
+
+  const handleFilterChange = (newFilter: string | null) => {
+    setPage(1); // Reset page to 1
+    setFilter((prevFilter) => (prevFilter === newFilter ? null : newFilter));
+  };
 
   return (
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
@@ -254,28 +276,6 @@ export default function CoursesPage() {
       <div className="flex h-full w-full flex-col gap-2 rounded border border-on-surface/20 bg-white p-5 shadow-sm">
         {/* Search & Filter */}
         <div className="flex w-full flex-col gap-5 rounded-2xl bg-b-primary p-8 shadow-md">
-          {/* Thống kê */}
-          <div className="flex w-full flex-row gap-16">
-            <Chip
-              className="rounded-sm capitalize"
-              color={'success'}
-              size="lg"
-              variant="flat"
-            >
-              Published: {publishedCourses}
-            </Chip>
-            <Chip
-              className="rounded-sm capitalize"
-              color={'default'}
-              size="lg"
-              variant="flat"
-            >
-              Unpublished: {unpublishedCourses}
-            </Chip>
-            <span>
-              Total: <span className="text-2xl">{totalCourses}</span> courses
-            </span>
-          </div>
           {/* Search/Filter */}
           <div className="flex w-full flex-row gap-16">
             {/* Search Name*/}
@@ -331,12 +331,52 @@ export default function CoursesPage() {
               iconLeft={<PlusIcon className="size-6 text-white" />}
             />
           </div>
+          {/* Filter */}
+          <div className="flex w-full flex-row gap-16">
+            <div className="w-20 justify-center">
+              <Chip
+                className="select-none capitalize hover:cursor-pointer"
+                color={'danger'}
+                size="lg"
+                variant={filter === 'ielts' ? 'flat' : 'bordered'}
+                onClick={() => handleFilterChange('ielts')}
+              >
+                IELTS
+              </Chip>
+            </div>
+            <div className="w-20 justify-center">
+              <Chip
+                className="select-none capitalize hover:cursor-pointer"
+                color={'warning'}
+                size="lg"
+                variant={filter === 'toeic' ? 'flat' : 'bordered'}
+                onClick={() => handleFilterChange('toeic')}
+              >
+                TOEIC
+              </Chip>
+            </div>
+            <div className="w-20 justify-center">
+              <Chip
+                className="select-none capitalize hover:cursor-pointer"
+                color={'success'}
+                size="lg"
+                variant={filter === 'toefl' ? 'flat' : 'bordered'}
+                onClick={() => handleFilterChange('toefl')}
+              >
+                TOEFL
+              </Chip>
+            </div>
+
+            <span>
+              Total: <span className="text-2xl">{totalCourses}</span> courses
+            </span>
+          </div>
         </div>
         {/* Table content */}
-        <div className="h-[482px] shrink overflow-hidden rounded-2xl bg-primary shadow-xl">
+        <div className="h-[482px] shrink overflow-hidden rounded-2xl shadow-xl">
           <Table
             aria-label="Example table with client side pagination"
-            className="h-full w-full bg-primary"
+            className="h-full w-full"
             selectionMode="single"
             // color="#F9FAFB"
             shadow="none"
@@ -355,7 +395,12 @@ export default function CoursesPage() {
                 </TableColumn>
               )}
             </TableHeader>
-            <TableBody items={sortedItems} emptyContent={'No rows to display.'}>
+            <TableBody
+              items={sortedItems}
+              emptyContent={'No rows to display.'}
+              loadingContent={<Spinner />}
+              loadingState={loadingState}
+            >
               {(item) => (
                 <TableRow key={item.id}>
                   {(columnKey) => (

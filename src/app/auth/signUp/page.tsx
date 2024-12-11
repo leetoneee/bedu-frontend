@@ -1,19 +1,25 @@
 'use client';
 
 import { classNames } from '@/components';
+import { CreateUserDto, createUser } from '@/services/users.service';
 import {
   EnvelopeIcon,
   LockClosedIcon,
   PhoneIcon,
   UserIcon
 } from '@heroicons/react/24/outline';
-import { Divider } from '@nextui-org/react';
+import { Divider, Select, SelectItem, Selection } from '@nextui-org/react';
 import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+
+const genderItems = [{ label: 'None' }, { label: 'Male' }, { label: 'Female' }];
 
 const SignUpPage = () => {
   const [name, setName] = useState<string>('');
   const [username, setUsername] = useState<string>('');
+  const [birthday, setBirthday] = useState<string>('');
+  const [gender, setGender] = useState<Selection>(new Set(['None']));
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -21,16 +27,40 @@ const SignUpPage = () => {
   const [errors, setErrors] = useState({
     name: '',
     username: '',
+    birthday: '',
     email: '',
     phone: '',
     password: '',
     confirmPass: ''
   });
 
+  const selectedGender = React.useMemo(
+    () => Array.from(gender).join(', ').replaceAll('_', ' '),
+    [gender]
+  );
+
   const validateInputs = () => {
+    const today = new Date();
+    const birthDate = new Date(birthday);
+    // Kiểm tra đủ tuổi
+    const year = 5;
+    const isValidAge =
+      today.getFullYear() - birthDate.getFullYear() > year ||
+      (today.getFullYear() - birthDate.getFullYear() === year &&
+        today.getMonth() > birthDate.getMonth()) ||
+      (today.getFullYear() - birthDate.getFullYear() === year &&
+        today.getMonth() === birthDate.getMonth() &&
+        today.getDate() >= birthDate.getDate());
+
     const newErrors: typeof errors = {
       name: name.trim() === '' ? 'Full name is required' : '',
       username: username.trim() === '' ? 'Username is required' : '',
+      birthday:
+        birthday.trim() === ''
+          ? 'Birthday is required'
+          : !isValidAge
+            ? 'Birthday must be at least 5 years ago'
+            : '',
       email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
         ? ''
         : 'Invalid email address',
@@ -49,6 +79,34 @@ const SignUpPage = () => {
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
+      const data: CreateUserDto = {
+        name: name,
+        username: username,
+        email: email,
+        phone: phone,
+        password: password,
+        address: 'None',
+        currentLevel: 'Beginner',
+        cid: '885323141',
+        birthday: birthday,
+        gender: selectedGender
+      };
+      try {
+        // Gọi API và đợi kết quả
+        const result = await createUser(data);
+        setName('');
+        setUsername('');
+        setBirthday('');
+        setGender(new Set(['None']));
+        setEmail('');
+        setPassword('');
+        setConfirmPass('');
+        setPhone('');
+        toast.success('User created successfully!');
+      } catch (error) {
+        console.error('🚫 ~ onSubmit ~ Error:', error);
+        toast.error('Failed to create user. Please try again.');
+      }
     } else {
       console.log('Form has errors. Fix them to proceed.');
     }
@@ -117,6 +175,50 @@ const SignUpPage = () => {
                   )}
                 </div>
                 {renderError('username')}
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-row gap-6">
+            {/* Birthday */}
+            <div className="flex w-full flex-col gap-2">
+              <span className="text-xl font-normal text-black">Birthday</span>
+              <div className="relative">
+                <div className="relative">
+                  <input
+                    type="date"
+                    className={classNames(
+                      'h-16 w-full rounded-[10px] border border-outline bg-b-primary p-5 text-2xl sm:h-12 sm:text-xl'
+                    )}
+                    placeholder="Le Toan"
+                    value={birthday}
+                    onChange={(e) => setBirthday(e.target.value)}
+                  />
+                </div>
+                {renderError('birthday')}
+              </div>
+            </div>
+            {/* Gender */}
+            <div className="flex w-full flex-col gap-2">
+              <span className="text-xl font-normal text-black">Gender</span>
+              <div className="relative">
+                <div className="relative">
+                  <Select
+                    variant="bordered"
+                    placeholder="--Gender--"
+                    disallowEmptySelection
+                    selectedKeys={gender}
+                    className="w-fulls bg-b-primary"
+                    onSelectionChange={setGender}
+                    size="lg"
+                  >
+                    {genderItems.map((position) => (
+                      <SelectItem key={position.label}>
+                        {position.label}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                </div>
+                {/* {renderError('name')} */}
               </div>
             </div>
           </div>

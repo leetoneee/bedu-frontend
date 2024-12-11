@@ -1,7 +1,7 @@
 'use client';
 
 import button, { useEffect, useState } from 'react';
-import { useEdgeStore } from '@/lib/edgestore';
+import { useEdgeStore } from '@/libs/edgestore';
 import { InputFileProps } from '@/types';
 
 export default function InputFile({ filename }: InputFileProps) {
