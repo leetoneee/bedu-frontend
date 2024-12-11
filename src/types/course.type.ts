@@ -2,12 +2,13 @@ export type Course = {
   id: number;
   code: string;
   title: string;
-  type: string;
+  courseType: string;
   description: string;
+  image: string
   lessonQuantity: number;
   timePerLesson: number;
   price: number;
-  isPublish: boolean;
+  isActive: boolean;
 };
 
 export const statusColorMap: Record<

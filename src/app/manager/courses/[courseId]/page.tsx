@@ -1,7 +1,6 @@
 'use client';
 
 import { Breadcrumb } from '@/components';
-import { getCourseById } from '@/data/course.data';
 import { columns, getLessonsByCourseId } from '@/data/lesson.data';
 import { Crumb } from '@/types';
 import { Course } from '@/types/course.type';
@@ -39,13 +38,22 @@ import {
   PlusIcon,
   TrashIcon
 } from '@heroicons/react/24/outline';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import axios from '@/libs/axiosInstance';
+import useSWR from 'swr';
 
-const CourseDetail = ({ params }: any) => {
-  const param: { courseId: string } = use(params);
-  const { courseId } = param;
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
+const CourseDetail = () => {
+  const params = useParams();
+  const courseId = params.courseId;
+
+  const { data, error: courseError } = useSWR(
+    `/courses/item/${courseId}`,
+    fetcher
+  );
+  
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  console.log('🚀 ~ CourseDetail ~ lessons:', Number(courseId));
   const [course, setCourse] = useState<Course>();
   const crumbs: Crumb[] = useMemo(() => {
     return [
@@ -54,19 +62,19 @@ const CourseDetail = ({ params }: any) => {
         href: '/manager/courses'
       },
       {
-        label: `${course?.title}`,
-        href: `/courses/${courseId}`
+        label: course?.title || 'Loading...',
+        href: `/manager/courses/${courseId}`
       }
     ];
   }, [courseId, course]);
 
   useEffect(() => {
-    const data: Lesson[] = getLessonsByCourseId(Number(courseId));
-    const data2: Course = getCourseById(Number(courseId));
-    setLessons(data);
-    setCourse(data2);
-  }, [courseId]);
-
+    if (data?.metadata) {
+      setCourse(data.metadata);
+      setLessons(data.metadata.lesson)
+    }
+  }, [data])
+  
   const router = useRouter();
 
   const [filterLessonName, setFilterLessonName] = useState<string>('');
@@ -286,6 +294,10 @@ const CourseDetail = ({ params }: any) => {
     );
   }, [filterLessonName]);
 
+  if (courseError) {
+    return <div>Error loading data</div>;
+  }
+
   return (
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
       <Breadcrumb crumbs={crumbs} />
@@ -294,12 +306,12 @@ const CourseDetail = ({ params }: any) => {
         <div className="flex min-h-max w-full flex-col gap-4">
           <div className="flex w-full flex-row gap-20">
             {/* Course Name */}
-            <div className="flex w-full basis-[40%] shrink flex-col gap-2">
+            <div className="flex w-full shrink basis-[40%] flex-col gap-2">
               <span className="text-xl font-semibold text-on-surface">
                 Course Name
               </span>
               <Input
-                type="text"
+                type=""
                 variant="bordered"
                 className="w-full"
                 size="lg"
@@ -316,13 +328,13 @@ const CourseDetail = ({ params }: any) => {
                   Type
                 </span>
                 <Input
-                  type="text"
+                  type=""
                   variant="bordered"
                   className="min-w-max"
                   size="lg"
                   readOnly
                   placeholder="Enter your project name"
-                  value={course?.type}
+                  value={course?.courseType.toUpperCase()}
                   // onChange={(e) => setProjectName(e.target.value)}
                 />
               </div>
@@ -332,7 +344,7 @@ const CourseDetail = ({ params }: any) => {
                   Code
                 </span>
                 <Input
-                  type="text"
+                  type=""
                   variant="bordered"
                   className="min-w-max"
                   size="lg"
@@ -349,22 +361,23 @@ const CourseDetail = ({ params }: any) => {
                 </span>
                 <Chip
                   className="h-full w-full rounded-sm capitalize"
-                  color={course?.isPublish ? 'success' : 'default'}
+                  color={course?.isActive ? 'success' : 'default'}
                   size="lg"
                   variant="flat"
                 >
-                  {course?.isPublish ? 'Published' : 'Unpublished'}
+                  {course?.isActive ? 'Published' : 'Unpublished'}
                 </Chip>
               </div>
             </div>
           </div>
-          <div className="flex w-full flex-row gap-28">
+          <div className="flex w-full flex-row gap-10">
             {/* Description */}
-            <div className="flex w-full basis-[30%] flex-col gap-2">
+            <div className="flex w-full basis-[40%] flex-col gap-2">
               <span className="text-xl font-semibold text-on-surface">
                 Description
               </span>
               <Textarea
+                type=""
                 variant={'bordered'}
                 size="lg"
                 placeholder="Enter your description"
@@ -374,13 +387,13 @@ const CourseDetail = ({ params }: any) => {
                 // onChange={(e) => setDescription(e.target.value)}
               />
             </div>
-            <div className="flex w-full basis-[70%] flex-row gap-28">
+            <div className="flex w-full basis-[60%] flex-row gap-10">
               <div className="flex w-full shrink flex-col gap-2">
                 <span className="text-xl font-semibold text-on-surface">
                   Lesson Quantity
                 </span>
                 <Input
-                  type="text"
+                  type=""
                   variant="bordered"
                   className="w-full"
                   size="lg"
@@ -395,7 +408,7 @@ const CourseDetail = ({ params }: any) => {
                   Time per Lesson
                 </span>
                 <Input
-                  type="text"
+                  type=""
                   variant="bordered"
                   className="w-full"
                   size="lg"
@@ -410,7 +423,7 @@ const CourseDetail = ({ params }: any) => {
                   Price
                 </span>
                 <Input
-                  type="text"
+                  type=""
                   variant="bordered"
                   className="w-full"
                   size="lg"
