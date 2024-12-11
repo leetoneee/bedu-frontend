@@ -1,3 +1,4 @@
 import { NUIProviders } from './NextUIProvider';
 import SProviders from './SProviders';
-export { NUIProviders, SProviders };
+import ToastProvider from './ToastProvider';
+export { NUIProviders, SProviders, ToastProvider };

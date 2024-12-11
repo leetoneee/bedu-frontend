@@ -12,7 +12,7 @@ const handler = NextAuth({
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
+        username: { label: 'Username', type: 'text' },
         password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials, req) {
@@ -28,7 +28,7 @@ const handler = NextAuth({
           headers: { 'Content-Type': 'application/json' }
         });
         const user = await res.json();
-        // console.log('🚀 ~ authorize ~ user:', user);
+        console.log('🚀 ~ authorize ~ user:', user);
 
         // If no error and we have user data, return it
         if (res.ok && user) {

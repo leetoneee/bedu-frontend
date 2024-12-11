@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
 
 import '../styles/globals.css';
-import { NUIProviders, SProviders } from '@/providers';
+import { NUIProviders, SProviders, ToastProvider } from '@/providers';
 
 const montserrat = Montserrat({
   weight: ['400', '500', '600', '700'],
@@ -24,7 +24,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${montserrat.className} antialiased`}>
         <SProviders>
-          <NUIProviders>{children}</NUIProviders>
+          <ToastProvider>
+            <NUIProviders>{children}</NUIProviders>
+          </ToastProvider>
         </SProviders>
       </body>
     </html>
