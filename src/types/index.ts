@@ -33,7 +33,12 @@ export type InputFileProps = {
   filename?: string;
 };
 
+export type InputFileHandle = {
+  upload: () => Promise<string | undefined>;
+};
+
 export type CheckboxProps = {
   isSelected?: boolean;
   onToggle?: (e: boolean) => void;
 };
+

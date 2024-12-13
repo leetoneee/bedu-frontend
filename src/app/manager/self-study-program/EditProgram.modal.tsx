@@ -19,116 +19,85 @@ import {
 } from '@nextui-org/react';
 import { InputFile } from '@/components';
 import { toast } from 'react-toastify';
-import {
-  createCourse,
-  CreateCourseDto,
-  editCourse,
-  UpdateCourseDto
-} from '@/services/courses.service';
-import { Course } from '@/types/course.type';
+import { Program } from '@/types/program.type';
+import { InputFileHandle } from '@/types';
+import { editProgram, UpdateProgramDto } from '@/services/programs.service';
 
 type Props = {
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: () => void;
   onClose: () => void;
-  course: Course;
+  program: Program;
   onEdited?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const courseTypes = ['IELTS', 'TOEIC', 'TOEFL'];
+const programTypes = ['IELTS', 'TOEIC', 'TOEFL'];
 
-export default function EditCourseModal({
+export default function EditProgramModal({
   isOpen,
   onOpen,
   onOpenChange,
   onClose,
-  course,
+  program,
   onEdited
 }: Props) {
-  // const [urls, setUrls] = useState<{
-  //   url: string;
-  //   thumbnailUrl: string | null;
-  // }>();
+  const inputFileRef = useRef<InputFileHandle | null>(null);
 
   const [name, setName] = useState<string>('');
   const [code, setCode] = useState<string>('');
-  const [timePerLesson, setTimePerLesson] = useState<string>();
-  const [price, setPrice] = useState<string>();
-  const [lessonQuantity, setLessonQuantity] = useState<string>();
+  // const [price, setPrice] = useState<string>();
+  const [sessionQuantity, setSessionQuantity] = useState<string>();
   const [description, setDescription] = useState<string>('');
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [type, setType] = useState<Selection>(new Set([]));
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (course) {
-      setName(course.title);
-      setCode(course.code);
-      setTimePerLesson(course.timePerLesson.toString());
-      setDescription(course.description);
-      setIsPublic(course.isActive);
-      setType(new Set([`${course.courseType}`]));
-      setLessonQuantity(course.lessonQuantity.toString());
-      setPrice(course.price.toString());
-    }
-  }, [course]);
-
   const [errors, setErrors] = useState<{
     name: string;
     code: string;
     type: string;
-    timePerLesson: string;
-    price: string;
-    lessonQuantity: string;
+    sessionQuantity: string;
     description: string;
   }>({
     name: '',
     code: '',
     type: '',
-    timePerLesson: '',
-    price: '',
-    lessonQuantity: '',
+    sessionQuantity: '',
     description: ''
   });
+
+    useEffect(() => {
+      if (program) {
+        setName(program.title);
+        setCode(program.code);
+        setDescription(program.description);
+        setIsPublic(program.isActive);
+        setType(new Set([`${program.type}`]));
+        setSessionQuantity(program.sessionQuantity.toString());
+        // setPrice(program.price.toString());
+      }
+    }, [program]);
 
   const validateInputs = () => {
     const newErrors = { ...errors };
 
-    newErrors.name = name.trim() === '' ? 'Course name is required' : '';
-    newErrors.code = code.trim() === '' ? 'Course code is required' : '';
+    newErrors.name = name.trim() === '' ? 'Program name is required' : '';
+    newErrors.code = code.trim() === '' ? 'Program code is required' : '';
     newErrors.type =
-      selectedType.trim() === '' ? 'Course type is required' : '';
+      selectedType.trim() === '' ? 'Program type is required' : '';
 
-    // Validate timePerLesson as a positive integer
-    if (!timePerLesson) {
-      newErrors.timePerLesson = 'Time per lesson is required';
-    } else if (isNaN(Number(timePerLesson)) || Number(timePerLesson) <= 0) {
-      newErrors.timePerLesson = 'Time per lesson must be a positive number';
-    } else {
-      newErrors.timePerLesson = '';
-    }
-
-    // Validate price as a positive number
-    if (!price) {
-      newErrors.price = 'Price is required';
-    } else if (isNaN(Number(price)) || Number(price) <= 0) {
-      newErrors.price = 'Price must be a positive number';
-    } else {
-      newErrors.price = '';
-    }
-
-    // Validate lessonQuantity as a positive integer
-    if (!lessonQuantity) {
-      newErrors.lessonQuantity = 'Lesson quantity is required';
+    // Validate sessionQuantity as a positive integer
+    if (!sessionQuantity) {
+      newErrors.sessionQuantity = 'Session quantity is required';
     } else if (
-      isNaN(Number(lessonQuantity)) ||
-      !Number.isInteger(Number(lessonQuantity)) ||
-      Number(lessonQuantity) <= 0
+      isNaN(Number(sessionQuantity)) ||
+      !Number.isInteger(Number(sessionQuantity)) ||
+      Number(sessionQuantity) <= 0
     ) {
-      newErrors.lessonQuantity = 'Lesson quantity must be a positive integer';
+      newErrors.sessionQuantity = 'Session quantity must be a positive integer';
     } else {
-      newErrors.lessonQuantity = '';
+      newErrors.sessionQuantity = '';
     }
 
     newErrors.description =
@@ -144,24 +113,39 @@ export default function EditCourseModal({
     [type]
   );
 
+  const handleUploadFile = async () => {
+    try {
+      if (!inputFileRef.current) throw new Error('File input is not available');
+      const url = await inputFileRef.current.upload();
+      if (!url) throw new Error('File upload failed');
+      return url;
+    } catch (error) {
+      console.error('🚫 ~ handleUploadFile ~ Error:', error);
+      toast.error('Failed to upload file. Please try again.');
+      return null;
+    }
+  };
+
   const handleSubmit = async () => {
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
-      const data: UpdateCourseDto = {
-        courseType: selectedType,
+      const data: UpdateProgramDto = {
+        type: selectedType,
         code: code,
         title: name,
         description: description,
-        lessonQuantity: Number(lessonQuantity),
-        timePerLesson: Number(timePerLesson),
-        price: Number(price),
-        // isActive: isPublic
+        // image: url,
+        sessionQuantity: Number(sessionQuantity),
+        courseId: []
       };
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
+        // Upload file
+        const url = await handleUploadFile();
+        if (!url) throw new Error('File upload failed');
         // Gọi API và đợi kết quả
-        const result = await editCourse(course.id, data);
+        const result = await editProgram(program.id, data);
         if (result) {
           handleClose();
           if (onEdited) {
@@ -172,7 +156,7 @@ export default function EditCourseModal({
         console.error('🚫 ~ onSubmit ~ Error:', error);
         toast.error(
           error.response?.data?.message ||
-            'Failed to create course. Please try again.'
+            'Failed to edit program. Please try again.'
         );
       } finally {
         setIsSubmitting(false); // Hoàn tất gửi yêu cầu
@@ -185,9 +169,8 @@ export default function EditCourseModal({
   const handleClose = () => {
     setName('');
     setCode('');
-    setTimePerLesson('');
-    setPrice('');
-    setLessonQuantity('');
+    // setPrice('');
+    setSessionQuantity('');
     setType(new Set([]));
     setDescription('');
     setIsPublic(false);
@@ -195,9 +178,7 @@ export default function EditCourseModal({
       name: '',
       code: '',
       type: '',
-      timePerLesson: '',
-      price: '',
-      lessonQuantity: '',
+      sessionQuantity: '',
       description: ''
     });
     // Đóng modal
@@ -250,44 +231,44 @@ export default function EditCourseModal({
             </svg>
           </div>
           <div className="ml-5">
-            <div className="text-lg font-semibold">Edit course</div>
+            <div className="text-lg font-semibold">Add new program</div>
             <div className="text-wrap text-sm font-normal">
-              Edit information about the course
+            Edit information about the program
             </div>
           </div>
         </ModalHeader>
         <ModalBody>
           <div className="flex flex-col gap-7">
-            {/* Course name */}
+            {/* Program name */}
             <div className="flex flex-row">
               <div className="basis-[30%]">
                 <span className="text-sm font-medium text-black">
-                  Course name<span className="text-danger">*</span>
+                  Program name<span className="text-danger">*</span>
                 </span>
               </div>
               <div className="relative basis-[70%]">
                 <input
                   type="text"
                   className="w-full rounded-lg"
-                  placeholder="Enter course name..."
+                  placeholder="Enter program name..."
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
                 {renderError('name')}
               </div>
             </div>
-            {/* Course code */}
+            {/* Program code */}
             <div className="flex flex-row">
               <div className="basis-[30%]">
                 <span className="text-sm font-medium text-black">
-                  Course code<span className="text-danger">*</span>
+                  Program code<span className="text-danger">*</span>
                 </span>
               </div>
               <div className="relative flex basis-[70%] gap-8">
                 <input
                   type="text"
                   className="w-1/2 rounded-lg"
-                  placeholder="Enter course code..."
+                  placeholder="Enter program code..."
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                 />
@@ -305,7 +286,7 @@ export default function EditCourseModal({
                     variant="bordered"
                     onSelectionChange={setType}
                   >
-                    {courseTypes.map((type) => (
+                    {programTypes.map((type) => (
                       <SelectItem key={type}>{type}</SelectItem>
                     ))}
                   </Select>
@@ -316,70 +297,36 @@ export default function EditCourseModal({
             <Divider />
 
             {/* Program image  */}
-
-            {/* Time per lesson & Price */}
-            <div className="relative flex flex-row">
+            <div className="flex flex-row">
               <div className="basis-[30%]">
                 <span className="text-sm font-medium text-black">
-                  Time per lesson<span className="text-danger">*</span>
+                  Program image<span className="text-danger">*</span>
                 </span>
               </div>
-              {renderError('timePerLesson')}
-              <div className="flex basis-[70%] gap-8">
-                <div className="relative w-1/2">
-                  <input
-                    type="text"
-                    className="w-full rounded-lg pr-16"
-                    placeholder="Enter time"
-                    value={timePerLesson}
-                    onChange={(e) => setTimePerLesson(e.target.value)}
-                  />
-                  <div className="absolute right-14 top-1/2 h-full w-px -translate-y-1/2 transform bg-gray-300"></div>
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-500">
-                    mins
-                  </span>
-                </div>
-                {/* Price */}
-                <div className="relative flex w-2/3 flex-row gap-4">
-                  <span className="text-sm font-medium text-black">
-                    Price<span className="text-danger">*</span>
-                  </span>
-                  {renderError('price')}
-                  <div className="relative">
-                    <input
-                      type="text"
-                      className="w-full rounded-lg pr-16"
-                      placeholder="Enter price"
-                      value={price}
-                      onChange={(e) => setPrice(e.target.value)}
-                    />
-                    <div className="absolute right-14 top-1/2 h-full w-px -translate-y-1/2 transform bg-gray-300"></div>
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-500">
-                      VND
-                    </span>
-                  </div>
-                </div>
+              <div className="relative basis-[70%]">
+                <InputFile ref={inputFileRef} />
+                {renderError('name')}
               </div>
             </div>
 
             <Divider />
 
-            {/* Lesson quantity & public */}
+            {/* Session quantity & public */}
             <div className="flex flex-row">
               <div className="basis-[30%]">
                 <span className="text-sm font-medium text-black">
-                  Lesson quantity<span className="text-danger">*</span>
+                  Session quantity<span className="text-danger">*</span>
                 </span>
               </div>
               <div className="relative flex basis-[70%] gap-8">
                 <input
                   type="text"
                   className="w-2/3 rounded-lg"
-                  placeholder="Enter lesson quantity..."
-                  value={lessonQuantity}
-                  onChange={(e) => setLessonQuantity(e.target.value)}
+                  placeholder="Enter session quantity..."
+                  value={sessionQuantity}
+                  onChange={(e) => setSessionQuantity(e.target.value)}
                 />
-                {renderError('lessonQuantity')}
+                {renderError('sessionQuantity')}
                 <div className="flex w-1/3 flex-row">
                   <Checkbox isSelected={isPublic} onValueChange={setIsPublic}>
                     Public
@@ -398,7 +345,7 @@ export default function EditCourseModal({
               <div className="relative basis-[70%]">
                 <textarea
                   className="w-full rounded-lg bg-white"
-                  placeholder="Enter course description..."
+                  placeholder="Enter program description..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />

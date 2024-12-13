@@ -31,7 +31,7 @@ type Props = {
 
 const courseTypes = ['IELTS', 'TOEIC', 'TOEFL'];
 
-export default function EditCourseModal({
+export default function AddCourseModal({
   isOpen,
   onOpen,
   onOpenChange,
