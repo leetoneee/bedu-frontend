@@ -41,6 +41,7 @@ import useSWR, { mutate } from 'swr';
 import AddCourseModal from './AddCourse.modal';
 import { toast } from 'react-toastify';
 import EditCourseModal from './EditCourse.modal';
+import DeleteCourseModal from './DeleteCourse.modal';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -60,10 +61,24 @@ export default function CoursesPage() {
     setSelectedCourse(course);
     onOpenE();
   };
-
+  //!  CONTROL Delete modal
+  const {
+    isOpen: isOpenD,
+    onOpen: onOpenD,
+    onOpenChange: onOpenChangeD,
+    onClose: onCloseD
+  } = useDisclosure();
+  const handleDeleteClick = (course: Course) => {
+    setSelectedCourse(course);
+    onOpenD();
+  };
   // Hàm đóng modal và reset selectedCourse
   const handleCloseEditModal = () => {
     onCloseE();
+    setSelectedCourse(null);
+  };
+  const handleCloseDeleteModal = () => {
+    onCloseD();
     setSelectedCourse(null);
   };
 
@@ -109,7 +124,7 @@ export default function CoursesPage() {
   //   return data?.count ? Math.ceil(data.count / rowsPerPage) : 0;
   // }, [data?.count, rowsPerPage]);
 
-  const pages = 2;
+  const pages = 3;
   const loadingState =
     isLoading || data?.metadata.length === 0 ? 'loading' : 'idle';
 
@@ -215,7 +230,10 @@ export default function CoursesPage() {
                 </span>
               </Tooltip>
               <Tooltip color="danger" content="Delete" delay={1000}>
-                <span className="cursor-pointer text-lg text-danger active:opacity-50">
+                <span
+                  className="cursor-pointer text-lg text-danger active:opacity-50"
+                  onClick={() => handleDeleteClick(course)}
+                >
                   <TrashIcon className="size-5" />
                 </span>
               </Tooltip>
@@ -303,6 +321,16 @@ export default function CoursesPage() {
 
   const handleCreated = () => {
     toast.success('Course created successfully!');
+    refreshEndpoint();
+  };
+
+  const handleEdited = () => {
+    toast.success('Course edited successfully!');
+    refreshEndpoint();
+  };
+
+  const handleDeleted = () => {
+    toast.success('Course deleted successfully!');
     refreshEndpoint();
   };
 
@@ -476,8 +504,18 @@ export default function CoursesPage() {
           onOpenChange={onOpenChangeE}
           course={selectedCourse}
           onClose={handleCloseEditModal}
-          
-          // Bạn có thể thêm onUpdated để refresh list sau khi update
+          onEdited={handleEdited}
+        />
+      )}
+      {isOpenD && selectedCourse && (
+        <DeleteCourseModal
+          isOpen={isOpenD}
+          onOpen={onOpenD}
+          onOpenChange={onOpenChangeD}
+          onClose={handleCloseDeleteModal}
+          courseId={selectedCourse.id}
+          courseTitle={selectedCourse.title}
+          onDeleted={handleDeleted}
         />
       )}
     </main>
