@@ -28,7 +28,8 @@ import {
   TableCell,
   TableRow,
   Pagination,
-  Spinner
+  Spinner,
+  useDisclosure
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import React, { Key, ReactNode, useCallback, useEffect } from 'react';
@@ -37,11 +38,49 @@ import { columns, statusOptions } from '@/data/course.data';
 import { Course, statusColorMap } from '@/types/course.type';
 import axios from '@/libs/axiosInstance';
 import useSWR, { mutate } from 'swr';
+import AddCourseModal from './AddCourse.modal';
+import { toast } from 'react-toastify';
+import EditCourseModal from './EditCourse.modal';
+import DeleteCourseModal from './DeleteCourse.modal';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export default function CoursesPage() {
   const router = useRouter();
+  //!  CONTROL Add modal
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  //!  CONTROL Edit modal
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const {
+    isOpen: isOpenE,
+    onOpen: onOpenE,
+    onOpenChange: onOpenChangeE,
+    onClose: onCloseE
+  } = useDisclosure();
+  const handleEditClick = (course: Course) => {
+    setSelectedCourse(course);
+    onOpenE();
+  };
+  //!  CONTROL Delete modal
+  const {
+    isOpen: isOpenD,
+    onOpen: onOpenD,
+    onOpenChange: onOpenChangeD,
+    onClose: onCloseD
+  } = useDisclosure();
+  const handleDeleteClick = (course: Course) => {
+    setSelectedCourse(course);
+    onOpenD();
+  };
+  // Hàm đóng modal và reset selectedCourse
+  const handleCloseEditModal = () => {
+    onCloseE();
+    setSelectedCourse(null);
+  };
+  const handleCloseDeleteModal = () => {
+    onCloseD();
+    setSelectedCourse(null);
+  };
 
   const crumbs: Crumb[] = [
     {
@@ -72,7 +111,12 @@ export default function CoursesPage() {
 
   const endpoint = `/courses/all${filter ? `/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
 
-  const { data, error, isLoading } = useSWR(endpoint, fetcher, {
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: refreshEndpoint
+  } = useSWR(endpoint, fetcher, {
     keepPreviousData: true
   });
 
@@ -80,7 +124,7 @@ export default function CoursesPage() {
   //   return data?.count ? Math.ceil(data.count / rowsPerPage) : 0;
   // }, [data?.count, rowsPerPage]);
 
-  const pages = 2;
+  const pages = 3;
   const loadingState =
     isLoading || data?.metadata.length === 0 ? 'loading' : 'idle';
 
@@ -178,12 +222,18 @@ export default function CoursesPage() {
                 </span>
               </Tooltip>
               <Tooltip content="Edit" color="warning" delay={1000}>
-                <span className="cursor-pointer text-lg text-on-secondary active:opacity-50">
+                <span
+                  className="cursor-pointer text-lg text-on-secondary active:opacity-50"
+                  onClick={() => handleEditClick(course)}
+                >
                   <PencilIcon className="size-5" />
                 </span>
               </Tooltip>
               <Tooltip color="danger" content="Delete" delay={1000}>
-                <span className="cursor-pointer text-lg text-danger active:opacity-50">
+                <span
+                  className="cursor-pointer text-lg text-danger active:opacity-50"
+                  onClick={() => handleDeleteClick(course)}
+                >
                   <TrashIcon className="size-5" />
                 </span>
               </Tooltip>
@@ -269,6 +319,21 @@ export default function CoursesPage() {
     setFilter((prevFilter) => (prevFilter === newFilter ? null : newFilter));
   };
 
+  const handleCreated = () => {
+    toast.success('Course created successfully!');
+    refreshEndpoint();
+  };
+
+  const handleEdited = () => {
+    toast.success('Course edited successfully!');
+    refreshEndpoint();
+  };
+
+  const handleDeleted = () => {
+    toast.success('Course deleted successfully!');
+    refreshEndpoint();
+  };
+
   return (
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
       <Breadcrumb crumbs={crumbs} />
@@ -329,6 +394,7 @@ export default function CoursesPage() {
               content="Create"
               className="my-auto ml-auto h-14 rounded-2xl bg-blue-500 text-white shadow-md"
               iconLeft={<PlusIcon className="size-6 text-white" />}
+              onClick={onOpen}
             />
           </div>
           {/* Filter */}
@@ -424,6 +490,34 @@ export default function CoursesPage() {
           />
         </div>
       </div>
+      <AddCourseModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+        onClose={onClose}
+        onCreated={handleCreated}
+      />
+      {isOpenE && selectedCourse && (
+        <EditCourseModal
+          isOpen={isOpenE}
+          onOpen={onOpenE}
+          onOpenChange={onOpenChangeE}
+          course={selectedCourse}
+          onClose={handleCloseEditModal}
+          onEdited={handleEdited}
+        />
+      )}
+      {isOpenD && selectedCourse && (
+        <DeleteCourseModal
+          isOpen={isOpenD}
+          onOpen={onOpenD}
+          onOpenChange={onOpenChangeD}
+          onClose={handleCloseDeleteModal}
+          courseId={selectedCourse.id}
+          courseTitle={selectedCourse.title}
+          onDeleted={handleDeleted}
+        />
+      )}
     </main>
   );
 }

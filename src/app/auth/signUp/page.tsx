@@ -34,6 +34,8 @@ const SignUpPage = () => {
     confirmPass: ''
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const selectedGender = React.useMemo(
     () => Array.from(gender).join(', ').replaceAll('_', ' '),
     [gender]
@@ -92,20 +94,32 @@ const SignUpPage = () => {
         gender: selectedGender
       };
       try {
+        setIsSubmitting(true);
         // Gọi API và đợi kết quả
         const result = await createUser(data);
-        setName('');
-        setUsername('');
-        setBirthday('');
-        setGender(new Set(['None']));
-        setEmail('');
-        setPassword('');
-        setConfirmPass('');
-        setPhone('');
-        toast.success('User created successfully!');
-      } catch (error) {
+        if (result) {
+          // Reset form fields
+          setName('');
+          setUsername('');
+          setBirthday('');
+          setGender(new Set(['None']));
+          setEmail('');
+          setPassword('');
+          setConfirmPass('');
+          setPhone('');
+  
+          toast.success('User created successfully!');
+        } else {
+          toast.error('Failed to create user. Please try again.');
+        }
+      } catch (error: any) {
         console.error('🚫 ~ onSubmit ~ Error:', error);
-        toast.error('Failed to create user. Please try again.');
+        toast.error(
+          error.response?.data?.message ||
+            'Failed to create course. Please try again.'
+        );
+      } finally {
+        setIsSubmitting(false);
       }
     } else {
       console.log('Form has errors. Fix them to proceed.');
@@ -333,7 +347,7 @@ const SignUpPage = () => {
             onClick={onSubmit}
           >
             <span className="text-2xl font-medium text-outline-focus">
-              Sign up
+            {isSubmitting ? 'Submitting...' : 'Sign up'}
             </span>
           </button>
         </div>

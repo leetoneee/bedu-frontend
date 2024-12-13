@@ -69,7 +69,7 @@ const AddCoursesModal = ({
     const disabledIds = new Set(
       listCourses
         .filter(
-          (course) => course.isPublish === false
+          (course) => course.isActive === false
         )
         .map((course) => course.id.toString())
     );
@@ -135,7 +135,7 @@ const AddCoursesModal = ({
               className="capitalize"
               color={
                 statusColorMap[
-                  (course.isPublish
+                  (course.isActive
                     ? 'Published'
                     : 'Unpublished') as keyof typeof statusColorMap
                 ]
@@ -143,7 +143,7 @@ const AddCoursesModal = ({
               size="sm"
               variant="flat"
             >
-              {course.isPublish ? 'Published' : 'Unpublished'}
+              {course.isActive ? 'Published' : 'Unpublished'}
             </Chip>
           );
         case 'lessonQuantity':
