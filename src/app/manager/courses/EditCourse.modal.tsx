@@ -326,7 +326,7 @@ export default function AddCourseModal({
               </div>
               {renderError('timePerLesson')}
               <div className="flex basis-[70%] gap-8">
-                <div className="w-1/2">
+                <div className="relative w-1/2">
                   <input
                     type="text"
                     className="w-full rounded-lg pr-16"
