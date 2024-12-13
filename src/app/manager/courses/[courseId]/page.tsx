@@ -1,6 +1,6 @@
 'use client';
 
-import { Breadcrumb } from '@/components';
+import { Breadcrumb, ButtonSolid } from '@/components';
 import { columns, getLessonsByCourseId } from '@/data/lesson.data';
 import { Crumb } from '@/types';
 import { Course } from '@/types/course.type';
@@ -52,7 +52,7 @@ const CourseDetail = () => {
     `/courses/item/${courseId}`,
     fetcher
   );
-  
+
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [course, setCourse] = useState<Course>();
   const crumbs: Crumb[] = useMemo(() => {
@@ -71,10 +71,10 @@ const CourseDetail = () => {
   useEffect(() => {
     if (data?.metadata) {
       setCourse(data.metadata);
-      setLessons(data.metadata.lesson)
+      setLessons(data.metadata.lesson);
     }
-  }, [data])
-  
+  }, [data]);
+
   const router = useRouter();
 
   const [filterLessonName, setFilterLessonName] = useState<string>('');
@@ -282,14 +282,12 @@ const CourseDetail = () => {
             onChange={setFilterEndDate}
           />
         </div>
-        <Button
-          className="my-auto ml-auto h-14 rounded-2xl bg-on-primary text-white shadow-md"
-          startContent={<PlusIcon className="size-6 text-white" />}
-          size="lg"
+        <ButtonSolid
+          content="Add"
+          className="my-auto ml-auto h-14 rounded-xl bg-blue-500 text-white shadow-md"
+          iconLeft={<PlusIcon className="size-6 text-white" />}
           // onClick={onOpen}
-        >
-          Add
-        </Button>
+        />
       </div>
     );
   }, [filterLessonName]);

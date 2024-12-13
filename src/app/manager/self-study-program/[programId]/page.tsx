@@ -120,7 +120,7 @@ const ProgramDetail = ({ params }: any) => {
               className="capitalize"
               color={
                 statusColorMap[
-                  (course.isPublish
+                  (course.isActive
                     ? 'Published'
                     : 'Unpublished') as keyof typeof statusColorMap
                 ]
@@ -128,7 +128,7 @@ const ProgramDetail = ({ params }: any) => {
               size="sm"
               variant="flat"
             >
-              {course.isPublish ? 'Published' : 'Unpublished'}
+              {course.isActive ? 'Published' : 'Unpublished'}
             </Chip>
           );
         case 'lessonQuantity':
