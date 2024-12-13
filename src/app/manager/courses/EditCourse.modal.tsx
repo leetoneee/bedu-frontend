@@ -36,7 +36,7 @@ type Props = {
   onEdited?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const courseTypes = ['IELTS', 'TOIEC', 'TOEFL'];
+const courseTypes = ['IELTS', 'TOEIC', 'TOEFL'];
 
 export default function AddCourseModal({
   isOpen,

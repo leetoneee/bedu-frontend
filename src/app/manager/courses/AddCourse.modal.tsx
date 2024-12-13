@@ -29,19 +29,7 @@ type Props = {
   onCreated?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-// Danh sách các nhóm bài
-const courseNameList = [
-  'Nhóm bài 1',
-  'Nhóm bài 2',
-  'Nhóm bài 3',
-  'Nhóm bài 4',
-  'Nhóm bài 5',
-  'Nhóm bài 6'
-];
-
-const courseCodeList = ['IE1', 'IE2', 'IE3', 'IE4', 'IE5', 'IE6'];
-
-const courseTypes = ['IELTS', 'TOIEC', 'TOEFL'];
+const courseTypes = ['IELTS', 'TOEIC', 'TOEFL'];
 
 export default function EditCourseModal({
   isOpen,
