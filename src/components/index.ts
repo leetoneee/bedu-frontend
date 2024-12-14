@@ -23,7 +23,7 @@ import AddClassModal from './ModalClass/class.add';
 import EditClassModal from './ModalClass/EditClass';
 import DeleteClassModal from './ModalClass/DeleteClass';
 import Input from './Input/input';
-import InputFile from './Input/input-file';
+import { InputFile } from './Input/input-file';
 import Checkbox from './Checkbox';
 import Navigation from './Navigation/Navigation';
 import Footer from './Footer';

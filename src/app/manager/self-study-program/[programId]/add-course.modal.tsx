@@ -1,10 +1,14 @@
 'use client';
 
 import { columns } from '@/data/program-course.data';
-import { courses as coursesData } from '@/data/course.data';
-import { EyeIcon, MagnifyingGlassIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import {
-  useDisclosure,
+  EyeIcon,
+  MagnifyingGlassIcon,
+  PencilIcon,
+  TrashIcon,
+  XMarkIcon
+} from '@heroicons/react/24/outline';
+import {
   Selection,
   Button,
   Modal,
@@ -37,6 +41,8 @@ import React, {
   useState
 } from 'react';
 import { Course, statusColorMap } from '@/types/course.type';
+import axios from '@/libs/axiosInstance';
+import useSWR from 'swr';
 
 type Props = {
   isOpen: boolean;
@@ -45,6 +51,8 @@ type Props = {
   courses: Course[];
   setCourses: Dispatch<SetStateAction<Course[]>>;
 };
+
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const AddCoursesModal = ({
   isOpen,
@@ -57,8 +65,8 @@ const AddCoursesModal = ({
   const hasSearchFilterName = Boolean(filterMemberName);
 
   // defaultKeys and disabledKey for Table in Modal
-  const [listCourses, setlistCourses] = useState<Course[]>([]);
-
+  const [listCourses, setListCourses] = useState<Course[]>([]);
+  const [filter, setFilter] = useState<string | null>(null); // 'ielts', 'toeic', 'toefl', or null
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [lastSelectedKeys, setLastSelectedKeys] = useState<Selection>(
     new Set([])
@@ -68,9 +76,7 @@ const AddCoursesModal = ({
   useEffect(() => {
     const disabledIds = new Set(
       listCourses
-        .filter(
-          (course) => course.isActive === false
-        )
+        .filter((course) => course.isActive === false)
         .map((course) => course.id.toString())
     );
     setDisabledKeys(disabledIds);
@@ -93,7 +99,19 @@ const AddCoursesModal = ({
   const [page, setPage] = useState(1);
   const rowsPerPage = 4;
 
-  const pages = Math.ceil(listCourses.length / rowsPerPage);
+  // const pages = React.useMemo(() => {
+  //   return data?.count ? Math.ceil(data.count / rowsPerPage) : 0;
+  // }, [data?.count, rowsPerPage]);
+  const pages = 3;
+  const endpoint = `/courses/all${filter ? `/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
+
+  const {
+    data: coursesData,
+    error,
+    isLoading
+  } = useSWR(endpoint, fetcher, {
+    keepPreviousData: true
+  });
 
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: '#',
@@ -102,8 +120,9 @@ const AddCoursesModal = ({
 
   // Load data
   useEffect(() => {
-    setlistCourses(coursesData);
-  }, [coursesData]);
+    if (error) setListCourses([]);
+    else if (coursesData) setListCourses(coursesData.metadata);
+    }, [coursesData]);
 
   const renderCell = useCallback(
     (course: Course, columnKey: Key): ReactNode => {
@@ -195,36 +214,32 @@ const AddCoursesModal = ({
 
   const filteredItems = React.useMemo(() => {
     let filteredListCourses = [...listCourses];
-    setPage(1);
 
     if (hasSearchFilterName) {
       filteredListCourses = filteredListCourses.filter((member) =>
         member.title.toLowerCase().includes(filterMemberName.toLowerCase())
       );
     }
-    
+
     return filteredListCourses;
-  }, [
-    listCourses,
-    filterMemberName,
-  ]);
+  }, [listCourses, filterMemberName]);
 
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+  // const items = React.useMemo(() => {
+  //   const start = (page - 1) * rowsPerPage;
+  //   const end = start + rowsPerPage;
 
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems]);
+  //   return filteredItems.slice(start, end);
+  // }, [page, filteredItems]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: Course, b: Course) => {
+    return [...filteredItems].sort((a: Course, b: Course) => {
       const first = a[sortDescriptor.column as keyof Course] as number;
       const second = b[sortDescriptor.column as keyof Course] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
     });
-  }, [sortDescriptor, items]);
+  }, [sortDescriptor, filteredItems]);
 
   const topContent: ReactNode = React.useMemo(() => {
     return (
@@ -243,7 +258,7 @@ const AddCoursesModal = ({
             onChange={(e) => setFilterMemberName(e.target.value)}
           />
         </div>
-       
+
         {/* <div className="h-full place-content-end">
           <Button
             className="mb-auto h-14 rounded-2xl bg-main-blue text-white shadow-md"
@@ -253,19 +268,15 @@ const AddCoursesModal = ({
         </div> */}
       </div>
     );
-  }, [
-    filterMemberName
-  ]);
+  }, [filterMemberName]);
 
   const handleContinue = () => {
-    const selectedCourses: Course[] = listCourses
-      .filter((listcourse) => {
-        if (selectedKeys === 'all') return true;
-        if (selectedKeys instanceof Set) {
-          return selectedKeys.has(listcourse.id.toString());
-        }
-      })
-      ;
+    const selectedCourses: Course[] = listCourses.filter((listcourse) => {
+      if (selectedKeys === 'all') return true;
+      if (selectedKeys instanceof Set) {
+        return selectedKeys.has(listcourse.id.toString());
+      }
+    });
     console.log('🚀 ~ handleContinue ~ selectedCourses:', selectedCourses);
 
     setCourses(selectedCourses);
@@ -310,13 +321,13 @@ const AddCoursesModal = ({
             <ModalBody>
               <div className="flex h-[440px] flex-col gap-2">
                 {/* Table */}
-                <div className="h-full shrink overflow-hidden rounded-xl border border-outline-var/75 shadow-xl">
+                <div className="border-outline-var/75 h-full shrink overflow-hidden rounded-xl border shadow-xl">
                   <Table
                     aria-label="Example table with client side pagination"
                     className="h-full w-full"
                     selectionMode="multiple"
                     shadow="none"
-                    color='default'
+                    color="default"
                     topContent={topContent}
                     topContentPlacement="inside"
                     sortDescriptor={sortDescriptor}

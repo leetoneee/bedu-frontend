@@ -37,7 +37,7 @@ import { useState } from 'react';
 import { columns, statusOptions } from '@/data/course.data';
 import { Course, statusColorMap } from '@/types/course.type';
 import axios from '@/libs/axiosInstance';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import AddCourseModal from './AddCourse.modal';
 import { toast } from 'react-toastify';
 import EditCourseModal from './EditCourse.modal';

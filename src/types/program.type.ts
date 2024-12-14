@@ -1,11 +1,12 @@
-export type SSProgram = {
+export type Program = {
   id: number;
   code: string;
   title: string;
+  type: string;
   description: string;
   sessionQuantity: number;
   price: number;
-  isPublish: boolean;
+  isActive: boolean;
 };
 
 export const statusColorMap: Record<

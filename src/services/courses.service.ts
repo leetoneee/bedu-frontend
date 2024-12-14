@@ -39,7 +39,7 @@ export const deleteCourse = async (id: number) => {
     const res = await axios.delete(`/courses/item/${id}`);
     return res.data;
   } catch (error) {
-    console.log('🚫 ~ editCourse ~ error:', error);
+    console.log('🚫 ~ deleteCourse ~ error:', error);
     throw error;
   }
 };

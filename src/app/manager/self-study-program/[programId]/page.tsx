@@ -27,29 +27,37 @@ import {
 import React, {
   Key,
   ReactNode,
-  use,
   useCallback,
   useEffect,
   useMemo,
   useState
 } from 'react';
 import Image from 'next/image';
-import {
-  EyeIcon,
-  PlusIcon,
-  TrashIcon
-} from '@heroicons/react/24/outline';
-import { useRouter } from 'next/navigation';
-import { SSProgram } from '@/types/program.type';
-import { getProgramById } from '@/data/program.data';
-import { getCoursesByProgramId } from '@/data/program-course.data';
+import { EyeIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { useParams, useRouter } from 'next/navigation';
+import { Program } from '@/types/program.type';
 import AddCoursesModal from './add-course.modal';
+import useSWR from 'swr';
+import axios from '@/libs/axiosInstance';
+import { editProgram, UpdateProgramDto } from '@/services/programs.service';
+import { toast } from 'react-toastify';
 
-const ProgramDetail = ({ params }: any) => {
-  const param: { programId: string } = use(params);
-  const { programId } = param;
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
+const ProgramDetail = () => {
+  const params = useParams();
+  const programId = params.programId;
+  const router = useRouter();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const { data, error: courseError } = useSWR(
+    `/programs/item/${programId}`,
+    fetcher
+  );
+
   const [courses, setCourses] = useState<Course[]>([]);
-  const [program, setProgram] = useState<SSProgram>();
+  const [program, setProgram] = useState<Program>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const crumbs: Crumb[] = useMemo(() => {
     return [
       {
@@ -57,21 +65,18 @@ const ProgramDetail = ({ params }: any) => {
         href: '/manager/self-study-program'
       },
       {
-        label: `${program?.title}`,
+        label: program?.title || 'Loading...',
         href: `/self-study-program/${programId}`
       }
     ];
   }, [programId, program]);
 
   useEffect(() => {
-    const data: Course[] = getCoursesByProgramId(Number(programId));
-    const data2: SSProgram = getProgramById(Number(programId));
-    setCourses(data);
-    setProgram(data2);
-  }, [programId]);
-
-  const router = useRouter();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    if (data?.metadata) {
+      setProgram(data.metadata);
+      setCourses(data.metadata.course);
+    }
+  }, [data]);
 
   // State for filter
   const [filterCourseName, setFilterCourseName] = useState<string>('');
@@ -189,7 +194,11 @@ const ProgramDetail = ({ params }: any) => {
   const [page, setPage] = useState(1);
   const rowsPerPage = 6;
 
-  const pages = Math.ceil(courses.length / rowsPerPage);
+  // const pages = React.useMemo(() => {
+  //   return data?.count ? Math.ceil(data.count / rowsPerPage) : 0;
+  // }, [data?.count, rowsPerPage]);
+
+  const pages = 3;
 
   const filteredItems = React.useMemo(() => {
     let filteredCourses = [...courses];
@@ -272,6 +281,31 @@ const ProgramDetail = ({ params }: any) => {
     );
   }, [filterCourseName]);
 
+  const handleSubmit = async () => {
+    const listCourses = courses.map((course) => course.id);
+    const updateData: UpdateProgramDto = {
+      courseId: listCourses
+    };
+    try {
+      setIsSubmitting(true); // Bắt đầu gửi yêu cầu
+      // Gọi API và đợi kết quả
+      if (program) {
+        const result = await editProgram(program.id, updateData);
+        if (result) {
+          toast.success('Program edited successfully!');
+        }
+      }
+    } catch (error: any) {
+      console.error('🚫 ~ onSubmit ~ Error:', error);
+      toast.error(
+        error.response?.data?.message ||
+          'Failed to edit program. Please try again.'
+      );
+    } finally {
+      setIsSubmitting(false); // Hoàn tất gửi yêu cầu
+    }
+  };
+
   return (
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
       <Breadcrumb crumbs={crumbs} />
@@ -285,7 +319,7 @@ const ProgramDetail = ({ params }: any) => {
                 Program Name
               </span>
               <Input
-                type="text"
+                type=""
                 variant="bordered"
                 className="w-full"
                 size="lg"
@@ -296,13 +330,29 @@ const ProgramDetail = ({ params }: any) => {
               />
             </div>
             <div className="flex w-full basis-[60%] flex-row gap-20">
+              {/* Type */}
+              <div className="flex w-full shrink flex-col gap-2">
+                <span className="text-xl font-semibold text-on-surface">
+                  Type
+                </span>
+                <Input
+                  type=""
+                  variant="bordered"
+                  className="min-w-max"
+                  size="lg"
+                  readOnly
+                  placeholder="Enter your project name"
+                  value={program?.type.toUpperCase()}
+                  // onChange={(e) => setProjectName(e.target.value)}
+                />
+              </div>
               {/* Code */}
               <div className="flex w-full shrink flex-col gap-2">
                 <span className="text-xl font-semibold text-on-surface">
                   Code
                 </span>
                 <Input
-                  type="text"
+                  type=""
                   variant="bordered"
                   className="min-w-max"
                   size="lg"
@@ -319,11 +369,11 @@ const ProgramDetail = ({ params }: any) => {
                 </span>
                 <Chip
                   className="h-full w-full rounded-sm capitalize"
-                  color={program?.isPublish ? 'success' : 'default'}
+                  color={program?.isActive ? 'success' : 'default'}
                   size="lg"
                   variant="flat"
                 >
-                  {program?.isPublish ? 'Published' : 'Unpublished'}
+                  {program?.isActive ? 'Published' : 'Unpublished'}
                 </Chip>
               </div>
             </div>
@@ -350,7 +400,7 @@ const ProgramDetail = ({ params }: any) => {
                   Session Quantity
                 </span>
                 <Input
-                  type="text"
+                  type=""
                   variant="bordered"
                   className="w-full"
                   size="lg"
@@ -360,7 +410,8 @@ const ProgramDetail = ({ params }: any) => {
                   // onChange={(e) => setProjectName(e.target.value)}
                 />
               </div>
-              <div className="flex w-full shrink flex-col gap-2">
+              {/* price */}
+              {/* <div className="flex w-full shrink flex-col gap-2">
                 <span className="text-xl font-semibold text-on-surface">
                   Price
                 </span>
@@ -374,7 +425,7 @@ const ProgramDetail = ({ params }: any) => {
                   value={program?.price.toString()}
                   // onChange={(e) => setProjectName(e.target.value)}
                 />
-              </div>
+              </div> */}
             </div>
           </div>
           <Divider />
@@ -455,8 +506,9 @@ const ProgramDetail = ({ params }: any) => {
               />
             }
             size="lg"
+            onClick={handleSubmit}
           >
-            Save
+            {isSubmitting ? 'Summitting...' : 'Save'}
           </Button>
         </div>
       </div>
