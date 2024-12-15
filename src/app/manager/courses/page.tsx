@@ -320,17 +320,17 @@ export default function CoursesPage() {
   };
 
   const handleCreated = () => {
-    toast.success('Class created successfully!');
+    toast.success('Course created successfully!');
     refreshEndpoint();
   };
 
   const handleEdited = () => {
-    toast.success('Class edited successfully!');
+    toast.success('Course edited successfully!');
     refreshEndpoint();
   };
 
   const handleDeleted = () => {
-    toast.success('Class deleted successfully!');
+    toast.success('Course deleted successfully!');
     refreshEndpoint();
   };
 

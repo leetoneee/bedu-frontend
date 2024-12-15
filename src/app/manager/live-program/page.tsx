@@ -325,17 +325,17 @@ export default function LiveProgramPage() {
   };
 
   const handleCreated = () => {
-    toast.success('Course created successfully!');
+    toast.success('Class created successfully!');
     refreshEndpoint();
   };
 
   const handleEdited = () => {
-    toast.success('Course edited successfully!');
+    toast.success('Class edited successfully!');
     refreshEndpoint();
   };
 
   const handleDeleted = () => {
-    toast.success('Course deleted successfully!');
+    toast.success('Class deleted successfully!');
     refreshEndpoint();
   };
 
