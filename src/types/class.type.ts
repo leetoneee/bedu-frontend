@@ -7,8 +7,9 @@ export type EClass = {
   description: string;
   lessonQuantity: number;
   timePerLesson: number;
+  type: string;
   price: number;
-  isPublish: boolean;
+  isActive: boolean;
 };
 
 const statusOptions = [
