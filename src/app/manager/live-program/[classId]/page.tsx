@@ -41,15 +41,25 @@ import {
   PlusIcon,
   TrashIcon
 } from '@heroicons/react/24/outline';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { EClass } from '@/types/class.type';
-import { getClassById } from '@/data/class.data';
+import useSWR from 'swr';
+import axios from '@/libs/axiosInstance';
 
-const EClassDetail = ({ params }: any) => {
-  const param: { classId: string } = use(params);
-  const { classId } = param;
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
+const EClassDetail = () => {
+  const params = useParams();
+  const classId = params.classId;
+  const router = useRouter();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [eclass, setEClass] = useState<EClass>();
+
+  const { data, error: classError } = useSWR(
+    `/classes/item/${classId}`,
+    fetcher
+  );
+
   const crumbs: Crumb[] = useMemo(() => {
     return [
       {
@@ -57,21 +67,19 @@ const EClassDetail = ({ params }: any) => {
         href: '/manager/live-program'
       },
       {
-        label: `${eclass?.name}`,
+        label: eclass?.name || 'Loading...',
         href: `/live-program/${classId}`
       }
     ];
   }, [classId, eclass]);
 
   useEffect(() => {
-    const data: Lesson[] = getLessonsByClassId(Number(classId));
-    console.log("🚀 ~ useEffect ~ data:", data)
-    const data2: EClass = getClassById(Number(classId));
-    setLessons(data);
-    setEClass(data2);
-  }, [classId]);
+    if (data?.metadata) {
+      setEClass(data.metadata);
+      // setLessons(data.metadata.lesson);
+    }
+  }, [data]);
 
-  const router = useRouter();
 
   const [filterLessonName, setFilterLessonName] = useState<string>('');
   const hasSearchFilterName = Boolean(filterLessonName);
@@ -303,7 +311,7 @@ const EClassDetail = ({ params }: any) => {
                 Class Name
               </span>
               <Input
-                type="text"
+                type=""
                 variant="bordered"
                 className="w-full"
                 size="lg"
@@ -320,7 +328,7 @@ const EClassDetail = ({ params }: any) => {
                   Type
                 </span>
                 <Input
-                  type="text"
+                  type=""
                   variant="bordered"
                   className="min-w-max"
                   size="lg"
@@ -336,7 +344,7 @@ const EClassDetail = ({ params }: any) => {
                   Code
                 </span>
                 <Input
-                  type="text"
+                  type=""
                   variant="bordered"
                   className="min-w-max"
                   size="lg"
@@ -353,16 +361,16 @@ const EClassDetail = ({ params }: any) => {
                 </span>
                 <Chip
                   className="h-full w-full rounded-sm capitalize"
-                  color={eclass?.isPublish ? 'success' : 'default'}
+                  color={eclass?.isActive ? 'success' : 'default'}
                   size="lg"
                   variant="flat"
                 >
-                  {eclass?.isPublish ? 'Published' : 'Unpublished'}
+                  {eclass?.isActive ? 'Published' : 'Unpublished'}
                 </Chip>
               </div>
             </div>
           </div>
-          <div className="flex w-full flex-row gap-28">
+          <div className="flex w-full flex-row gap-20">
             {/* Description */}
             <div className="flex w-full basis-[30%] flex-col gap-2">
               <span className="text-xl font-semibold text-on-surface">
@@ -378,13 +386,13 @@ const EClassDetail = ({ params }: any) => {
                 // onChange={(e) => setDescription(e.target.value)}
               />
             </div>
-            <div className="flex w-full basis-[70%] flex-row gap-28">
+            <div className="flex w-full basis-[70%] flex-row gap-20">
               <div className="flex w-full shrink flex-col gap-2">
                 <span className="text-xl font-semibold text-on-surface">
                   Lesson Quantity
                 </span>
                 <Input
-                  type="text"
+                  type=""
                   variant="bordered"
                   className="w-full"
                   size="lg"
@@ -399,7 +407,7 @@ const EClassDetail = ({ params }: any) => {
                   Time per Lesson
                 </span>
                 <Input
-                  type="text"
+                  type=""
                   variant="bordered"
                   className="w-full"
                   size="lg"
@@ -414,7 +422,7 @@ const EClassDetail = ({ params }: any) => {
                   Price
                 </span>
                 <Input
-                  type="text"
+                  type=""
                   variant="bordered"
                   className="w-full"
                   size="lg"
