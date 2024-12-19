@@ -132,7 +132,7 @@ export default function AddCourseModal({
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
       const data: CreateCourseDto = {
-        courseType: selectedType,
+        courseType: selectedType.toLowerCase(),
         title: name,
         description: description,
         image: '',

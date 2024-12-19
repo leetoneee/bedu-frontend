@@ -43,11 +43,13 @@ import React, {
 import { Course, statusColorMap } from '@/types/course.type';
 import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
+import { UpdateProgramDto } from '@/services/programs.service';
 
 type Props = {
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: () => void;
+  courseType: string;
   courses: Course[];
   setCourses: Dispatch<SetStateAction<Course[]>>;
 };
@@ -58,6 +60,7 @@ const AddCoursesModal = ({
   isOpen,
   onOpen,
   onOpenChange,
+  courseType,
   courses,
   setCourses
 }: Props) => {
@@ -66,7 +69,7 @@ const AddCoursesModal = ({
 
   // defaultKeys and disabledKey for Table in Modal
   const [listCourses, setListCourses] = useState<Course[]>([]);
-  const [filter, setFilter] = useState<string | null>(null); // 'ielts', 'toeic', 'toefl', or null
+  // const [filter, setFilter] = useState<string | null>(null); // 'ielts', 'toeic', 'toefl', or null
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [lastSelectedKeys, setLastSelectedKeys] = useState<Selection>(
     new Set([])
@@ -103,7 +106,7 @@ const AddCoursesModal = ({
   //   return data?.count ? Math.ceil(data.count / rowsPerPage) : 0;
   // }, [data?.count, rowsPerPage]);
   const pages = 3;
-  const endpoint = `/courses/all${filter ? `/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
+  const endpoint = `/courses/all${courseType ? `/${courseType}` : ''}?page=${page}&limit=${rowsPerPage}`;
 
   const {
     data: coursesData,
@@ -121,8 +124,8 @@ const AddCoursesModal = ({
   // Load data
   useEffect(() => {
     if (error) setListCourses([]);
-    else if (coursesData) setListCourses(coursesData.metadata);
-    }, [coursesData]);
+    else if (coursesData) setListCourses(coursesData.metadata.courses);
+  }, [coursesData]);
 
   const renderCell = useCallback(
     (course: Course, columnKey: Key): ReactNode => {
@@ -292,8 +295,9 @@ const AddCoursesModal = ({
       backdrop="opaque"
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      radius="sm"
+      radius="lg"
       size="5xl"
+      scrollBehavior="outside"
       isDismissable={false}
       isKeyboardDismissDisabled={true}
       hideCloseButton
@@ -311,7 +315,7 @@ const AddCoursesModal = ({
           <>
             <ModalHeader className="flex flex-row justify-between">
               <span className="text-4xl font-semibold">
-                Add Staff To Project
+                Add Courses To Program
               </span>
               <XMarkIcon
                 className="size-10 hover:cursor-pointer"

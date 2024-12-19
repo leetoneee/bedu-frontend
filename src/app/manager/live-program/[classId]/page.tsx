@@ -230,22 +230,22 @@ const EClassDetail = () => {
     return filteredLessons;
   }, [lessons, filterLessonName, filterStartDate, filterEndDate]);
 
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+  // const items = React.useMemo(() => {
+  //   const start = (page - 1) * rowsPerPage;
+  //   const end = start + rowsPerPage;
 
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems]);
+  //   return filteredItems.slice(start, end);
+  // }, [page, filteredItems]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: Lesson, b: Lesson) => {
+    return [...filteredItems].sort((a: Lesson, b: Lesson) => {
       const first = a[sortDescriptor.column as keyof Lesson] as number;
       const second = b[sortDescriptor.column as keyof Lesson] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
     });
-  }, [sortDescriptor, items]);
+  }, [sortDescriptor, filteredItems]);
 
   const topContent: ReactNode = React.useMemo(() => {
     return (
@@ -334,7 +334,7 @@ const EClassDetail = () => {
                   size="lg"
                   readOnly
                   placeholder="Enter your project name"
-                  value={eclass?.code}
+                  value={eclass?.type.toLocaleUpperCase()}
                   // onChange={(e) => setProjectName(e.target.value)}
                 />
               </div>
