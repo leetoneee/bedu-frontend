@@ -13,7 +13,11 @@ import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const genderItems = [{ label: 'None' }, { label: 'Male' }, { label: 'Female' }];
+const genderItems = [
+  { key: 'none', label: 'None' },
+  { key: 'male', label: 'Male' },
+  { key: 'female', label: 'Female' }
+];
 
 const SignUpPage = () => {
   const [name, setName] = useState<string>('');
@@ -89,7 +93,7 @@ const SignUpPage = () => {
         password: password,
         address: 'None',
         currentLevel: 'Beginner',
-        cid: '885323141',
+        groupId: 1,
         birthday: birthday,
         gender: selectedGender
       };
@@ -107,7 +111,7 @@ const SignUpPage = () => {
           setPassword('');
           setConfirmPass('');
           setPhone('');
-  
+
           toast.success('User created successfully!');
         } else {
           toast.error('Failed to create user. Please try again.');
@@ -116,7 +120,7 @@ const SignUpPage = () => {
         console.error('🚫 ~ onSubmit ~ Error:', error);
         toast.error(
           error.response?.data?.message ||
-            'Failed to create course. Please try again.'
+            'Failed to create user. Please try again.'
         );
       } finally {
         setIsSubmitting(false);
@@ -225,10 +229,8 @@ const SignUpPage = () => {
                     onSelectionChange={setGender}
                     size="lg"
                   >
-                    {genderItems.map((position) => (
-                      <SelectItem key={position.label}>
-                        {position.label}
-                      </SelectItem>
+                    {genderItems.map((gender) => (
+                      <SelectItem key={gender.key}>{gender.label}</SelectItem>
                     ))}
                   </Select>
                 </div>
@@ -347,7 +349,7 @@ const SignUpPage = () => {
             onClick={onSubmit}
           >
             <span className="text-2xl font-medium text-outline-focus">
-            {isSubmitting ? 'Submitting...' : 'Sign up'}
+              {isSubmitting ? 'Submitting...' : 'Sign up'}
             </span>
           </button>
         </div>

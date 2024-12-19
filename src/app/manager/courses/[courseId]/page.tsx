@@ -97,7 +97,7 @@ const CourseDetail = () => {
         case 'type':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">{cellValue.toString().toUpperCase()}</p>
             </div>
           );
         case 'title':

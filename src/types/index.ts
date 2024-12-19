@@ -42,3 +42,10 @@ export type CheckboxProps = {
   onToggle?: (e: boolean) => void;
 };
 
+export type EventProps = {
+  id: number;
+  title: string;
+  start: string;
+  end: string;
+  description: string;
+}

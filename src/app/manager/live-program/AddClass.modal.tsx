@@ -185,7 +185,7 @@ export default function AddClassModal({
         if (!url) throw new Error('File upload failed');
         // Gọi API và đợi kết quả
         const data: CreateClassDto = {
-          type: selectedType,
+          type: selectedType.toLowerCase(),
           name: name,
           description: description,
           avatar: url,

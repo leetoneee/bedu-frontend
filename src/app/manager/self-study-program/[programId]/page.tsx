@@ -213,22 +213,22 @@ const ProgramDetail = () => {
     return filteredCourses;
   }, [courses, filterCourseName]);
 
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+  // const items = React.useMemo(() => {
+  //   const start = (page - 1) * rowsPerPage;
+  //   const end = start + rowsPerPage;
 
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems]);
+  //   return filteredItems.slice(start, end);
+  // }, [page, filteredItems]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: Course, b: Course) => {
+    return [...filteredItems].sort((a: Course, b: Course) => {
       const first = a[sortDescriptor.column as keyof Course] as number;
       const second = b[sortDescriptor.column as keyof Course] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
     });
-  }, [sortDescriptor, items]);
+  }, [sortDescriptor, filteredItems]);
 
   const topContent: ReactNode = React.useMemo(() => {
     return (
@@ -512,13 +512,16 @@ const ProgramDetail = () => {
           </Button>
         </div>
       </div>
-      <AddCoursesModal
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onOpenChange={onOpenChange}
-        courses={courses}
-        setCourses={setCourses}
-      />
+      {program && (
+        <AddCoursesModal
+          isOpen={isOpen}
+          onOpen={onOpen}
+          courseType={program?.type}
+          onOpenChange={onOpenChange}
+          courses={courses}
+          setCourses={setCourses}
+        />
+      )}
     </main>
   );
 };
