@@ -1,11 +1,10 @@
 import axios from '@/libs/axiosInstance';
 
 export type CreateClassDto = {
-  code: string;
   name: string;
   studyForm: string;
   startDate: Date;
-  // image: string;
+  avatar: string;
   description: string;
   lessonQuantity: number;
   timePerLesson: number;

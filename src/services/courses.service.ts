@@ -2,7 +2,6 @@ import axios from '@/libs/axiosInstance';
 
 export type CreateCourseDto = {
   courseType: string;
-  code: string;
   title: string;
   description: string;
   image: string;
@@ -10,6 +9,7 @@ export type CreateCourseDto = {
   timePerLesson: number;
   price: number;
   programId: number[];
+  isActive: boolean;
 };
 
 export const createCourse = async (data: CreateCourseDto) => {
