@@ -257,7 +257,7 @@ const CourseDetail = () => {
   });
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 6;
+  const rowsPerPage = 5;
 
   const pages = Math.ceil(lessons.length / rowsPerPage);
 

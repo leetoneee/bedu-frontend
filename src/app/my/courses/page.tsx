@@ -24,6 +24,7 @@ const MyCoursesPage = () => {
         <div className="w-72">
           <Navigation />
         </div>
+        {/* Code ở đây */}
       </div>
     </main>
   );

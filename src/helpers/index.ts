@@ -1,3 +1,3 @@
 import { renderChip } from './renderChip';
-
-export { renderChip };
+import { getFullDayName } from './getFullDayName';
+export { renderChip, getFullDayName };

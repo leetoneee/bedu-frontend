@@ -282,7 +282,7 @@ export default function AddLessonModal({
                 <input
                   type="text"
                   className="w-full rounded-lg"
-                  placeholder="https://example.com/"
+                  placeholder="https://www.youtube.com/"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                 />

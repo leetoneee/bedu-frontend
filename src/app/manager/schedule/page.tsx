@@ -25,6 +25,13 @@ export default function SSP() {
       start: '2024-12-19 12:00',
       end: '2024-12-19 13:00',
       description: 'hello'
+    },
+    {
+      id: 3,
+      title: 'Meeting',
+      start: '2024-12-21 12:00',
+      end: '2024-12-21 13:00',
+      description: 'hello'
     }
   ];
 

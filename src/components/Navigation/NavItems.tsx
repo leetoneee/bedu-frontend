@@ -1,6 +1,7 @@
 import { UserIcon, VideoCameraIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { MdOutlineClass } from 'react-icons/md';
 
 export const NavItems = () => {
   const pathname = usePathname();
@@ -21,6 +22,12 @@ export const NavItems = () => {
       href: '/my/courses',
       active: isNavItemActive(pathname, '/my/courses'),
       icon: <VideoCameraIcon className="size-6" />
+    },
+    {
+      name: 'Purchased Classes',
+      href: '/my/eclasses',
+      active: isNavItemActive(pathname, '/my/eclasses'),
+      icon: <MdOutlineClass className="size-6" />
     }
   ];
 };

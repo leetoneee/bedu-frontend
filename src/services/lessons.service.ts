@@ -10,6 +10,29 @@ export type CreateLessonDto = {
   isActive: boolean;
 };
 
+export type CreateRecurringLessonDto = {
+  classId: number;
+  teacherId: number;
+  // google's api properties
+  summary: string;
+  description: string;
+  startDate: string; // Ngày bắt đầu do người dùng chọn
+  startTime: string; // Giờ bắt đầu (HH:mm)
+  endTime: string; // Giờ kết thúc (HH:mm)
+  selectedDays: string[]; // ['Mon', 'Wed', 'Fri']
+  lessonQuantity: number; // Số tuần lặp lại
+}
+
+export const createRecurringLesson = async (data: CreateRecurringLessonDto) => {
+  try {
+    const res = await axios.post(`/lessons/new-recurring`, data);
+    return res.data;
+  } catch (error) {
+    console.log('🚫 ~ createRecurringLesson ~ error:', error);
+    throw error;
+  }
+};
+
 export const createLesson = async (data: CreateLessonDto) => {
   try {
     const res = await axios.post(`/lessons/new`, data);

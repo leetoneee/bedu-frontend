@@ -203,9 +203,9 @@ export default function EditLessonModal({
             </svg>
           </div>
           <div className="ml-5">
-            <div className="text-lg font-semibold">Add new lesson</div>
+            <div className="text-lg font-semibold">Edit lesson</div>
             <div className="text-wrap text-sm font-normal">
-              Create a new lesson in a course and assign exercises for students
+              Edit lesson information
             </div>
           </div>
         </ModalHeader>
