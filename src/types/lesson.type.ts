@@ -9,6 +9,7 @@ export type Lesson = {
   courseId: number;
   examId: number;
   teacherId: number;
+  isActive: boolean;
 };
 
 export const statusColorMap: Record<

@@ -129,7 +129,7 @@ export default function CoursesPage() {
   }, [data, rowsPerPage]);
 
   const loadingState =
-    isLoading || data?.metadata.length === 0 ? 'loading' : 'idle';
+    isLoading || data?.metadata.courses.length === 0 ? 'loading' : 'idle';
 
   // Load data
   useEffect(() => {

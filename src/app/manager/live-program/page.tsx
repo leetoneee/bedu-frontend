@@ -127,7 +127,7 @@ export default function LiveProgramPage() {
   }, [data?.metadata.totalRecord, rowsPerPage]);
 
   const loadingState =
-    isLoading || data?.metadata.length === 0 ? 'loading' : 'idle';
+    isLoading || data?.metadata.classes.length === 0 ? 'loading' : 'idle';
 
   // Load data
   useEffect(() => {
