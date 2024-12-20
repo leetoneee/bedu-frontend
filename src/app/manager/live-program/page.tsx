@@ -109,7 +109,7 @@ export default function LiveProgramPage() {
   const rowsPerPage = 10;
 
   // ! fix route???
-  const endpoint = `/classes/all/type${filter ? `/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
+  const endpoint = `/classes/all${filter ? `/type/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
 
   const {
     data,
