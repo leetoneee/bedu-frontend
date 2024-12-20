@@ -1,7 +1,7 @@
 import { Chip } from '@nextui-org/react';
 import { ReactNode, useCallback } from 'react';
 
-export const renderChip = useCallback((content: string): ReactNode => {
+export const renderChip = (content: string): ReactNode => {
   switch (content) {
     case 'Published':
       return (
@@ -18,4 +18,4 @@ export const renderChip = useCallback((content: string): ReactNode => {
     default:
       <span>{content}</span>;
   }
-}, []);
+};

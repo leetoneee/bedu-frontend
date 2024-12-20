@@ -9,6 +9,15 @@ export const columns = [
   { name: 'ACTIONS', uid: 'actions' }
 ];
 
+export const columnsForCouse = [
+  { name: '#', uid: 'id', sortable: true },
+  { name: 'TYPE', uid: 'type' },
+  { name: 'TITLE', uid: 'name' },
+  { name: 'STATUS', uid: 'isPublish' },
+  { name: 'VIDEO URL', uid: 'videoUrl' },
+  { name: 'ACTIONS', uid: 'actions' }
+];
+
 export const lessons = [
   {
     id: 1,

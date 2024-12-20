@@ -61,10 +61,10 @@ export default function EditClassModal({
 
   const [name, setName] = useState<string>('');
   const [code, setCode] = useState<string>('');
-  const [timePerLesson, setTimePerLesson] = useState<string>();
+  const [timePerLesson, setTimePerLesson] = useState<string>('');
   const [startDate, setStartDate] = useState<string>();
   const [price, setPrice] = useState<string>();
-  const [lessonQuantity, setLessonQuantity] = useState<string>();
+  const [lessonQuantity, setLessonQuantity] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [type, setType] = useState<Selection>(new Set([]));

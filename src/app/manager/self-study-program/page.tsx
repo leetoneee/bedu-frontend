@@ -127,7 +127,7 @@ export default function SSP() {
   }, [data?.metadata.totalRecord, rowsPerPage]);
 
   const loadingState =
-    isLoading || data?.metadata.length === 0 ? 'loading' : 'idle';
+    isLoading || data?.metadata.programs.length === 0 ? 'loading' : 'idle';
 
   // Load data
   useEffect(() => {

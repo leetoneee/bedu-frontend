@@ -1,10 +1,10 @@
 'use client';
 
 import { Breadcrumb, ButtonSolid } from '@/components';
-import { columns, getLessonsByCourseId } from '@/data/lesson.data';
+import { columnsForCouse as columns } from '@/data/lesson.data';
 import { Crumb } from '@/types';
 import { Course } from '@/types/course.type';
-import { Lesson } from '@/types/lesson.type';
+import { Lesson, statusColorMap } from '@/types/lesson.type';
 import {
   Button,
   CalendarDate,
@@ -14,6 +14,7 @@ import {
   Input,
   Pagination,
   SortDescriptor,
+  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -21,7 +22,8 @@ import {
   TableHeader,
   TableRow,
   Textarea,
-  Tooltip
+  Tooltip,
+  useDisclosure
 } from '@nextui-org/react';
 import React, {
   Key,
@@ -40,18 +42,59 @@ import {
 } from '@heroicons/react/24/outline';
 import { useParams, useRouter } from 'next/navigation';
 import axios from '@/libs/axiosInstance';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
+import AddLessonModal from './AddLesson.modal';
+import { toast } from 'react-toastify';
+import EditLessonModal from './EditLesson.modal';
+import DeleteLessonModal from './DeleteLesson.modal';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const CourseDetail = () => {
+  const router = useRouter();
   const params = useParams();
   const courseId = params.courseId;
+  //!  CONTROL Add modal
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  //!  CONTROL Edit modal
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+  const {
+    isOpen: isOpenE,
+    onOpen: onOpenE,
+    onOpenChange: onOpenChangeE,
+    onClose: onCloseE
+  } = useDisclosure();
+  const handleEditClick = (lesson: Lesson) => {
+    setSelectedLesson(lesson);
+    onOpenE();
+  };
+  //!  CONTROL Delete modal
+  const {
+    isOpen: isOpenD,
+    onOpen: onOpenD,
+    onOpenChange: onOpenChangeD,
+    onClose: onCloseD
+  } = useDisclosure();
+  const handleDeleteClick = (lesson: Lesson) => {
+    setSelectedLesson(lesson);
+    onOpenD();
+  };
+  // Hàm đóng modal và reset selectedCourse
+  const handleCloseEditModal = () => {
+    onCloseE();
+    setSelectedLesson(null);
+  };
+  const handleCloseDeleteModal = () => {
+    onCloseD();
+    setSelectedLesson(null);
+  };
 
-  const { data, error: courseError } = useSWR(
-    `/courses/item/${courseId}`,
-    fetcher
-  );
+  const {
+    data,
+    isLoading,
+    error: courseError,
+    mutate: refreshEndpoint
+  } = useSWR(`/courses/item/${courseId}`, fetcher);
 
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [course, setCourse] = useState<Course>();
@@ -75,7 +118,8 @@ const CourseDetail = () => {
     }
   }, [data]);
 
-  const router = useRouter();
+  const loadingState =
+    isLoading || data?.metadata.lesson.length === 0 ? 'loading' : 'idle';
 
   const [filterLessonName, setFilterLessonName] = useState<string>('');
   const hasSearchFilterName = Boolean(filterLessonName);
@@ -97,7 +141,9 @@ const CourseDetail = () => {
         case 'type':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue.toString().toUpperCase()}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toString().toUpperCase()}
+              </p>
             </div>
           );
         case 'title':
@@ -110,7 +156,7 @@ const CourseDetail = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {new Date(cellValue).toLocaleDateString('vi-VE', {
+                {new Date(cellValue.toString()).toLocaleDateString('vi-VE', {
                   day: '2-digit',
                   month: '2-digit',
                   year: 'numeric'
@@ -122,7 +168,7 @@ const CourseDetail = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {new Date(cellValue).toLocaleDateString('vi-VE', {
+                {new Date(cellValue.toString()).toLocaleDateString('vi-VE', {
                   day: '2-digit',
                   month: '2-digit',
                   year: 'numeric'
@@ -144,6 +190,23 @@ const CourseDetail = () => {
               <p className="text-bold text-sm capitalize">{cellValue}</p>
             </div>
           );
+        case 'isPublish':
+          return (
+            <Chip
+              className="capitalize"
+              color={
+                statusColorMap[
+                  (lesson.isActive
+                    ? 'Published'
+                    : 'Unpublished') as keyof typeof statusColorMap
+                ]
+              }
+              size="sm"
+              variant="flat"
+            >
+              {lesson.isActive ? 'Published' : 'Unpublished'}
+            </Chip>
+          );
         case 'timePerLesson':
           return (
             <div className="flex flex-col">
@@ -164,12 +227,18 @@ const CourseDetail = () => {
                 </span>
               </Tooltip>
               <Tooltip content="Edit" color="warning" delay={1000}>
-                <span className="cursor-pointer text-lg text-on-secondary active:opacity-50">
+                <span
+                  className="cursor-pointer text-lg text-on-secondary active:opacity-50"
+                  onClick={() => handleEditClick(lesson)}
+                >
                   <PencilIcon className="size-5" />
                 </span>
               </Tooltip>
               <Tooltip color="danger" content="Delete" delay={1000}>
-                <span className="cursor-pointer text-lg text-danger active:opacity-50">
+                <span
+                  className="cursor-pointer text-lg text-danger active:opacity-50"
+                  onClick={() => handleDeleteClick(lesson)}
+                >
                   <TrashIcon className="size-5" />
                 </span>
               </Tooltip>
@@ -188,7 +257,7 @@ const CourseDetail = () => {
   });
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
 
   const pages = Math.ceil(lessons.length / rowsPerPage);
 
@@ -261,7 +330,7 @@ const CourseDetail = () => {
           />
         </div>
         {/* Filter Start date */}
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <span>Start date</span>
           <DateInput
             key={'start-date'}
@@ -270,9 +339,9 @@ const CourseDetail = () => {
             value={filterStartDate}
             onChange={setFilterStartDate}
           />
-        </div>
+        </div> */}
         {/* Filter end date */}
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <span>End date</span>
           <DateInput
             key={'end-date'}
@@ -281,16 +350,31 @@ const CourseDetail = () => {
             value={filterEndDate}
             onChange={setFilterEndDate}
           />
-        </div>
+        </div> */}
         <ButtonSolid
           content="Add"
           className="my-auto ml-auto h-14 rounded-xl bg-blue-500 text-white shadow-md"
           iconLeft={<PlusIcon className="size-6 text-white" />}
-          // onClick={onOpen}
+          onClick={onOpen}
         />
       </div>
     );
   }, [filterLessonName]);
+
+  const handleCreated = () => {
+    toast.success('Lesson created successfully!');
+    refreshEndpoint();
+  };
+
+  const handleEdited = () => {
+    toast.success('Lesson edited successfully!');
+    refreshEndpoint();
+  };
+
+  const handleDeleted = () => {
+    toast.success('Lesson deleted successfully!');
+    refreshEndpoint();
+  };
 
   if (courseError) {
     return <div>Error loading data</div>;
@@ -469,6 +553,8 @@ const CourseDetail = () => {
                     className=""
                     items={sortedItems}
                     emptyContent={'No rows to display.'}
+                    loadingContent={<Spinner />}
+                    loadingState={loadingState}
                   >
                     {(item) => (
                       <TableRow key={item.id}>
@@ -516,6 +602,40 @@ const CourseDetail = () => {
           </Button>
         </div> */}
       </div>
+      {course && (
+        <AddLessonModal
+          isOpen={isOpen}
+          onClose={onClose}
+          onOpen={onOpen}
+          courseId={course.id}
+          courseName={course.title}
+          courseType={course.courseType}
+          onOpenChange={onOpenChange}
+          onCreated={handleCreated}
+        />
+      )}
+      {course && selectedLesson && (
+        <EditLessonModal
+          isOpen={isOpenE}
+          onClose={handleCloseEditModal}
+          onOpen={onOpenE}
+          onOpenChange={onOpenChangeE}
+          onEdited={handleEdited}
+          courseName={course.title}
+          lesson={selectedLesson}
+        />
+      )}
+      {selectedLesson && (
+        <DeleteLessonModal
+          isOpen={isOpenD}
+          onClose={handleCloseDeleteModal}
+          onOpen={onOpenD}
+          onOpenChange={onOpenChangeD}
+          lessonId={selectedLesson.id}
+          lessonTitle={'selectedLesson.title'}
+          onDeleted={handleDeleted}
+        />
+      )}
     </main>
   );
 };
