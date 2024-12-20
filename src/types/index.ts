@@ -48,4 +48,6 @@ export type EventProps = {
   start: string;
   end: string;
   description: string;
+  location?: string;
+  people: string[];
 }

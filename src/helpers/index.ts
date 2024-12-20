@@ -1,3 +1,4 @@
 import { renderChip } from './renderChip';
 import { getFullDayName } from './getFullDayName';
-export { renderChip, getFullDayName };
+import { formatDateSchedule } from './formatDateSchedule';
+export { renderChip, getFullDayName, formatDateSchedule };

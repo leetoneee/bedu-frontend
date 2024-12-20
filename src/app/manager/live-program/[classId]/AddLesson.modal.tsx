@@ -93,7 +93,7 @@ export default function AddLessonModal({
   const [startTime, setStartTime] = useState<string>('');
   const [endTime, setEndTime] = useState<string>('');
   const [cycle, setCycle] = useState<Selection>(new Set([]));
-
+  const [listTeacher, setListTeacher] = useState<User[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [errors, setErrors] = useState<{
@@ -140,6 +140,13 @@ export default function AddLessonModal({
     [cycle]
   );
 
+  const {
+    data: listTeacherData,
+    isLoading,
+    error: classError,
+    mutate: refreshEndpoint
+  } = useSWR(`/users/groupUser/teacher?page=1&limit=10`, fetcher);
+
   useEffect(() => {
     if (eclassId && eclassName && eclassType) {
       setName(eclassName);
@@ -155,6 +162,12 @@ export default function AddLessonModal({
     }
   }, [selectedCycle]);
 
+  useEffect(() => {
+    if (listTeacherData) {
+      setListTeacher(listTeacherData.metadata.users);
+    }
+  }, [listTeacherData]);
+
   const validateInputs = () => {
     const newErrors = { ...errors };
 
@@ -166,8 +179,8 @@ export default function AddLessonModal({
     //   selectedType.trim() === '' ? 'Lesson type is required' : '';
 
     // Validate teacher
-    // newErrors.teacher =
-    //   selectedTeacher.trim() === '' ? 'Teacher is required' : '';
+    newErrors.teacher =
+      selectedTeacher.trim() === '' ? 'Teacher is required' : '';
 
     // Validate startDate
     if (!startDate) {
@@ -237,17 +250,9 @@ export default function AddLessonModal({
     newErrors.cycle = selectedCycle.trim() === '' ? 'Cycle is required' : '';
 
     setErrors(newErrors);
-    console.log("🚀 ~ validateInputs ~ newErrors:", newErrors)
 
     return Object.values(newErrors).every((error) => error === '');
   };
-
-  const {
-    data,
-    isLoading,
-    error: classError,
-    mutate: refreshEndpoint
-  } = useSWR(`/users/groupUser/teacher?page=2&limit=10`, fetcher);
 
   const handleSubmit = async () => {
     if (validateInputs()) {
@@ -269,7 +274,7 @@ export default function AddLessonModal({
           selectedDays: selectedDays,
           lessonQuantity: Number(lessonQuantity)
         };
-        console.log("🚀 ~ handleSubmit ~ data:", data)
+        console.log('🚀 ~ handleSubmit ~ data:', data);
         const result = await createRecurringLesson(data);
         if (result) {
           handleClose();
@@ -445,7 +450,7 @@ export default function AddLessonModal({
                   className="max-w-xs"
                   isLoading={isLoading}
                   selectedKeys={teacher}
-                  items={data?.data || []}
+                  items={listTeacher || []}
                   placeholder="Select a Teacher"
                   disallowEmptySelection
                   selectionMode="single"
