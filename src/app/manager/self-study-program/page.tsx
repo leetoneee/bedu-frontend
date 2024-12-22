@@ -109,7 +109,7 @@ export default function SSP() {
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
 
-  const endpoint = `/programs/all${filter ? `/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
+  const endpoint = `/programs/all${filter ? `/type/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
 
   const {
     data,
@@ -154,19 +154,25 @@ export default function SSP() {
         case 'id':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toString()}
+              </p>
             </div>
           );
         case 'code':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toString()}
+              </p>
             </div>
           );
         case 'title':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toString()}
+              </p>
             </div>
           );
         case 'isPublish':
@@ -190,7 +196,7 @@ export default function SSP() {
           return (
             <div className="flex basis-[10%] flex-col">
               <p className="text-bold text-wraps text-sm capitalize">
-                {cellValue}
+                {cellValue.toString()}
               </p>
             </div>
           );
@@ -205,7 +211,9 @@ export default function SSP() {
         case 'price':
           return (
             <div className="flex basis-[10%] flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toString()}
+              </p>
             </div>
           );
         case 'actions':
@@ -240,7 +248,7 @@ export default function SSP() {
             </div>
           );
         default:
-          return cellValue;
+          return cellValue.toString();
       }
     },
     []

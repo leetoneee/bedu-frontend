@@ -30,7 +30,7 @@ export type SSProgramCardProps = {
   studentQuantity: number;
   totalTime: number;
   price: number;
-  image: string;
+  avatar: string;
   type?: number;
   isPublish: boolean;
   rating: number;
