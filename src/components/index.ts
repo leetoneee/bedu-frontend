@@ -30,14 +30,14 @@ import Footer from './Footer';
 import { Accordion } from '@/components/Accordion';
 import Schedule from './Schedule/Schedule';
 import ProgramCard from './ProgramCard/ProgramCard';
-
+import ClassCard from './ProgramCard/ClassCard';
 export { classNames };
 export { Sidebar };
 export { Header, NavHeader };
 export { TooltipItem };
 export { ButtonBase, ButtonOutline, ButtonSolid };
 export { Breadcrumb };
-export { SelfStudyProgramCard, LiveProgramCard, OrderCard, Rating, ProgramCard };
+export { SelfStudyProgramCard, LiveProgramCard, OrderCard, Rating, ProgramCard, ClassCard };
 export { AddProgramModal, EditProgramModal, DeleteProgramModal };
 export { AddCourseModal, EditCourseModal, DeleteCourseModal };
 export { AddClassModal, EditClassModal, DeleteClassModal };

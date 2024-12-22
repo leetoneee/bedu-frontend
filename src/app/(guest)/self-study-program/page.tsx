@@ -13,7 +13,6 @@ import { Chip, Divider, Spinner } from '@nextui-org/react';
 import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 import axios from '@/libs/axiosInstance';
-import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -52,6 +51,9 @@ export default function ProgramPage() {
       );
       setPrograms(listPrograms);
       setTotalPrograms(data[0].metadata.totalRecord);
+    } else {
+      setPrograms([]);
+      setTotalPrograms(0);
     }
   }, [data]);
 
@@ -111,7 +113,11 @@ export default function ProgramPage() {
           </Fragment>
         ))}
       </div>
-      {isLoading && <Spinner />}
+      {isLoading && (
+        <div className="mx-auto p-2">
+          <Spinner />
+        </div>
+      )}
       <button
         className="mx-auto cursor-pointer rounded-lg bg-primary p-2 text-white shadow-md"
         onClick={() => setSize(size + 1)}
