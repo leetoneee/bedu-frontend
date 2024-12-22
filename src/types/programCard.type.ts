@@ -1,3 +1,6 @@
+import { EClass } from "./class.type";
+import { Program } from "./program.type";
+
 // type = 1
 export type LiveProgramCardProps = {
   id: number;
@@ -17,7 +20,7 @@ export type LiveProgramCardProps = {
 };
 
 export type OrderCardProps = {
-  detail: SSProgramCardProps | LiveProgramCardProps;
+  detail: Program | EClass;
 }
 
 //type = 2

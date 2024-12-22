@@ -7,21 +7,15 @@ import { Program } from '@/types/program.type';
 import { use, useEffect, useState } from 'react';
 import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
-import { useRouter } from 'next/navigation';
+import { InformationCircleIcon } from '@heroicons/react/24/outline';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-const ProgramCard = ({
-  program,
-  
-}: {
-  program: Program;
-}) => {
-  const router = useRouter();
-
+const ProgramOverviewCard = ({ program }: { program: Program }) => {
   const {
     id,
     code,
+    type,
     description,
     avatar,
     sessionQuantity,
@@ -30,7 +24,7 @@ const ProgramCard = ({
     course
   } = program;
 
-  const [lessonQuantity, setLessonQuantity] = useState<number>(0);
+  // const [lessonQuantity, setLessonQuantity] = useState<number>(0);
   const [totalTime, setTotalTime] = useState<number>(0);
   const [studentQuantity, setStudentQuantity] = useState<number>(0);
 
@@ -56,20 +50,20 @@ const ProgramCard = ({
   //   }
   // }, [data]);
 
-  useEffect(() => {
-    if (course) {
-      const totalLesson = course.reduce(
-        (acc, cur) => acc + cur.lessonQuantity,
-        0
-      );
-      const totalMins = course.reduce(
-        (acc, cur) => acc + cur.lessonQuantity * cur.timePerLesson,
-        0
-      );
-      setTotalTime(totalMins / 60);
-      setLessonQuantity(totalLesson);
-    }
-  }, [course]);
+  // useEffect(() => {
+  //   if (course) {
+  //     const totalLesson = course.reduce(
+  //       (acc, cur) => acc + cur.lessonQuantity,
+  //       0
+  //     );
+  //     const totalMins = course.reduce(
+  //       (acc, cur) => acc + cur.lessonQuantity * cur.timePerLesson,
+  //       0
+  //     );
+  //     setTotalTime(totalMins / 60);
+  //     setLessonQuantity(totalLesson);
+  //   }
+  // }, [course]);
 
   const formattedNumber = (number: number): string => {
     return new Intl.NumberFormat('vi-VN', {
@@ -80,7 +74,7 @@ const ProgramCard = ({
 
   return (
     <div className="w-[400px] cursor-pointer rounded-xl border-[1px] border-outline text-xs transition-shadow duration-200 hover:shadow-lg">
-      <div onClick={() => router.push(`/self-study-program/${id}`)}>
+      <div>
         <Image
           src={avatar || '/icons/course_img.svg'}
           alt="Course image"
@@ -100,21 +94,19 @@ const ProgramCard = ({
             <div className="flex items-center gap-2 text-sm text-on-surface">
               <LuBookMinus />
               <p>
-                {lessonQuantity} {lessonQuantity > 1 ? 'lessons' : 'lesson'}
+                {sessionQuantity} {sessionQuantity > 1 ? 'sessions' : 'session'}
               </p>
             </div>
             <div className="flex items-center gap-2 text-sm text-on-surface">
-              <LuClock3 />
-              <p>
-                {totalTime} {totalTime > 0 ? 'hours' : 'hour'}
-              </p>
+              <InformationCircleIcon className='size-5'/>
+              <p>{type.toUpperCase()}</p>
             </div>
-            <div className="flex items-center gap-2 text-sm text-on-surface">
+            {/* <div className="flex items-center gap-2 text-sm text-on-surface">
               <RiUserLine />
               <p>
                 {studentQuantity} {studentQuantity > 1 ? 'students' : 'student'}
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="mt-3 h-[1px] w-[366px] justify-center rounded-lg bg-outline"></div>
@@ -128,4 +120,4 @@ const ProgramCard = ({
   );
 };
 
-export default ProgramCard;
+export default ProgramOverviewCard;

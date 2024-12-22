@@ -34,9 +34,8 @@ type Props = {
 };
 
 const courseTypes = [
-  { key: 'ielts', label: 'IELTS' },
-  { key: 'toeic', label: 'TOEIC' },
-  { key: 'toefl', label: 'TOEFL' }
+  { key: 'live', label: 'LIVE' },
+  { key: 'online', label: 'ONLINE' }
 ];
 
 export default function AddLessonModal({
@@ -57,7 +56,7 @@ export default function AddLessonModal({
   const [name, setName] = useState<string>('');
   const [url, setUrl] = useState<string>('');
   const [isPublic, setIsPublic] = useState<boolean>(false);
-  const [type, setType] = useState<Selection>(new Set([`${courseType}`]));
+  const [type, setType] = useState<Selection>(new Set([`online`]));
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [errors, setErrors] = useState<{
@@ -107,7 +106,7 @@ export default function AddLessonModal({
         endDate: today.toISOString(),
         type: selectedType.toLowerCase(),
         courseId: courseId,
-        // title: name,
+        title: name,
         videoUrl: url,
         isActive: isPublic
       };
@@ -137,7 +136,7 @@ export default function AddLessonModal({
 
   const handleClose = () => {
     setName('');
-    setType(new Set([]));
+    setType(new Set(['online']));
     setUrl('');
     // setIsPublic(false);
     setErrors({
@@ -252,7 +251,7 @@ export default function AddLessonModal({
                   placeholder="Select type"
                   disallowEmptySelection
                   selectedKeys={type}
-                  color='default'
+                  color="default"
                   variant="bordered"
                   // onSelectionChange={setType}
                 >

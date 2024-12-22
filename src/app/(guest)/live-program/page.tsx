@@ -112,12 +112,14 @@ export default function LivePage() {
           <Spinner />
         </div>
       )}
-      <button
-        className="mx-auto cursor-pointer rounded-lg bg-primary p-2 text-white shadow-md"
-        onClick={() => setSize(size + 1)}
-      >
-        Load more
-      </button>
+      {eclasses.length < totalClasses && (
+        <button
+          className="mx-auto cursor-pointer rounded-lg bg-primary p-2 text-white shadow-md"
+          onClick={() => setSize(size + 1)}
+        >
+          Load more
+        </button>
+      )}
     </main>
   );
 }

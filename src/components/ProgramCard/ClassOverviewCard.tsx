@@ -7,10 +7,11 @@ import { useRouter } from 'next/router';
 import { LiveProgramCardProps } from '@/types/programCard.type';
 import { EClass } from '@/types/class.type';
 
-const ClassCard = ({ eclass }: { eclass: EClass }) => {
+const ClassOverviewCard = ({ eclass }: { eclass: EClass }) => {
   const {
     id,
     code,
+    type,
     description,
     avatar,
     lessonQuantity,
@@ -101,4 +102,4 @@ const ClassCard = ({ eclass }: { eclass: EClass }) => {
   );
 };
 
-export default ClassCard;
+export default ClassOverviewCard;

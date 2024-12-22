@@ -118,12 +118,14 @@ export default function ProgramPage() {
           <Spinner />
         </div>
       )}
-      <button
-        className="mx-auto cursor-pointer rounded-lg bg-primary p-2 text-white shadow-md"
-        onClick={() => setSize(size + 1)}
-      >
-        Load more
-      </button>
+      {programs.length < totalPrograms && (
+        <button
+          className="mx-auto cursor-pointer rounded-lg bg-primary p-2 text-white shadow-md"
+          onClick={() => setSize(size + 1)}
+        >
+          Load more
+        </button>
+      )}
     </main>
   );
 }
