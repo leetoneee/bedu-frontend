@@ -28,6 +28,7 @@ import Checkbox from './Checkbox';
 import Navigation from './Navigation/Navigation';
 import Footer from './Footer';
 import { Accordion } from '@/components/Accordion';
+import { OtpInput } from '@/components/OTP';
 
 export { classNames };
 export { Sidebar };
@@ -44,3 +45,4 @@ export { Checkbox };
 export { Navigation };
 export { Footer };
 export { Accordion };
+export { OtpInput };
