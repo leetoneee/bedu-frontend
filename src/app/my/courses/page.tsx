@@ -15,10 +15,13 @@ import axios from '@/libs/axiosInstance';
 import useSWRInfinite from 'swr/infinite';
 import { Program } from '@/types/program.type';
 import { Enrollment } from '@/types/enrollment.type';
+import { useSession } from 'next-auth/react';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const MyCoursesPage = () => {
+  const { data: session } = useSession();
+
   const crumbs: Crumb[] = [
     {
       label: 'Homepage',
@@ -33,7 +36,7 @@ const MyCoursesPage = () => {
   const getKey = (pageIndex: number, previousPageData: any) => {
     pageIndex += 1;
     if (previousPageData && !previousPageData.length) return null; // reached the end
-    return `/users_programs/all/user/2?page=${pageIndex}&limit=10`; // SWR key
+    return `/users_programs/all/user/${session?.user.id}?page=${pageIndex}&limit=10`; // SWR key
   };
 
   const [programs, setPrograms] = useState<Program[]>([]);
