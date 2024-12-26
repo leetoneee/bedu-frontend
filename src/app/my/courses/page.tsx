@@ -82,12 +82,12 @@ const MyCoursesPage = () => {
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
       <Breadcrumb crumbs={crumbs} />
       <Divider />
-      <div className="flex flex-row gap-4">
-        <div className="w-72">
+      <div className="flex flex-row gap-4 w-full">
+        <div className="flex-none w-72">
           <Navigation />
         </div>
         {/* Code ở đây */}
-        <div className="flex w-full flex-col items-center justify-center gap-4">
+        <div className="flex shrink w-full flex-col gap-4">
           <Input
             className="mr-auto w-56 bg-white"
             variant="bordered"

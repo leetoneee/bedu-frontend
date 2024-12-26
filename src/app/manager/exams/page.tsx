@@ -40,10 +40,11 @@ import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
 import { toast } from 'react-toastify';
 import { statusColorMap } from '@/types/course.type';
+import AddExamModal from './AddExam.modal';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-export default function CoursesPage() {
+export default function ExamsPage() {
   const router = useRouter();
   //!  CONTROL Add modal
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -70,7 +71,7 @@ export default function CoursesPage() {
     setSelectedExam(exam);
     onOpenD();
   };
-  // Hàm đóng modal và reset selectedCourse
+  // Hàm đóng modal và reset selectedExam
   const handleCloseEditModal = () => {
     onCloseE();
     setSelectedExam(null);
@@ -87,11 +88,11 @@ export default function CoursesPage() {
     }
   ];
 
-  const [courses, setCourses] = useState<Exam[]>([]);
+  const [exams, setExams] = useState<Exam[]>([]);
   const [filter, setFilter] = useState<string | null>(null); // 'ielts', 'toeic', 'toefl', or null
-  const [totalCourses, setTotalCourses] = useState<number>(0);
-  const [filterCourseName, setFilterCourseName] = useState<string>('');
-  const hasSearchFilter = Boolean(filterCourseName);
+  const [totalExams, setTotalExams] = useState<number>(0);
+  const [filterExamName, setFilterExamName] = useState<string>('');
+  const hasSearchFilter = Boolean(filterExamName);
   const [selectedStatus, setSelectedStatus] = useState<Selection>(
     new Set(['all'])
   );
@@ -127,15 +128,15 @@ export default function CoursesPage() {
   }, [data, rowsPerPage]);
 
   const loadingState =
-    isLoading || data?.metadata.courses.length === 0 ? 'loading' : 'idle';
+    isLoading || data?.metadata.exams.length === 0 ? 'loading' : 'idle';
 
   // Load data
   useEffect(() => {
-    if (error) setCourses([]);
-    else if (data && data.metadata.courses) {
-      console.log("🚀 ~ useEffect ~ data.metadata:", data.metadata)
-      setCourses(data.metadata.courses);
-      setTotalCourses(data.metadata.totalRecord);
+    if (error) setExams([]);
+    else if (data && data.metadata.exams) {
+      // console.log('🚀 ~ useEffect ~ data.metadata:', data.metadata);
+      setExams(data.metadata.exams);
+      setTotalExams(data.metadata.totalRecord);
     }
   }, [data, filter]);
   //
@@ -155,19 +156,20 @@ export default function CoursesPage() {
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case 'code':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
-          </div>
-        );
       case 'title':
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue}</p>
           </div>
         );
-      case 'courseType':
+      case 'duaration':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{cellValue}</p>
+          </div>
+        );
+
+      case 'examType':
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">
@@ -192,7 +194,7 @@ export default function CoursesPage() {
             {exam.isActive ? 'Published' : 'Unpublished'}
           </Chip>
         );
-      case 'lessonQuantity':
+      case 'questionQuantity':
         return (
           <div className="flex flex-col">
             <p className="text-bold text-wraps text-sm capitalize">
@@ -200,13 +202,7 @@ export default function CoursesPage() {
             </p>
           </div>
         );
-      case 'price':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
-          </div>
-        );
-      case 'timePerLesson':
+      case 'resultTime':
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">{cellValue} minutes</p>
@@ -218,7 +214,7 @@ export default function CoursesPage() {
             <Tooltip content="Details" className="bg-on-primary" delay={1000}>
               <span
                 className="cursor-pointer text-lg text-on-primary active:opacity-50"
-                onClick={() => router.push(`courses/${exam.id}`)}
+                onClick={() => router.push(`exams/${exam.id}`)}
               >
                 <EyeIcon className="size-5" />
               </span>
@@ -276,11 +272,11 @@ export default function CoursesPage() {
   }, []);
 
   const filteredItems = React.useMemo(() => {
-    let filteredCourses = [...courses];
+    let filteredExams = [...exams];
 
     if (hasSearchFilter) {
-      filteredCourses = filteredCourses.filter((course) =>
-        course.title.toLowerCase().includes(filterCourseName.toLowerCase())
+      filteredExams = filteredExams.filter((exam) =>
+        exam.title.toLowerCase().includes(filterExamName.toLowerCase())
       );
     }
 
@@ -288,14 +284,14 @@ export default function CoursesPage() {
       selectedValue !== 'all' &&
       Array.from(selectedStatus).length !== statusOptions.length
     ) {
-      filteredCourses = filteredCourses.filter((course) =>
+      filteredExams = filteredExams.filter((exam) =>
         Array.from(selectedStatus).includes(
-          course.isActive ? 'Published' : 'Unpublished'
+          exam.isActive ? 'Published' : 'Unpublished'
         )
       );
     }
-    return filteredCourses;
-  }, [courses, filterCourseName, selectedValue, selectedStatus]);
+    return filteredExams;
+  }, [exams, filterExamName, selectedValue, selectedStatus]);
 
   // const items = React.useMemo(() => {
   //   const start = (page - 1) * rowsPerPage;
@@ -320,17 +316,17 @@ export default function CoursesPage() {
   };
 
   const handleCreated = () => {
-    toast.success('Course created successfully!');
+    toast.success('Exam created successfully!');
     refreshEndpoint();
   };
 
   const handleEdited = () => {
-    toast.success('Course edited successfully!');
+    toast.success('Exam edited successfully!');
     refreshEndpoint();
   };
 
   const handleDeleted = () => {
-    toast.success('Course deleted successfully!');
+    toast.success('Exam deleted successfully!');
     refreshEndpoint();
   };
 
@@ -345,15 +341,15 @@ export default function CoursesPage() {
           <div className="flex w-full flex-row gap-16">
             {/* Search Name*/}
             <div className="flex flex-col gap-2">
-              <span>Course name</span>
+              <span>Exam name</span>
               <Input
                 className="bg-white"
                 variant="bordered"
                 size={'md'}
                 type=""
-                placeholder="Find your program name"
-                value={filterCourseName}
-                onChange={(e) => setFilterCourseName(e.target.value)}
+                placeholder="Find your exam name"
+                value={filterExamName}
+                onChange={(e) => setFilterExamName(e.target.value)}
               />
             </div>
             {/* Filter Status */}
@@ -434,7 +430,7 @@ export default function CoursesPage() {
             </div>
 
             <span>
-              Total: <span className="text-2xl">{totalCourses}</span> courses
+              Total: <span className="text-2xl">{totalExams}</span> exams
             </span>
           </div>
         </div>
@@ -490,6 +486,13 @@ export default function CoursesPage() {
           />
         </div>
       </div>
+      <AddExamModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+        onCreated={handleCreated}
+      />
     </main>
   );
 }
