@@ -11,6 +11,7 @@ import {
   UsersIcon,
   BellIcon
 } from '@heroicons/react/24/outline';
+import { GoTasklist } from 'react-icons/go';
 
 export const NavItems = () => {
   const pathname = usePathname();
@@ -56,11 +57,18 @@ export const NavItems = () => {
       group: 'resources'
     },
     {
+      name: 'Exams',
+      href: '/manager/exams',
+      icon: <GoTasklist className="size-6" />,
+      active: isNavItemActive(pathname, '/manager/exams'),
+      group: 'resources'
+    },
+    {
       name: 'Revenue Report',
       href: '/manager/revenue-report',
       icon: <DocumentChartBarIcon className="size-6" />,
       active: isNavItemActive(pathname, '/manager/revenue-report'),
-      group: 'resources'
+      group: 'system'
     },
     {
       name: 'Feedback Report',
