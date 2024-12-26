@@ -169,9 +169,9 @@ export default function QuestionBank() {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize text-on-surface">
-                {cellValue === 'multiple'
+                {cellValue === 'MultipleChoice'
                   ? 'Multiple Choice'
-                  : cellValue === 'single'
+                  : cellValue === 'SingleChoice'
                     ? 'Single Choice'
                     : 'Fill In The Blank'}
               </p>

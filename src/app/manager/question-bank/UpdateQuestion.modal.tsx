@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { toast } from 'react-toastify';
 import {
   Modal,
@@ -8,28 +8,15 @@ import {
   ModalContent,
   Divider,
   Checkbox,
-  Input,
   SelectItem,
   Select,
   Selection,
   Button,
-  Tooltip,
-  useDisclosure
+  Tooltip
 } from '@nextui-org/react';
-import {
-  EyeIcon,
-  MagnifyingGlassIcon,
-  PencilIcon,
-  PlusIcon,
-  TrashIcon
-} from '@heroicons/react/24/outline';
+import { TrashIcon } from '@heroicons/react/24/outline';
 import { ButtonSolid } from '@/components';
-import {
-  createQuestion,
-  CreateQuestionDto,
-  editQuestion,
-  UpdateQuestionDto
-} from '@/services/questions.service';
+import { editQuestion, UpdateQuestionDto } from '@/services/questions.service';
 import { Question } from '@/types/question-bank.type';
 
 type Props = {
@@ -42,9 +29,9 @@ type Props = {
 };
 
 export const questionTypes = [
-  { key: 'multiple', label: 'Multiple Choice' },
-  { key: 'single', label: 'Single Choice' },
-  { key: 'fillin', label: 'Fill In The Blank' }
+  { key: 'MultipleChoice', label: 'Multiple Choice' },
+  { key: 'SingleChoice', label: 'Single Choice' },
+  { key: 'FillInTheBlankChoice', label: 'Fill In The Blank' }
 ];
 
 const UpdateQuestion = ({
@@ -67,7 +54,9 @@ const UpdateQuestion = ({
   const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
   const [answer, setAnswer] = useState<string>('');
   const [attach, setAttach] = useState<string>('');
-  const [questionType, setQuestionType] = useState<Selection>(new Set([]));
+  const [questionType, setQuestionType] = useState<Selection>(
+    new Set([`${questionUpdate.questionType}`])
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const parseAnswers = (answers: string): { id: number; answer: string }[] => {
@@ -106,7 +95,7 @@ const UpdateQuestion = ({
       setAnswers(parseAnswers(questionUpdate.possibleAnswer));
       setCorrectAnswers(parseCorrectAnswers(questionUpdate.answer));
       setAttach(questionUpdate.attach);
-      setQuestionType(new Set([`${questionUpdate.questionType}`]));
+      // setQuestionType(new Set([`${questionUpdate.questionType}`]));
     }
   }, [questionUpdate]);
 
@@ -122,7 +111,7 @@ const UpdateQuestion = ({
   ) => {
     let possibleAnswersAPI = answers.map((answer) => answer.answer).join('/');
     let answerAPI: string = '';
-    if (typeQuestion === 'fillin') {
+    if (typeQuestion === 'FillInTheBlankChoice') {
       answerAPI = possibleAnswersAPI;
     } else {
       answerAPI = answers
@@ -160,7 +149,7 @@ const UpdateQuestion = ({
       totalPoints.trim() === '' ? 'Score is required' : '';
     newErrors.questionType = selectedType ? '' : 'Question type is required';
     //Single Choice & Multiple Choice
-    if (selectedType === 'single' || selectedType === 'multiple') {
+    if (selectedType === 'SingleChoice' || selectedType === 'MultipleChoice') {
       if (answers.length === 0) {
         newErrors.answers = 'List of answers cannot be empty';
       } else {
@@ -175,7 +164,7 @@ const UpdateQuestion = ({
     }
 
     // Fill in the blank
-    if (selectedType === 'fillin') {
+    if (selectedType === 'FillInTheBlankChoice') {
       // answers không được là chuỗi rỗng
       const emptyAnswers = answers.filter(
         (answer) => answer.answer.trim() === ''
@@ -221,7 +210,7 @@ const UpdateQuestion = ({
     };
 
     // Single Choice & Multiple Choice
-    if (selectedType === 'single' || selectedType === 'multiple') {
+    if (selectedType === 'SingleChoice' || selectedType === 'MultipleChoice') {
       if (answers.length === 0) {
         newErrors.answers = 'List of answers cannot be empty';
       } else {
@@ -236,7 +225,7 @@ const UpdateQuestion = ({
     }
 
     // Fill in the blank
-    if (selectedType === 'fillin') {
+    if (selectedType === 'FillInTheBlankChoice') {
       // answers không được là chuỗi rỗng
       const emptyAnswers = answers.filter(
         (answer) => answer.answer.trim() === ''
@@ -300,7 +289,7 @@ const UpdateQuestion = ({
 
   const handleSubmit = async () => {
     if (!validateInputsSpec()) {
-      if (selectedType === 'fillin') {
+      if (selectedType === 'FillInTheBlankChoice') {
         renderError('pointDivision');
       }
       renderError('answers');
@@ -353,7 +342,7 @@ const UpdateQuestion = ({
     }
   };
 
-  useEffect(() => {
+  const handleChangeSelection = (selectedKey: Selection) => {
     setErrors({
       content: '',
       question: '',
@@ -370,35 +359,37 @@ const UpdateQuestion = ({
     setAnswer('');
     setAnswers([]);
     setCorrectAnswers([]);
-    //Cần setError cho 3 tường đặc biệt trước: answers, correctAnswers, PointDivision
     validateInputsSpec();
-  }, [selectedType]);
+    setQuestionType(selectedKey);
+  };
+
+  // useEffect(() => {
+  //   setErrors({
+  //     content: '',
+  //     question: '',
+  //     totalPoints: '',
+  //     pointDivision: '',
+  //     answers: '',
+  //     correctAnswers: '',
+  //     questionType: ''
+  //   });
+  //   setContent('');
+  //   setQuestion('');
+  //   settotalPoints('');
+  //   setPointDivision([]);
+  //   setAnswer('');
+  //   setAnswers([]);
+  //   setCorrectAnswers([]);
+  //   validateInputsSpec();
+  // }, [selectedType]);
 
   const handleClose = () => {
-    // setContent('');
-    // setQuestion('');
-    // settotalPoints('');
-    // setPointDivision([]);
-    // setAnswer('');
-    // setQuestionType(new Set([]));
-    // setAnswers([]);
-    // setCorrectAnswers([]);
-    // setErrors({
-    //   content: '',
-    //   question: '',
-    //   totalPoints: '',
-    //   pointDivision: '',
-    //   answers: '', // những đáp án lựa chọn không được trống
-    //   correctAnswers: '', // id cho đáp án không được trống
-    //   questionType: ''
-    // });
-    // //Đóng modal
     onClose();
   };
 
   // Thêm câu trả lời mới
   const addAnswer = () => {
-    if (selectedType === 'fillin') {
+    if (selectedType === 'FillInTheBlankChoice') {
       // Với type fillin, thêm câu trả lời mới vào cả answers và correctAnswers
       const newId = answers.length ? answers[answers.length - 1].id + 1 : 1;
       const newAnswer = { id: newId, answer: '' };
@@ -416,7 +407,7 @@ const UpdateQuestion = ({
     // Xóa câu trả lời trong answers
     setAnswers(answers.filter((ans) => ans.id !== id));
 
-    if (selectedType === 'fillin') {
+    if (selectedType === 'FillInTheBlankChoice') {
       // Với type fillin, xóa pointDivision của id tương ứng
       setPointDivision(pointDivision.filter((point) => point.id !== id));
     }
@@ -427,7 +418,7 @@ const UpdateQuestion = ({
 
   // Cập nhật nội dung câu trả lời
   const updateAnswer = (id: number, newAnswer: string) => {
-    if (selectedType === 'fillin') {
+    if (selectedType === 'FillInTheBlankChoice') {
       // Với type fillin, cập nhật cả answers và correctAnswers
       setAnswers((prevAnswers) =>
         prevAnswers.map((answer) =>
@@ -455,14 +446,14 @@ const UpdateQuestion = ({
   };
   // Chuyển đổi trạng thái "đáp án đúng"
   const toggleCorrectAnswer = (id: number) => {
-    if (selectedType === 'single') {
+    if (selectedType === 'SingleChoice') {
       // Single choice: chỉ cho phép một đáp án đúng
       if (correctAnswers.includes(id)) {
         setCorrectAnswers([]); // Bỏ chọn nếu đã chọn
       } else {
         setCorrectAnswers([id]); // Chỉ lưu một đáp án
       }
-    } else if (selectedType === 'multiple') {
+    } else if (selectedType === 'MultipleChoice') {
       // Multiple choice: cho phép nhiều đáp án đúng
       if (correctAnswers.includes(id)) {
         setCorrectAnswers(
@@ -471,7 +462,7 @@ const UpdateQuestion = ({
       } else {
         setCorrectAnswers([...correctAnswers, id]); // Thêm đáp án
       }
-    } else if (selectedType === 'fillin') {
+    } else if (selectedType === 'FillInTheBlankChoice') {
       // Fill in the blank: logic khác, ví dụ không áp dụng checkbox
       console.warn('Fill in the blank không sử dụng toggleCorrectAnswer');
     }
@@ -559,7 +550,7 @@ const UpdateQuestion = ({
                   placeholder="Select an question type"
                   selectedKeys={questionType}
                   variant="bordered"
-                  onSelectionChange={setQuestionType}
+                  onSelectionChange={(keys) => handleChangeSelection(keys)}
                 >
                   {questionTypes.map((questionType) => (
                     <SelectItem key={questionType.key}>
@@ -626,7 +617,7 @@ const UpdateQuestion = ({
 
             {/* Program image  */}
 
-            {selectedType && selectedType === 'single' ? (
+            {selectedType && selectedType === 'SingleChoice' ? (
               <div className="w-full gap-3">
                 <Divider />
                 <div className="flex flex-row pt-8">
@@ -677,7 +668,7 @@ const UpdateQuestion = ({
                   </div>
                 </div>
               </div>
-            ) : selectedType === 'multiple' ? (
+            ) : selectedType === 'MultipleChoice' ? (
               <div className="w-full gap-3">
                 <Divider />
                 <div className="flex flex-row pt-8">
@@ -728,7 +719,7 @@ const UpdateQuestion = ({
                   </div>
                 </div>
               </div>
-            ) : selectedType === 'fillin' ? (
+            ) : selectedType === 'FillInTheBlankChoice' ? (
               <div className="w-full gap-3">
                 <Divider />
                 <div className="flex flex-row pt-8">
