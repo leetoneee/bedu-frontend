@@ -2,7 +2,7 @@ import axios from '@/libs/axiosInstance';
 
 export type CreateQuestionDto = {
   question: string;
-  totalPoint: number;
+  totalPoints: number;
   pointDivision: string;
   content: string;
   attach: string;

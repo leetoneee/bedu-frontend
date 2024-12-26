@@ -1,7 +1,7 @@
 export type Question = {
   id: number;
   question: string;
-  totalPoint: number;
+  totalPoints: number;
   pointDivision: string;
   content: string;
   attach: string;
