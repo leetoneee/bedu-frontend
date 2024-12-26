@@ -37,7 +37,6 @@ type Props = {
   onOpen: () => void;
   onOpenChange: () => void;
   onClose: () => void;
-  onCreated?: () => void; //Callback báo cho parent biết đã tạo xong
   onUpdate?: () => void;
   questionUpdate: Question;
 };
@@ -58,7 +57,7 @@ const UpdateQuestion = ({
 }: Props) => {
   const [content, setContent] = useState<string>('');
   const [question, setQuestion] = useState<string>('');
-  const [totalPoint, setTotalPoint] = useState<string>('');
+  const [totalPoints, settotalPoints] = useState<string>('');
   // Danh sách các câu trả lời
   const [answers, setAnswers] = useState<{ id: number; answer: string }[]>([]);
   const [pointDivision, setPointDivision] = useState<
@@ -81,9 +80,9 @@ const UpdateQuestion = ({
   const parseCorrectAnswers = (correctAnswers: string): number[] => {
     let ans: number[] = [];
     let ansArr = correctAnswers.split('/');
-    for (let i = 1; i <= ansArr.length; i++) {
+    for (let i = 0; i < ansArr.length; i++) {
       if (ansArr[i] !== '@') {
-        ans.push(i);
+        ans.push(i + 1);
       }
     }
     return ans;
@@ -94,7 +93,7 @@ const UpdateQuestion = ({
   ): { id: number; point: number }[] => {
     return pointDivision.split('/').map((point, index) => ({
       id: index + 1, // ID bắt đầu từ 1
-      point: Number(point.trim()) // Xóa khoảng trắng nếu có
+      point: Number(point)
     }));
   };
 
@@ -102,14 +101,14 @@ const UpdateQuestion = ({
     if (questionUpdate) {
       setContent(questionUpdate.content);
       setQuestion(questionUpdate.question);
-      setTotalPoint(questionUpdate.totalPoint.toString());
+      settotalPoints(questionUpdate.totalPoints.toString());
       setPointDivision(parsePointDivision(questionUpdate.pointDivision));
       setAnswers(parseAnswers(questionUpdate.possibleAnswer));
       setCorrectAnswers(parseCorrectAnswers(questionUpdate.answer));
       setAttach(questionUpdate.attach);
       setQuestionType(new Set([`${questionUpdate.questionType}`]));
     }
-  });
+  }, [questionUpdate]);
 
   const selectedType = React.useMemo(
     () => Array.from(questionType).join(', ').replaceAll('_', ' '),
@@ -138,7 +137,7 @@ const UpdateQuestion = ({
   const [errors, setErrors] = useState<{
     content: string;
     question: string;
-    totalPoint: string;
+    totalPoints: string;
     pointDivision: string;
     answers: string;
     correctAnswers: string;
@@ -146,7 +145,7 @@ const UpdateQuestion = ({
   }>({
     content: '',
     question: '',
-    totalPoint: '',
+    totalPoints: '',
     pointDivision: '',
     answers: '', // những đáp án lựa chọn không được trống
     correctAnswers: '', // id cho đáp án đúng không được trống
@@ -157,7 +156,8 @@ const UpdateQuestion = ({
     const newErrors = { ...errors };
     newErrors.content = content.trim() === '' ? 'Content is required' : '';
     newErrors.question = question.trim() === '' ? 'Question is required' : '';
-    newErrors.totalPoint = totalPoint.trim() === '' ? 'Score is required' : '';
+    newErrors.totalPoints =
+      totalPoints.trim() === '' ? 'Score is required' : '';
     newErrors.questionType = selectedType ? '' : 'Question type is required';
     //Single Choice & Multiple Choice
     if (selectedType === 'single' || selectedType === 'multiple') {
@@ -193,15 +193,15 @@ const UpdateQuestion = ({
         answers.length !== correctAnswers.length
           ? 'The number of answers must match the number of correct answers'
           : '';
-      // Tổng pointDivision phải bằng totalPoint
-      const totalPointsSum = pointDivision.reduce(
+      // Tổng pointDivision phải bằng totalPoints
+      const totalPointssSum = pointDivision.reduce(
         (sum, point) => sum + point.point,
         0
       );
-      newErrors.totalPoint =
-        isNaN(parseFloat(totalPoint)) ||
-        totalPointsSum !== parseFloat(totalPoint)
-          ? `Total points (${totalPointsSum}) must equal the total point (${totalPoint})`
+      newErrors.totalPoints =
+        isNaN(parseFloat(totalPoints)) ||
+        totalPointssSum !== parseFloat(totalPoints)
+          ? `Total points (${totalPointssSum}) must equal the total point (${totalPoints})`
           : '';
     }
 
@@ -213,7 +213,7 @@ const UpdateQuestion = ({
     const newErrors = {
       content: '',
       question: '',
-      totalPoint: '',
+      totalPoints: '',
       pointDivision: '',
       answers: '',
       correctAnswers: '',
@@ -256,16 +256,16 @@ const UpdateQuestion = ({
           ? 'The number of answers must match the number of correct answers'
           : '';
 
-      // Tổng pointDivision phải bằng totalPoint
-      const totalPointsSum = pointDivision.reduce(
+      // Tổng pointDivision phải bằng totalPoints
+      const totalPointssSum = pointDivision.reduce(
         (sum, point) => sum + point.point,
         0
       );
       if (pointDivision.length !== 0) {
-        newErrors.totalPoint =
-          isNaN(parseFloat(totalPoint)) ||
-          totalPointsSum !== parseFloat(totalPoint)
-            ? `Total points (${totalPointsSum}) must equal the total point (${totalPoint})`
+        newErrors.totalPoints =
+          isNaN(parseFloat(totalPoints)) ||
+          totalPointssSum !== parseFloat(totalPoints)
+            ? `Total points (${totalPointssSum}) must equal the total point (${totalPoints})`
             : '';
       }
     }
@@ -276,9 +276,9 @@ const UpdateQuestion = ({
     // Kiểm tra chỉ ba lỗi cụ thể
     const isAnswersValid = !newErrors.answers;
     const isCorrectAnswersValid = !newErrors.correctAnswers;
-    const istotalPointValid = !newErrors.totalPoint;
+    const istotalPointsValid = !newErrors.totalPoints;
 
-    return isAnswersValid && isCorrectAnswersValid && istotalPointValid;
+    return isAnswersValid && isCorrectAnswersValid && istotalPointsValid;
   };
 
   const renderError = (field: keyof typeof errors) => {
@@ -318,9 +318,9 @@ const UpdateQuestion = ({
         answers,
         correctAnswers
       );
-      const data: CreateQuestionDto = {
+      const data: UpdateQuestionDto = {
         question: question,
-        totalPoint: Number(totalPoint),
+        totalPoints: Number(totalPoints),
         pointDivision: pointDivisionAPI,
         content: content,
         attach: attach,
@@ -332,10 +332,10 @@ const UpdateQuestion = ({
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
         // Gọi API và đợi kết quả trả về
-        const result = await editQuestion(questionUpdate.id ,data);
-        if(result) {
+        const result = await editQuestion(questionUpdate.id, data);
+        if (result) {
           handleClose();
-          if(onUpdate) {
+          if (onUpdate) {
             onUpdate();
           }
         }
@@ -357,7 +357,7 @@ const UpdateQuestion = ({
     setErrors({
       content: '',
       question: '',
-      totalPoint: '',
+      totalPoints: '',
       pointDivision: '',
       answers: '',
       correctAnswers: '',
@@ -365,7 +365,7 @@ const UpdateQuestion = ({
     });
     setContent('');
     setQuestion('');
-    setTotalPoint('');
+    settotalPoints('');
     setPointDivision([]);
     setAnswer('');
     setAnswers([]);
@@ -375,24 +375,24 @@ const UpdateQuestion = ({
   }, [selectedType]);
 
   const handleClose = () => {
-    setContent('');
-    setQuestion('');
-    setTotalPoint('');
-    setPointDivision([]);
-    setAnswer('');
-    setQuestionType(new Set([]));
-    setAnswers([]);
-    setCorrectAnswers([]);
-    setErrors({
-      content: '',
-      question: '',
-      totalPoint: '',
-      pointDivision: '',
-      answers: '', // những đáp án lựa chọn không được trống
-      correctAnswers: '', // id cho đáp án không được trống
-      questionType: ''
-    });
-    //Đóng modal
+    // setContent('');
+    // setQuestion('');
+    // settotalPoints('');
+    // setPointDivision([]);
+    // setAnswer('');
+    // setQuestionType(new Set([]));
+    // setAnswers([]);
+    // setCorrectAnswers([]);
+    // setErrors({
+    //   content: '',
+    //   question: '',
+    //   totalPoints: '',
+    //   pointDivision: '',
+    //   answers: '', // những đáp án lựa chọn không được trống
+    //   correctAnswers: '', // id cho đáp án không được trống
+    //   questionType: ''
+    // });
+    // //Đóng modal
     onClose();
   };
 
@@ -538,7 +538,7 @@ const UpdateQuestion = ({
           <div className="ml-5">
             <div className="text-lg font-semibold">Update question</div>
             <div className="text-wrap text-sm font-normal">
-            Update question for question bank.
+              Update question for question bank.
             </div>
           </div>
         </ModalHeader>
@@ -581,10 +581,10 @@ const UpdateQuestion = ({
                   type="number"
                   className="w-full rounded-lg text-black"
                   placeholder="Enter score..."
-                  value={totalPoint}
-                  onChange={(e) => setTotalPoint(e.target.value)}
+                  value={totalPoints}
+                  onChange={(e) => settotalPoints(e.target.value)}
                 />
-                {renderError('totalPoint')}
+                {renderError('totalPoints')}
               </div>
             </div>
             {/**Content */}
@@ -650,7 +650,7 @@ const UpdateQuestion = ({
                           {/* Input chiếm toàn bộ không gian */}
                           <input
                             type="text"
-                            className="flex-grow rounded-lg border p-2 w-full"
+                            className="w-full flex-grow rounded-lg border p-2"
                             placeholder="Enter answer"
                             value={answer.answer}
                             onChange={(e) => {

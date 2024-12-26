@@ -1,5 +1,6 @@
 'use client';
 
+import { deleteQuestion } from '@/services/questions.service';
 import {
   Modal,
   ModalContent,
@@ -48,24 +49,24 @@ const DeleteQuestionModal = ({
       toast.error('This question is also in the exams, please remove it before deleting the question.');
       onClose();
     }
-    // setIsDeleting(true);
-    // try {
-    //   const result = await deleteCourse(courseId);
-    //   if (result) {
-    //     handleClose();
-    //     if (onDeleted) {
-    //       onDeleted(); // Thông báo cho parent component
-    //     }
-    //   }
-    // } catch (error: any) {
-    //   console.error('🚫 ~ handleDelete ~ Error:', error);
-    //   toast.error(
-    //     error.response?.data?.message ||
-    //       'Failed to delete course. Please try again.'
-    //   );
-    // } finally {
-    //   setIsDeleting(false);
-    // }
+    setIsDeleting(true);
+    try {
+      const result = await deleteQuestion(questionId);
+      if (result) {
+        handleClose();
+        if (onDeleted) {
+          onDeleted(); // Thông báo cho parent component
+        }
+      }
+    } catch (error: any) {
+      console.error('🚫 ~ handleDelete ~ Error:', error);
+      toast.error(
+        error.response?.data?.message ||
+          'Failed to delete course. Please try again.'
+      );
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleClose = () => {
