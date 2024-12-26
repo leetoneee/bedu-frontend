@@ -62,7 +62,7 @@ const DeleteQuestionModal = ({
       console.error('🚫 ~ handleDelete ~ Error:', error);
       toast.error(
         error.response?.data?.message ||
-          'Failed to delete course. Please try again.'
+          'Failed to delete question. Please try again.'
       );
     } finally {
       setIsDeleting(false);

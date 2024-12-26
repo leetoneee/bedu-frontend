@@ -34,9 +34,9 @@ type Props = {
 };
 
 export const questionTypes = [
-  { key: 'multiple', label: 'Multiple Choice' },
-  { key: 'single', label: 'Single Choice' },
-  { key: 'fillin', label: 'Fill In The Blank' }
+  { key: 'MultipleChoice', label: 'Multiple Choice' },
+  { key: 'SingleChoice', label: 'Single Choice' },
+  { key: 'FillInTheBlankChoice', label: 'Fill In The Blank' }
 ];
 
 const AddQuestionModal = ({
@@ -72,7 +72,7 @@ const AddQuestionModal = ({
   ) => {
     let possibleAnswersAPI = answers.map((answer) => answer.answer).join('/');
     let answerAPI: string = '';
-    if (typeQuestion === 'fillin') {
+    if (typeQuestion === 'FillInTheBlankChoice') {
       answerAPI = possibleAnswersAPI;
     } else {
       answerAPI = answers
@@ -109,8 +109,8 @@ const AddQuestionModal = ({
     newErrors.totalPoints =
       totalPoints.trim() === '' ? 'Score is required' : '';
     newErrors.questionType = selectedType ? '' : 'Question type is required';
-    //Single Choice & Multiple Choice
-    if (selectedType === 'single' || selectedType === 'multiple') {
+    //single Choice & multiple Choice
+    if (selectedType === 'SingleChoice' || selectedType === 'MultipleChoice') {
       if (answers.length === 0) {
         newErrors.answers = 'List of answers cannot be empty';
       } else {
@@ -125,7 +125,7 @@ const AddQuestionModal = ({
     }
 
     // Fill in the blank
-    if (selectedType === 'fillin') {
+    if (selectedType === 'FillInTheBlankChoice') {
       // answers không được là chuỗi rỗng
       const emptyAnswers = answers.filter(
         (answer) => answer.answer.trim() === ''
@@ -171,7 +171,7 @@ const AddQuestionModal = ({
     };
 
     // Single Choice & Multiple Choice
-    if (selectedType === 'single' || selectedType === 'multiple') {
+    if (selectedType === 'SingleChoice' || selectedType === 'MultipleChoice') {
       if (answers.length === 0) {
         newErrors.answers = 'List of answers cannot be empty';
       } else {
@@ -186,7 +186,7 @@ const AddQuestionModal = ({
     }
 
     // Fill in the blank
-    if (selectedType === 'fillin') {
+    if (selectedType === 'FillInTheBlankChoice') {
       // answers không được là chuỗi rỗng
       const emptyAnswers = answers.filter(
         (answer) => answer.answer.trim() === ''
@@ -250,7 +250,7 @@ const AddQuestionModal = ({
 
   const handleSubmit = async () => {
     if (!validateInputsSpec()) {
-      if (selectedType === 'fillin') {
+      if (selectedType === 'FillInTheBlankChoice') {
         renderError('pointDivision');
       }
       renderError('answers');
@@ -280,7 +280,7 @@ const AddQuestionModal = ({
         // examId: [],
         // documentId: []
       };
-      console.log('data: ', data);
+      // console.log('data: ', data);
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
         //Gọi API và đợi kết quả trả về
@@ -349,7 +349,7 @@ const AddQuestionModal = ({
 
   // Thêm câu trả lời mới
   const addAnswer = () => {
-    if (selectedType === 'fillin') {
+    if (selectedType === 'FillInTheBlankChoice') {
       // Với type fillin, thêm câu trả lời mới vào cả answers và correctAnswers
       const newId = answers.length ? answers[answers.length - 1].id + 1 : 1;
       const newAnswer = { id: newId, answer: '' };
@@ -367,7 +367,7 @@ const AddQuestionModal = ({
     // Xóa câu trả lời trong answers
     setAnswers(answers.filter((ans) => ans.id !== id));
 
-    if (selectedType === 'fillin') {
+    if (selectedType === 'FillInTheBlankChoice') {
       // Với type fillin, xóa pointDivision của id tương ứng
       setPointDivision(pointDivision.filter((point) => point.id !== id));
     }
@@ -378,7 +378,7 @@ const AddQuestionModal = ({
 
   // Cập nhật nội dung câu trả lời
   const updateAnswer = (id: number, newAnswer: string) => {
-    if (selectedType === 'fillin') {
+    if (selectedType === 'FillInTheBlankChoice') {
       // Với type fillin, cập nhật cả answers và correctAnswers
       setAnswers((prevAnswers) =>
         prevAnswers.map((answer) =>
@@ -396,7 +396,7 @@ const AddQuestionModal = ({
         );
       }
     } else {
-      // Với single và multiple choice
+      // Với SingleChoice và multiple choice
       setAnswers((prevAnswers) =>
         prevAnswers.map((answer) =>
           answer.id === id ? { ...answer, answer: newAnswer } : answer
@@ -406,15 +406,15 @@ const AddQuestionModal = ({
   };
   // Chuyển đổi trạng thái "đáp án đúng"
   const toggleCorrectAnswer = (id: number) => {
-    if (selectedType === 'single') {
-      // Single choice: chỉ cho phép một đáp án đúng
+    if (selectedType === 'SingleChoice') {
+      // single choice: chỉ cho phép một đáp án đúng
       if (correctAnswers.includes(id)) {
         setCorrectAnswers([]); // Bỏ chọn nếu đã chọn
       } else {
         setCorrectAnswers([id]); // Chỉ lưu một đáp án
       }
-    } else if (selectedType === 'multiple') {
-      // Multiple choice: cho phép nhiều đáp án đúng
+    } else if (selectedType === 'MultipleChoice') {
+      // multiple choice: cho phép nhiều đáp án đúng
       if (correctAnswers.includes(id)) {
         setCorrectAnswers(
           correctAnswers.filter((correctId) => correctId !== id)
@@ -422,7 +422,7 @@ const AddQuestionModal = ({
       } else {
         setCorrectAnswers([...correctAnswers, id]); // Thêm đáp án
       }
-    } else if (selectedType === 'fillin') {
+    } else if (selectedType === 'FillInTheBlankChoice') {
       // Fill in the blank: logic khác, ví dụ không áp dụng checkbox
       console.warn('Fill in the blank không sử dụng toggleCorrectAnswer');
     }
@@ -577,7 +577,7 @@ const AddQuestionModal = ({
 
             {/* Program image  */}
 
-            {selectedType && selectedType === 'single' ? (
+            {selectedType && selectedType === 'SingleChoice' ? (
               <div className="w-full gap-3">
                 <Divider />
                 <div className="flex flex-row pt-8">
@@ -628,7 +628,7 @@ const AddQuestionModal = ({
                   </div>
                 </div>
               </div>
-            ) : selectedType === 'multiple' ? (
+            ) : selectedType === 'MultipleChoice' ? (
               <div className="w-full gap-3">
                 <Divider />
                 <div className="flex flex-row pt-8">
@@ -679,7 +679,7 @@ const AddQuestionModal = ({
                   </div>
                 </div>
               </div>
-            ) : selectedType === 'fillin' ? (
+            ) : selectedType === 'FillInTheBlankChoice' ? (
               <div className="w-full gap-3">
                 <Divider />
                 <div className="flex flex-row pt-8">
