@@ -8,16 +8,16 @@ export async function middleware(request: NextRequest) {
   // let headers = new Headers(request.headers);
   // const token = await getToken({ req: request, secret: process.env.SECRET });
 
-  console.log('🚀 ~ middleware ~ token:', token);
+  // console.log('🚀 ~ middleware ~ token:', token);
 
   if (!token) return NextResponse.redirect(new URL('/denied', request.url));
 
   console.log('Pathname:', request.nextUrl.pathname);
-  console.log('Token Role:', token.role);
+  console.log('Token Role:', token.name);
 
   if (
     !request.nextUrl.pathname.startsWith('/manager') &&
-    token.role === 'manager'
+    token.name === 'manager'
   ) {
     return NextResponse.redirect(new URL('/', request.url));
   }

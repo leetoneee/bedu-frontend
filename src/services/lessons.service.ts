@@ -4,7 +4,7 @@ export type CreateLessonDto = {
   startDate: string;
   endDate: string;
   type: string;
-  // title: string;
+  title: string;
   courseId: number;
   videoUrl: string;
   isActive: boolean;

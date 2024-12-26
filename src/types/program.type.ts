@@ -1,3 +1,5 @@
+import { Course } from "./course.type";
+
 export type Program = {
   id: number;
   code: string;
@@ -6,7 +8,9 @@ export type Program = {
   description: string;
   sessionQuantity: number;
   price: number;
+  avatar: string;
   isActive: boolean;
+  course: Course[];
 };
 
 export const statusColorMap: Record<

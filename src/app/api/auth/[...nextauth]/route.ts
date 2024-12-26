@@ -22,17 +22,22 @@ const handler = NextAuth({
         // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
-        const res = await fetch('https://dummyjson.com/auth/login', {
+        const res = await fetch('http://localhost:3001/auth/login', {
           method: 'POST',
           body: JSON.stringify(credentials),
           headers: { 'Content-Type': 'application/json' }
         });
-        const user = await res.json();
-        console.log('🚀 ~ authorize ~ user:', user);
-
+        const data = await res.json();
         // If no error and we have user data, return it
-        if (res.ok && user) {
-          return user;
+        if (res.ok && data.metadata) {
+          return {
+            id: data.metadata.user.id,
+            name: data.metadata.user.name,
+            email: data.metadata.user.email,
+            role: data.metadata.user.role,
+            accessToken: data.metadata.accessToken,
+            ...data.metadata.user // Includes other user details
+          };
         }
         // Return null if user data could not be retrieved
         return null;
@@ -42,25 +47,12 @@ const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === 'development',
   callbacks: {
-    async jwt({ token, user, account }) {
-      // Persist the OAuth access_token to the token right after signin
-      // if (account) {
-      //   token.accessToken = account.access_token;
-      // }
-      if (user) {
-        token.role = 'manager';
-      }
-      //   // token.email = user.email;
-      //   token.name = user.firstName + user.lastName;
-      // }
+    async jwt({ token, user }) {
       return { ...token, ...user };
     },
     async session({ session, token, user }) {
       // Send properties to the client, like an access_token from a provider.
       // session.accessToken = token.accessToken;
-      if (session?.user) {
-        session.user.role = token.role as string;
-      }
       //   session.user.name = token.name;
       //   // session.user.role = token.name;
       // }

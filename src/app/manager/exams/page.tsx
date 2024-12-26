@@ -1,9 +1,7 @@
 'use client';
 
-import Breadcrumb from '@/components/Breadcrumb';
-import ButtonSolid from '@/components/Button/ButtonSolid';
+import { ButtonSolid, Breadcrumb } from '@/components';
 import { Crumb } from '@/types';
-import { Program, statusColorMap } from '@/types/program.type';
 import {
   EyeIcon,
   MagnifyingGlassIcon,
@@ -12,54 +10,54 @@ import {
   TrashIcon
 } from '@heroicons/react/24/outline';
 import {
-  Button,
-  Chip,
   Divider,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Input,
-  Pagination,
-  Selection,
   SortDescriptor,
-  Spinner,
+  Selection,
+  Chip,
+  Tooltip,
+  Input,
+  Dropdown,
+  DropdownTrigger,
+  Button,
+  DropdownMenu,
+  DropdownItem,
   Table,
+  TableHeader,
+  TableColumn,
   TableBody,
   TableCell,
-  TableColumn,
-  TableHeader,
   TableRow,
-  Tooltip,
+  Pagination,
+  Spinner,
   useDisclosure
 } from '@nextui-org/react';
-import React, { Key, useEffect } from 'react';
-import { ReactNode, useCallback, useState } from 'react';
-import { columns, statusOptions } from '@/data/program.data';
 import { useRouter } from 'next/navigation';
-import useSWR from 'swr';
+import React, { Key, ReactNode, useCallback, useEffect } from 'react';
+import { useState } from 'react';
+import { columns, statusOptions } from '@/data/exam.data';
+import { Exam } from '@/types/exam.type';
 import axios from '@/libs/axiosInstance';
+import useSWR from 'swr';
 import { toast } from 'react-toastify';
-import AddProgramModal from './AddProgram.modal';
-import EditProgramModal from './EditProgram.modal';
-import DeleteProgramModal from './DeleteProgram.modal';
+import { statusColorMap } from '@/types/course.type';
+import AddExamModal from './AddExam.modal';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-export default function SSP() {
+export default function ExamsPage() {
   const router = useRouter();
   //!  CONTROL Add modal
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   //!  CONTROL Edit modal
-  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+  const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
   const {
     isOpen: isOpenE,
     onOpen: onOpenE,
     onOpenChange: onOpenChangeE,
     onClose: onCloseE
   } = useDisclosure();
-  const handleEditClick = (program: Program) => {
-    setSelectedProgram(program);
+  const handleEditClick = (exam: Exam) => {
+    setSelectedExam(exam);
     onOpenE();
   };
   //!  CONTROL Delete modal
@@ -69,31 +67,32 @@ export default function SSP() {
     onOpenChange: onOpenChangeD,
     onClose: onCloseD
   } = useDisclosure();
-  const handleDeleteClick = (program: Program) => {
-    setSelectedProgram(program);
+  const handleDeleteClick = (exam: Exam) => {
+    setSelectedExam(exam);
     onOpenD();
   };
-  // Hàm đóng modal và reset selectedCourse
+  // Hàm đóng modal và reset selectedExam
   const handleCloseEditModal = () => {
     onCloseE();
-    setSelectedProgram(null);
+    setSelectedExam(null);
   };
   const handleCloseDeleteModal = () => {
     onCloseD();
-    setSelectedProgram(null);
+    setSelectedExam(null);
   };
+
   const crumbs: Crumb[] = [
     {
-      label: 'Self-study Program',
-      href: '/manager/self-study-program'
+      label: 'Exams',
+      href: '/manager/exams'
     }
   ];
 
-  const [programs, setPrograms] = useState<Program[]>([]);
+  const [exams, setExams] = useState<Exam[]>([]);
   const [filter, setFilter] = useState<string | null>(null); // 'ielts', 'toeic', 'toefl', or null
-  const [totalPrograms, setTotalPrograms] = useState<number>(0);
-  const [filterProgramName, setFilterProgramName] = useState<string>('');
-  const hasSearchFilter = Boolean(filterProgramName);
+  const [totalExams, setTotalExams] = useState<number>(0);
+  const [filterExamName, setFilterExamName] = useState<string>('');
+  const hasSearchFilter = Boolean(filterExamName);
   const [selectedStatus, setSelectedStatus] = useState<Selection>(
     new Set(['all'])
   );
@@ -109,7 +108,7 @@ export default function SSP() {
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
 
-  const endpoint = `/programs/all${filter ? `/type/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
+  const endpoint = `/exams/all${filter ? `/type/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
 
   const {
     data,
@@ -121,138 +120,127 @@ export default function SSP() {
   });
 
   const pages = React.useMemo(() => {
-    return data?.metadata.totalRecord
-      ? Math.ceil(data.metadata.totalRecord / rowsPerPage)
-      : 0;
-  }, [data?.metadata.totalRecord, rowsPerPage]);
+    if (data)
+      return data?.metadata.totalRecord
+        ? Math.ceil(data.metadata.totalRecord / rowsPerPage)
+        : 0;
+    return 1;
+  }, [data, rowsPerPage]);
 
   const loadingState =
-    isLoading || data?.metadata.programs.length === 0 ? 'loading' : 'idle';
+    isLoading || data?.metadata.exams.length === 0 ? 'loading' : 'idle';
 
   // Load data
   useEffect(() => {
-    if (error) setPrograms([]);
-    else if (data && data.metadata.programs) {
-      setTotalPrograms(data.metadata.totalRecord);
-      setPrograms(data.metadata.programs);
+    if (error) setExams([]);
+    else if (data && data.metadata.exams) {
+      // console.log('🚀 ~ useEffect ~ data.metadata:', data.metadata);
+      setExams(data.metadata.exams);
+      setTotalExams(data.metadata.totalRecord);
     }
   }, [data, filter]);
   //
 
-  useEffect(() => {
-    setTotalPrograms(programs.length);
-  }, [programs]);
+  // useEffect(() => {
+  //   setTotalCourses(courses.length);
+  // }, [courses]);
 
-  const renderCell = useCallback(
-    (program: Program, columnKey: Key): ReactNode => {
-      const cellValue =
-        columnKey !== 'actions'
-          ? program[columnKey as keyof Program]
-          : 'actions';
+  const renderCell = useCallback((exam: Exam, columnKey: Key): ReactNode => {
+    const cellValue =
+      columnKey !== 'actions' ? exam[columnKey as keyof Exam] : 'actions';
 
-      switch (columnKey) {
-        case 'id':
-          return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">
-                {cellValue.toString()}
-              </p>
-            </div>
-          );
-        case 'code':
-          return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">
-                {cellValue.toString()}
-              </p>
-            </div>
-          );
-        case 'title':
-          return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">
-                {cellValue.toString()}
-              </p>
-            </div>
-          );
-        case 'isPublish':
-          return (
-            <Chip
-              className="capitalize"
-              color={
-                statusColorMap[
-                  (program.isActive
-                    ? 'Published'
-                    : 'Unpublished') as keyof typeof statusColorMap
-                ]
-              }
-              size="sm"
-              variant="flat"
-            >
-              {program.isActive ? 'Published' : 'Unpublished'}
-            </Chip>
-          );
-        case 'sessionQuantity':
-          return (
-            <div className="flex basis-[10%] flex-col">
-              <p className="text-bold text-wraps text-sm capitalize">
-                {cellValue.toString()}
-              </p>
-            </div>
-          );
-        case 'type':
-          return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">
-                {cellValue.toString().toUpperCase()}
-              </p>
-            </div>
-          );
-        case 'price':
-          return (
-            <div className="flex basis-[10%] flex-col">
-              <p className="text-bold text-sm capitalize">
-                {cellValue.toString()}
-              </p>
-            </div>
-          );
-        case 'actions':
-          return (
-            <div className="relative flex items-center justify-center gap-2">
-              <Tooltip content="Details" className="bg-on-primary" delay={1000}>
-                <span
-                  className="cursor-pointer text-lg text-on-primary active:opacity-50"
-                  onClick={() =>
-                    router.push(`self-study-program/${program.id}`)
-                  }
-                >
-                  <EyeIcon className="size-5" />
-                </span>
-              </Tooltip>
-              <Tooltip content="Edit" color="warning" delay={1000}>
-                <span
-                  className="cursor-pointer text-lg text-on-secondary active:opacity-50"
-                  onClick={() => handleEditClick(program)}
-                >
-                  <PencilIcon className="size-5" />
-                </span>
-              </Tooltip>
-              <Tooltip color="danger" content="Delete" delay={1000}>
-                <span
-                  className="cursor-pointer text-lg text-danger active:opacity-50"
-                  onClick={() => handleDeleteClick(program)}
-                >
-                  <TrashIcon className="size-5" />
-                </span>
-              </Tooltip>
-            </div>
-          );
-        default:
-          return cellValue.toString();
-      }
-    },
-    []
-  );
+    switch (columnKey) {
+      case 'id':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{cellValue}</p>
+          </div>
+        );
+      case 'title':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{cellValue}</p>
+          </div>
+        );
+      case 'duaration':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{cellValue}</p>
+          </div>
+        );
+
+      case 'examType':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">
+              {cellValue.toString().toUpperCase()}
+            </p>
+          </div>
+        );
+      case 'isPublish':
+        return (
+          <Chip
+            className="capitalize"
+            color={
+              statusColorMap[
+                (exam.isActive
+                  ? 'Published'
+                  : 'Unpublished') as keyof typeof statusColorMap
+              ]
+            }
+            size="sm"
+            variant="flat"
+          >
+            {exam.isActive ? 'Published' : 'Unpublished'}
+          </Chip>
+        );
+      case 'questionQuantity':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-wraps text-sm capitalize">
+              {cellValue}
+            </p>
+          </div>
+        );
+      case 'resultTime':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize">{cellValue} minutes</p>
+          </div>
+        );
+      case 'actions':
+        return (
+          <div className="relative flex items-center justify-center gap-2">
+            <Tooltip content="Details" className="bg-on-primary" delay={1000}>
+              <span
+                className="cursor-pointer text-lg text-on-primary active:opacity-50"
+                onClick={() => router.push(`exams/${exam.id}`)}
+              >
+                <EyeIcon className="size-5" />
+              </span>
+            </Tooltip>
+            <Tooltip content="Edit" color="warning" delay={1000}>
+              <span
+                className="cursor-pointer text-lg text-on-secondary active:opacity-50"
+                onClick={() => handleEditClick(exam)}
+              >
+                <PencilIcon className="size-5" />
+              </span>
+            </Tooltip>
+            <Tooltip color="danger" content="Delete" delay={1000}>
+              <span
+                className="cursor-pointer text-lg text-danger active:opacity-50"
+                onClick={() => handleDeleteClick(exam)}
+              >
+                <TrashIcon className="size-5" />
+              </span>
+            </Tooltip>
+          </div>
+        );
+      default:
+        return cellValue;
+    }
+  }, []);
 
   const renderChip = useCallback((content: string): ReactNode => {
     switch (content) {
@@ -284,12 +272,11 @@ export default function SSP() {
   }, []);
 
   const filteredItems = React.useMemo(() => {
-    let filteredPrograms = [...programs];
-    setPage(1);
+    let filteredExams = [...exams];
 
     if (hasSearchFilter) {
-      filteredPrograms = filteredPrograms.filter((program) =>
-        program.title.toLowerCase().includes(filterProgramName.toLowerCase())
+      filteredExams = filteredExams.filter((exam) =>
+        exam.title.toLowerCase().includes(filterExamName.toLowerCase())
       );
     }
 
@@ -297,14 +284,14 @@ export default function SSP() {
       selectedValue !== 'all' &&
       Array.from(selectedStatus).length !== statusOptions.length
     ) {
-      filteredPrograms = filteredPrograms.filter((program) =>
+      filteredExams = filteredExams.filter((exam) =>
         Array.from(selectedStatus).includes(
-          program.isActive ? 'Published' : 'Unpublished'
+          exam.isActive ? 'Published' : 'Unpublished'
         )
       );
     }
-    return filteredPrograms;
-  }, [programs, filterProgramName, selectedValue, selectedStatus]);
+    return filteredExams;
+  }, [exams, filterExamName, selectedValue, selectedStatus]);
 
   // const items = React.useMemo(() => {
   //   const start = (page - 1) * rowsPerPage;
@@ -314,9 +301,9 @@ export default function SSP() {
   // }, [page, filteredItems]);
 
   const sortedItems = React.useMemo(() => {
-    return [...filteredItems].sort((a: Program, b: Program) => {
-      const first = a[sortDescriptor.column as keyof Program] as number;
-      const second = b[sortDescriptor.column as keyof Program] as number;
+    return [...filteredItems].sort((a: Exam, b: Exam) => {
+      const first = a[sortDescriptor.column as keyof Exam] as number;
+      const second = b[sortDescriptor.column as keyof Exam] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
@@ -329,17 +316,17 @@ export default function SSP() {
   };
 
   const handleCreated = () => {
-    toast.success('Program created successfully!');
+    toast.success('Exam created successfully!');
     refreshEndpoint();
   };
 
   const handleEdited = () => {
-    toast.success('Program edited successfully!');
+    toast.success('Exam edited successfully!');
     refreshEndpoint();
   };
 
   const handleDeleted = () => {
-    toast.success('Program deleted successfully!');
+    toast.success('Exam deleted successfully!');
     refreshEndpoint();
   };
 
@@ -354,15 +341,15 @@ export default function SSP() {
           <div className="flex w-full flex-row gap-16">
             {/* Search Name*/}
             <div className="flex flex-col gap-2">
-              <span>Program name</span>
+              <span>Exam name</span>
               <Input
                 className="bg-white"
                 variant="bordered"
                 size={'md'}
                 type=""
-                placeholder="Find your program name"
-                value={filterProgramName}
-                onChange={(e) => setFilterProgramName(e.target.value)}
+                placeholder="Find your exam name"
+                value={filterExamName}
+                onChange={(e) => setFilterExamName(e.target.value)}
               />
             </div>
             {/* Filter Status */}
@@ -443,7 +430,7 @@ export default function SSP() {
             </div>
 
             <span>
-              Total: <span className="text-2xl">{totalPrograms}</span> programs
+              Total: <span className="text-2xl">{totalExams}</span> exams
             </span>
           </div>
         </div>
@@ -457,6 +444,7 @@ export default function SSP() {
             shadow="none"
             sortDescriptor={sortDescriptor}
             onSortChange={setSortDescriptor}
+            isHeaderSticky
           >
             <TableHeader columns={columns}>
               {(column) => (
@@ -498,34 +486,13 @@ export default function SSP() {
           />
         </div>
       </div>
-      <AddProgramModal
+      <AddExamModal
         isOpen={isOpen}
+        onClose={onClose}
         onOpen={onOpen}
         onOpenChange={onOpenChange}
-        onClose={onClose}
         onCreated={handleCreated}
       />
-      {isOpenE && selectedProgram && (
-        <EditProgramModal
-          isOpen={isOpenE}
-          onOpen={onOpenE}
-          onOpenChange={onOpenChangeE}
-          program={selectedProgram}
-          onClose={handleCloseEditModal}
-          onEdited={handleEdited}
-        />
-      )}
-      {isOpenD && selectedProgram && (
-        <DeleteProgramModal
-          isOpen={isOpenD}
-          onOpen={onOpenD}
-          onOpenChange={onOpenChangeD}
-          onClose={handleCloseDeleteModal}
-          programId={selectedProgram.id}
-          programTitle={selectedProgram.title}
-          onDeleted={handleDeleted}
-        />
-      )}
     </main>
   );
 }

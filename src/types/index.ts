@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export type ButtonProps = {
   content?: string;
@@ -14,7 +14,7 @@ export type Crumb = {
   label: string;
   href: string;
   className?: string;
-}
+};
 
 export type InputProps = {
   title: string;
@@ -50,4 +50,11 @@ export type EventProps = {
   description: string;
   location?: string;
   people: string[];
-}
+};
+
+export type TabButtonProps = {
+  name: string;
+  setActiveTab: (tabName: string) => void;
+  activeTab: string;
+  icon?: ReactNode;
+};

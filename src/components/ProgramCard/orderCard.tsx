@@ -18,11 +18,11 @@ const OrderCard = ({ detail }: OrderCardProps) => {
     <div className="w-[400px] rounded-xl border-[1px] border-outline text-xs transition-shadow duration-200 hover:shadow-lg">
       <div>
         <Image
-          src={'/icons/course_img.svg'}
+          src={detail.avatar || '/icons/course_img.svg'}
           alt={'Course Image'}
           width={400}
           height={200}
-          className="rounded-t-xl object-cover"
+          className="rounded-t-xl object-cover p-2"
         />
       </div>
       <div className="pb-4 pl-4 pr-4">

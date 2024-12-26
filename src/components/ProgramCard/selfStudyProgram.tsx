@@ -13,7 +13,7 @@ const SelfStudyProgramCard = ({
     id,
     code,
     description,
-    image,
+    avatar,
     lessonQuantity,
     price,
     studentQuantity,
@@ -32,7 +32,7 @@ const SelfStudyProgramCard = ({
     <div className="w-[400px] cursor-pointer rounded-xl border-[1px] border-outline text-xs transition-shadow duration-200 hover:shadow-lg">
       <div>
         <Image
-          src={'/icons/course_img.svg'}
+          src={avatar || '/icons/course_img.svg'}
           alt="Course image"
           width={400}
           height={200}

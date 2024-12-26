@@ -100,32 +100,37 @@ const EClassDetail = () => {
         case 'id':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue?.toString()}
+              </p>
             </div>
           );
         case 'type':
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue.toString().toUpperCase()}
+                {cellValue ? cellValue.toString().toUpperCase() : ''}
               </p>
             </div>
           );
         case 'title':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue?.toString()}
+              </p>
             </div>
           );
         case 'startDate':
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {new Date(cellValue.toString()).toLocaleDateString('vi-VE', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric'
-                })}
+                {cellValue &&
+                  new Date(cellValue.toString()).toLocaleDateString('vi-VE', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                  })}
               </p>
             </div>
           );
@@ -133,11 +138,12 @@ const EClassDetail = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {new Date(cellValue.toString()).toLocaleDateString('vi-VE', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric'
-                })}
+                {cellValue &&
+                  new Date(cellValue.toString()).toLocaleDateString('vi-VE', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                  })}
               </p>
             </div>
           );
@@ -145,21 +151,23 @@ const EClassDetail = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-wraps text-sm capitalize">
-                {cellValue}
+                {cellValue?.toString()}
               </p>
             </div>
           );
         case 'price':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue?.toString()}
+              </p>
             </div>
           );
         case 'timePerLesson':
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue} minutes
+                {cellValue?.toString()} minutes
               </p>
             </div>
           );
@@ -187,7 +195,7 @@ const EClassDetail = () => {
             </div>
           );
         default:
-          return cellValue;
+          return cellValue?.toString();
       }
     },
     []
