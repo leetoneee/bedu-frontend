@@ -270,26 +270,27 @@ const AddQuestionModal = ({
       );
       const data: CreateQuestionDto = {
         question: question,
-        totalPoint: Number(totalPoints),
+        totalPoints: Number(totalPoints),
         pointDivision: pointDivisionAPI,
         content: content,
         attach: attach,
         questionType: selectedType,
         possibleAnswer: possibleAnswersAPI,
-        answer: answerAPI
+        answer: answerAPI,
+        // examId: [],
+        // documentId: []
       };
-      // console.log('data: ', data);
+      console.log('data: ', data);
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
         //Gọi API và đợi kết quả trả về
-        //Bấm 1 phát khi chưa có api là đỏ lè
-        // const result = await createQuestion(data);
-        // if(result) {
-        //   handleClose();
-        //   if(onCreated) {
-        //     onCreated();
-        //   }
-        // }
+        const result = await createQuestion(data);
+        if(result) {
+          handleClose();
+          if(onCreated) {
+            onCreated();
+          }
+        }
       } catch (error: any) {
         console.error('🚫 ~ onSubmit ~ Error:', error);
         toast.error(
