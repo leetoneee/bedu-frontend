@@ -104,29 +104,27 @@ export default function QuestionBank() {
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
 
-  // const endpoint = `/question/all${filter ? `/type/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
+  const endpoint = `/question/all${filter ? `/type/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
 
-  // const {
-  //   data,
-  //   error,
-  //   isLoading,
-  //   mutate: refreshEndpoint
-  // } = useSWR(endpoint, fetcher, {
-  //   keepPreviousData: true
-  // });
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: refreshEndpoint
+  } = useSWR(endpoint, fetcher, {
+    keepPreviousData: true
+  });
 
   //Can sua lai
   const pages = 10; //pagination
-  // const loadingState =
-  //   isLoading || data?.metadata.length === 0 ? 'loading' : 'idle';
-  // Test, khong can nua thi xoa
-  const loadingState = 'idle';
+  const loadingState =
+    isLoading || data?.metadata.length === 0 ? 'loading' : 'idle';
 
   // Load data
-  // useEffect(() => {
-  //   if (error) setQuestions([]);
-  //   else if (data) setQuestions(data.metadata);
-  // }, [data, filter]);
+  useEffect(() => {
+    if (error) setQuestions([]);
+    else if (data) setQuestions(data.metadata.questions);
+  }, [data, filter]);
 
   useEffect(() => {
     setTotalQuestions(questions.length);
@@ -179,7 +177,7 @@ export default function QuestionBank() {
               </p>
             </div>
           );
-        case 'totalPoint':
+        case 'totalPoints':
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize text-on-surface">
@@ -222,9 +220,9 @@ export default function QuestionBank() {
     },
     []
   );
-  // Can sua lai dataQuestions
+
   const filteredItems = React.useMemo(() => {
-    let filteredQuestions = [...dataQuestions];
+    let filteredQuestions = [...questions];
     if (hasSearchFilter) {
       filteredQuestions = filteredQuestions.filter((question) =>
         question.content
@@ -245,24 +243,24 @@ export default function QuestionBank() {
     });
   }, [sortDescriptor, filteredItems]);
 
-  const handleFilterChange = (newFillter: string | null) => {
-    setPage(1);
-    setFilter((prevFilter) => (prevFilter === newFillter ? null : newFillter));
+  const handleFilterChange = (newFilter: string | null) => {
+    setPage(1); // Reset page to 1
+    setFilter((prevFilter) => (prevFilter === newFilter ? null : newFilter));
   };
 
   const handleCreated = () => {
     toast.success('Question created successfully!');
-    // refreshEndpoint();
+    refreshEndpoint();
   };
 
   const handleEdited = () => {
     toast.success('Question edited successfully!');
-    // refreshEndpoint();
+    refreshEndpoint();
   };
 
   const handleDeleted = () => {
     toast.success('Question deleted successfully!');
-    // refreshEndpoint();
+    refreshEndpoint();
   };
 
   return (
@@ -301,8 +299,8 @@ export default function QuestionBank() {
                 className="select-none capitalize hover:cursor-pointer"
                 color={'danger'}
                 size="lg"
-                variant={filter === 'multiplechoice' ? 'flat' : 'bordered'}
-                onClick={() => handleFilterChange('multiplechoice')}
+                variant={filter === 'multiple' ? 'flat' : 'bordered'}
+                onClick={() => handleFilterChange('multiple')}
               >
                 MULTIPLE CHOICE
               </Chip>
@@ -312,8 +310,8 @@ export default function QuestionBank() {
                 className="select-none capitalize hover:cursor-pointer"
                 color={'warning'}
                 size="lg"
-                variant={filter === 'singlechoice' ? 'flat' : 'bordered'}
-                onClick={() => handleFilterChange('singlechoice')}
+                variant={filter === 'single' ? 'flat' : 'bordered'}
+                onClick={() => handleFilterChange('single')}
               >
                 SINGLE CHOICE
               </Chip>
@@ -323,8 +321,8 @@ export default function QuestionBank() {
                 className="select-none capitalize hover:cursor-pointer"
                 color={'success'}
                 size="lg"
-                variant={filter === 'fillintheblank' ? 'flat' : 'bordered'}
-                onClick={() => handleFilterChange('fillintheblank')}
+                variant={filter === 'fillin' ? 'flat' : 'bordered'}
+                onClick={() => handleFilterChange('fillin')}
               >
                 FILL IN THE BLANK
               </Chip>
