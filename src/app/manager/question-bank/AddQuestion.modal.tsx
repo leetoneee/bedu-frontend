@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ToastContainer, Bounce, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import {
   Modal,
   ModalHeader,
@@ -8,7 +8,6 @@ import {
   ModalContent,
   Divider,
   Checkbox,
-  Input,
   SelectItem,
   Select,
   Selection,
@@ -16,10 +15,6 @@ import {
   Tooltip
 } from '@nextui-org/react';
 import {
-  EyeIcon,
-  MagnifyingGlassIcon,
-  PencilIcon,
-  PlusIcon,
   TrashIcon
 } from '@heroicons/react/24/outline';
 import { ButtonSolid } from '@/components';
@@ -44,7 +39,6 @@ export const questionTypes = [
 
 const AddQuestionModal = ({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   onCreated

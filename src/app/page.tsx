@@ -1,4 +1,4 @@
-import { Header, NavHeader } from '@/components';
+import { NavHeader } from '@/components';
 import Image from 'next/image';
 import girl_1 from '../../public/images/girl_1.svg';
 import girl_2 from '../../public/images/girl_2.svg';

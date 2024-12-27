@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -11,24 +11,24 @@ import {
 } from '@nextui-org/react';
 import { Button } from '@nextui-org/react';
 import { toast } from 'react-toastify';
-import { deleteProgram } from '@/services/programs.service';
+import { deleteExam } from '@/services/exam.service';
 
 type Props = {
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: () => void;
   onClose: () => void;
-  programId: number;
-  programTitle: string;
+  examId: number;
+  examTitle: string;
   onDeleted?: () => void;
 };
 
-export default function DeleteProgramModal({
+export default function DeleteExamModal({
   isOpen,
   onOpenChange,
   onClose,
-  programId,
-  programTitle,
+  examId,
+  examTitle,
   onDeleted
 }: Props) {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
@@ -36,16 +36,16 @@ export default function DeleteProgramModal({
   // const [id, setId] = useState<number>();
 
   // useEffect(() => {
-  //   if (programId && programTitle) {
-  //     setName(programTitle);
-  //     setId(programId);
+  //   if (examId && examTitle) {
+  //     setName(examTitle);
+  //     setId(examId);
   //   }
-  // }, [programId, programTitle]);
+  // }, [examId, examTitle]);
 
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      const result = await deleteProgram(programId);
+      const result = await deleteExam(examId);
       if (result) {
         handleClose();
         if (onDeleted) {
@@ -56,7 +56,7 @@ export default function DeleteProgramModal({
       console.error('🚫 ~ handleDelete ~ Error:', error);
       toast.error(
         error.response?.data?.message ||
-          'Failed to delete program. Please try again.'
+          'Failed to delete exam. Please try again.'
       );
     } finally {
       setIsDeleting(false);
@@ -94,10 +94,10 @@ export default function DeleteProgramModal({
             </ModalHeader>
             <ModalBody>
               <div className="space-y-2">
-                <div className="text-lg font-semibold">Remove program</div>
+                <div className="text-lg font-semibold">Remove exam</div>
                 <div className="text-sm font-normal">
-                  Are you sure you want to remove the program{' '}
-                  <strong>{programTitle}</strong>? This action cannot be undone.
+                  Are you sure you want to remove the exam{' '}
+                  <strong>{examTitle}</strong>? This action cannot be undone.
                 </div>
               </div>
             </ModalBody>

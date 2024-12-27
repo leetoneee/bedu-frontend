@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -15,14 +15,16 @@ import {
   Button
 } from '@nextui-org/react';
 import { toast } from 'react-toastify';
-import { createExam, CreateExamDto } from '@/services/exam.service';
+import { editExam, UpdateExamDto } from '@/services/exam.service';
+import { Exam } from '@/types/exam.type';
 
 type Props = {
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: () => void;
   onClose: () => void;
-  onCreated?: () => void; // Callback báo cho parent biết đã tạo xong
+  exam: Exam;
+  onEdited?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
 const examTypes = [
@@ -33,11 +35,12 @@ const examTypes = [
 
 const scroringTypes = [{ key: 'highest', label: 'Highest score' }];
 
-export default function AddExamModal({
+export default function EditExamModal({
   isOpen,
   onOpenChange,
   onClose,
-  onCreated
+  exam,
+  onEdited
 }: Props) {
   // const [urls, setUrls] = useState<{
   //   url: string;
@@ -71,6 +74,17 @@ export default function AddExamModal({
     resultTime: '',
     description: ''
   });
+
+  useEffect(() => {
+    if (exam) {
+      setName(exam.title);
+      setDuration(`${exam.duration}`);
+      setMaxTries(`${exam.maxTries}`);
+      setResultTime(`${exam.resultTime}`);
+      setDescription(exam.description);
+      setType(new Set([`${exam.examType}`]));
+    }
+  }, [exam]);
 
   const validateInputs = () => {
     const newErrors = { ...errors };
@@ -126,23 +140,22 @@ export default function AddExamModal({
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
-      const data: CreateExamDto = {
+      const data: UpdateExamDto = {
         title: name,
         examType: selectedType,
         duration: Number(duration),
         maxTries: Number(maxTries),
         resultTime: Number(resultTime),
-        questionId: [],
         description: description
       };
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
         // Gọi API và đợi kết quả
-        const result = await createExam(data);
+        const result = await editExam(exam.id, data);
         if (result) {
           handleClose();
-          if (onCreated) {
-            onCreated();
+          if (onEdited) {
+            onEdited();
           }
         }
       } catch (error: any) {
@@ -225,10 +238,9 @@ export default function AddExamModal({
             </svg>
           </div>
           <div className="ml-5">
-            <div className="text-lg font-semibold">Add new exam</div>
+            <div className="text-lg font-semibold">Edit an exam</div>
             <div className="text-wrap text-sm font-normal">
-              Create a new exam for program, then build an exam by adding
-              questions to form a complete assessment.
+              Edit information about an exam.
             </div>
           </div>
         </ModalHeader>

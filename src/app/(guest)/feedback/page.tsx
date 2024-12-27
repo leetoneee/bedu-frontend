@@ -1,4 +1,4 @@
-import { Header, NavHeader } from '@/components';
+import { NavHeader } from '@/components';
 import Image from 'next/image';
 
 export default function FeedbackPage() {

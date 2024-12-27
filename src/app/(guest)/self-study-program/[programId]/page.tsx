@@ -3,18 +3,12 @@
 import {
   Accordion,
   Breadcrumb,
-  Header,
-  NavHeader,
   OrderCard,
   Rating,
-  Footer
 } from '@/components';
 import Image from 'next/image';
 import { Crumb } from '@/types';
 import { useParams } from 'next/navigation';
-import { getCoursesByProgramId } from '@/data/program-course.data';
-import { getLessonsByCourseId } from '@/data/lesson.data';
-import { SSProgramCardProps } from '@/types/programCard.type';
 import { Divider } from '@nextui-org/react';
 import { useEffect, useMemo, useState } from 'react';
 import { Course } from '@/types/course.type';
