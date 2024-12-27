@@ -2,13 +2,32 @@
 
 import { Divider } from '@nextui-org/react';
 import { useSession } from 'next-auth/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ButtonSolid } from '@/components';
+import useSWR from 'swr';
+import { User } from '@/types/user.type';
+import axios from '@/libs/axiosInstance';
+
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const Profile = () => {
   const { data: session } = useSession();
   const router = useRouter();
+  const [user, setUser] = useState<User>();
+  const {
+    data,
+    isLoading,
+    error: courseError,
+    mutate: refreshEndpoint
+  } = useSWR(`/users/item/${session?.user.id}`, fetcher);
+
+  useEffect(() => {
+    if (data) {
+      setUser(data.metadata);
+    }
+  }, [data]);
+
   return (
     <div className="flex w-full flex-col rounded-[4px] border border-outline bg-highlight p-6">
       <span className="text-2xl font-extrabold text-on-surface">
@@ -18,37 +37,44 @@ const Profile = () => {
         {/* Full name */}
         <div className="flex flex-row items-center justify-between">
           <span>Full name</span>
-          <span>{session?.user.name}</span>
+          <span>{user?.name}</span>
         </div>
         <Divider />
         {/* Gender */}
         <div className="flex flex-row items-center justify-between">
           <span>Gender</span>
-          <span>{session?.user.gender}</span>
+          <span>{user?.gender}</span>
         </div>
         <Divider />
         {/* Birthday */}
         <div className="flex flex-row items-center justify-between">
           <span>Birthday</span>
-          <span>{session?.user.birthday}</span>
+          <span>
+            {user &&
+              new Date(user.birthday.toString()).toLocaleDateString('vi-VE', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+              })}
+          </span>
         </div>
         <Divider />
         {/* Email */}
         <div className="flex flex-row items-center justify-between">
           <span>Email</span>
-          <span>{session?.user.email}</span>
+          <span>{user?.email}</span>
         </div>
         <Divider />
         {/* Phone */}
         <div className="flex flex-row items-center justify-between">
           <span>Phone number</span>
-          <span>{session?.user.phone}</span>
+          <span>{user?.phone}</span>
         </div>
         <Divider />
         {/* Customer code */}
         <div className="flex flex-row items-center justify-between">
           <span>Customer code</span>
-          <span>{session?.user.cid}</span>
+          <span>{user?.cid}</span>
         </div>
         <Divider />
       </div>

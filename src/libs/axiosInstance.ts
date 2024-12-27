@@ -11,19 +11,17 @@ const axiosInstance = axios.create({
 
 const getAuthToken = async () => {
   const session = await getSession();
-  return session?.user?.accessToken || null;
+  return session?.user.accessToken || null;
 };
 
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
   async function (config) {
     const token = await getAuthToken();
-    console.log("🚀 ~ token:", token)
+    console.log('🚀 ~ token:', token);
     // Do something before the request is sent
     // For example, add an authentication token to the headers
     // const token = localStorage.getItem('authToken'); // Retrieve auth token from localStorage
-    // const token = (await cookies()).get('next-auth.session-token')?.value;
-    // const token = getAccessToken();
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

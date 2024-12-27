@@ -29,7 +29,7 @@ const Header = () => {
         <div className="flex flex-row items-center gap-4">
           <div className="flex flex-col items-end">
             <span className="font-semibold">{session.user.name}</span>
-            <span className="capitalize">{session.user.role.name}</span>
+            <span className="capitalize">{session.user.role}</span>
           </div>
           <Dropdown>
             <DropdownTrigger>

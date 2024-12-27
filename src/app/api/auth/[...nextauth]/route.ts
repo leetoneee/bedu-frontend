@@ -1,6 +1,5 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { NextRequest } from 'next/server';
 
 const handler = NextAuth({
   providers: [
@@ -44,18 +43,22 @@ const handler = NextAuth({
       }
     })
   ],
+  session: {
+    strategy: 'jwt'
+  },
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === 'development',
   callbacks: {
     async jwt({ token, user }) {
-      return { ...token, ...user };
+      if (user) {
+        token.id = user.id; // Include only the required fields
+        token.name = user.name;
+        token.accessToken = user.accessToken;
+        token.role = user.role.name;
+      }
+      return token;
     },
-    async session({ session, token, user }) {
-      // Send properties to the client, like an access_token from a provider.
-      // session.accessToken = token.accessToken;
-      //   session.user.name = token.name;
-      //   // session.user.role = token.name;
-      // }
+    async session({ session, token }) {
       session.user = token as any;
       return session;
     }
