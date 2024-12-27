@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { toast } from 'react-toastify';
 
 const LoginPage = () => {
   const { data: session } = useSession();
@@ -25,11 +26,15 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    console.log("🚀 ~ useEffect ~ session:", session)
+    console.log('🚀 ~ useEffect ~ session:', session);
     if (session) {
-      if (session.user.role.name === 'manager')
+      if (session.user.role === 'manager') {
         router.replace('/manager/self-study-program');
-      else router.replace('/my/profile');
+        toast.success('Welcome back, manager!');
+      } else if (session.user.role === 'student') {
+        router.replace('/my/profile');
+        toast.success('Welcome back, student!');
+      }
     }
   }, [session]);
 
