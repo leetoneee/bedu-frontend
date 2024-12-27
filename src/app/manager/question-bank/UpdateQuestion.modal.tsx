@@ -546,7 +546,6 @@ const UpdateQuestion = ({
               <div className="basis-[70%]">
                 <Select
                   className="max-w-xs text-black"
-                  label="Question type"
                   placeholder="Select an question type"
                   selectedKeys={questionType}
                   variant="bordered"

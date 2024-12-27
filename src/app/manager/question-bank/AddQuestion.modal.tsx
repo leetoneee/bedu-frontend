@@ -23,7 +23,10 @@ import {
   TrashIcon
 } from '@heroicons/react/24/outline';
 import { ButtonSolid } from '@/components';
-import { createQuestion, CreateQuestionDto } from '@/services/questions.service';
+import {
+  createQuestion,
+  CreateQuestionDto
+} from '@/services/questions.service';
 
 type Props = {
   isOpen: boolean;
@@ -277,25 +280,26 @@ const AddQuestionModal = ({
         questionType: selectedType,
         possibleAnswer: possibleAnswersAPI,
         answer: answerAPI,
-        // examId: [],
-        // documentId: []
+        examId: [],
+        documentId: []
       };
       // console.log('data: ', data);
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
         //Gọi API và đợi kết quả trả về
         const result = await createQuestion(data);
-        if(result) {
+        if (result) {
           handleClose();
-          if(onCreated) {
+          if (onCreated) {
             onCreated();
           }
         }
       } catch (error: any) {
         console.error('🚫 ~ onSubmit ~ Error:', error);
         toast.error(
-          error.response?.data?.message || 'Failed to create question. Please try again.'
-        )
+          error.response?.data?.message ||
+            'Failed to create question. Please try again.'
+        );
       } finally {
         setIsSubmitting(false); // Hoàn tất gửi yêu cầu
       }
@@ -506,7 +510,6 @@ const AddQuestionModal = ({
               <div className="basis-[70%]">
                 <Select
                   className="max-w-xs text-black"
-                  label="Question type"
                   placeholder="Select an question type"
                   selectedKeys={questionType}
                   variant="bordered"

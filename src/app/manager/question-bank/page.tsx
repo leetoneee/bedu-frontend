@@ -21,11 +21,7 @@ import {
 import React, { useEffect, useState, useCallback, Key, ReactNode } from 'react';
 import { Selection } from '@nextui-org/react';
 import { Question } from '@/types/question-bank.type';
-import {
-  PencilIcon,
-  PlusIcon,
-  TrashIcon
-} from '@heroicons/react/24/outline';
+import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { columns, dataQuestions } from '@/data/question.data';
 import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
@@ -116,14 +112,22 @@ export default function QuestionBank() {
   });
 
   //Can sua lai
-  const pages = 10; //pagination
+  const pages = React.useMemo(() => {
+    return data?.metadata.totalRecord
+      ? Math.ceil(data.metadata.totalRecord / rowsPerPage)
+      : 0;
+  }, [data?.metadata.totalRecord, rowsPerPage]);
+
   const loadingState =
     isLoading || data?.metadata.length === 0 ? 'loading' : 'idle';
 
   // Load data
   useEffect(() => {
     if (error) setQuestions([]);
-    else if (data) setQuestions(data.metadata.questions);
+    else if (data && data.metadata.questions) {
+      setTotalQuestions(data.metadata.totalRecord);
+      setQuestions(data.metadata.questions);
+    }
   }, [data, filter]);
 
   useEffect(() => {
@@ -294,7 +298,7 @@ export default function QuestionBank() {
           </div>
           {/**Filter */}
           <div className="flex w-full flex-row gap-10">
-            <div className="justify-center">
+            <div className="w-48 justify-center">
               <Chip
                 className="select-none capitalize hover:cursor-pointer"
                 color={'danger'}
@@ -305,7 +309,7 @@ export default function QuestionBank() {
                 MULTIPLE CHOICE
               </Chip>
             </div>
-            <div className="justify-center">
+            <div className="w-48 justify-center">
               <Chip
                 className="select-none capitalize hover:cursor-pointer"
                 color={'warning'}
@@ -316,7 +320,7 @@ export default function QuestionBank() {
                 SINGLE CHOICE
               </Chip>
             </div>
-            <div className="justify-center">
+            <div className="w-48 justify-center">
               <Chip
                 className="select-none capitalize hover:cursor-pointer"
                 color={'success'}
@@ -335,13 +339,14 @@ export default function QuestionBank() {
           </div>
         </div>
         {/**Content table */}
-        <div className="h-full shrink overflow-hidden rounded-2xl shadow-xl">
+        <div className="h-[482px] shrink overflow-hidden rounded-2xl shadow-xl">
           <Table
             aria-label="Example table with client side pagination"
             className="h-full w-full"
             selectionMode="single"
             shadow="none"
             sortDescriptor={sortDescriptor}
+            onSortChange={setSortDescriptor}
             isHeaderSticky
           >
             <TableHeader columns={columns}>

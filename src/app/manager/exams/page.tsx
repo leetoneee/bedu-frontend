@@ -353,7 +353,7 @@ export default function ExamsPage() {
               />
             </div>
             {/* Filter Status */}
-            <div className="flex flex-col gap-2">
+            {/* <div className="flex flex-col gap-2">
               <span>Status</span>
               <Dropdown>
                 <DropdownTrigger>
@@ -380,12 +380,12 @@ export default function ExamsPage() {
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-            </div>
-            <ButtonSolid
+            </div> */}
+            {/* <ButtonSolid
               content=""
               className="my-auto h-14 rounded-2xl bg-blue-500 text-white shadow-md"
               iconLeft={<MagnifyingGlassIcon className="size-6 text-white" />}
-            />
+            /> */}
             <ButtonSolid
               content="Create"
               className="my-auto ml-auto h-14 rounded-2xl bg-blue-500 text-white shadow-md"
@@ -395,37 +395,37 @@ export default function ExamsPage() {
           </div>
           {/* Filter */}
           <div className="flex w-full flex-row gap-16">
-            <div className="w-20 justify-center">
+            <div className="w-36 justify-center">
               <Chip
                 className="select-none capitalize hover:cursor-pointer"
                 color={'danger'}
                 size="lg"
-                variant={filter === 'ielts' ? 'flat' : 'bordered'}
-                onClick={() => handleFilterChange('ielts')}
+                variant={filter === 'assignments' ? 'flat' : 'bordered'}
+                onClick={() => handleFilterChange('assignments')}
               >
-                IELTS
+                Assignments
               </Chip>
             </div>
-            <div className="w-20 justify-center">
+            <div className="w-36 justify-center">
               <Chip
                 className="select-none capitalize hover:cursor-pointer"
                 color={'warning'}
                 size="lg"
-                variant={filter === 'toeic' ? 'flat' : 'bordered'}
-                onClick={() => handleFilterChange('toeic')}
+                variant={filter === 'mid-term' ? 'flat' : 'bordered'}
+                onClick={() => handleFilterChange('mid-term')}
               >
-                TOEIC
+                Mid-term
               </Chip>
             </div>
-            <div className="w-20 justify-center">
+            <div className="w-36 justify-center">
               <Chip
                 className="select-none capitalize hover:cursor-pointer"
                 color={'success'}
                 size="lg"
-                variant={filter === 'toefl' ? 'flat' : 'bordered'}
-                onClick={() => handleFilterChange('toefl')}
+                variant={filter === 'final-term' ? 'flat' : 'bordered'}
+                onClick={() => handleFilterChange('final-term')}
               >
-                TOEFL
+                Final-term
               </Chip>
             </div>
 
