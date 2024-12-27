@@ -6,7 +6,7 @@ import { Crumb, EventProps } from '@/types';
 import { Divider } from '@nextui-org/react';
 import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Lesson } from '@/types/lesson.type';
 import { formatDateSchedule } from '@/helpers';
 
@@ -27,7 +27,6 @@ export default function SSP() {
 
   const {
     data: eventsData,
-    error,
     isLoading,
     mutate: refreshEndpoint
   } = useSWR(`/lessons/all?page=${page}&limit=${rowsPerPage}`, fetcher, {

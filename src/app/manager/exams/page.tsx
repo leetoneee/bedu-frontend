@@ -4,7 +4,6 @@ import { ButtonSolid, Breadcrumb } from '@/components';
 import { Crumb } from '@/types';
 import {
   EyeIcon,
-  MagnifyingGlassIcon,
   PencilIcon,
   PlusIcon,
   TrashIcon
@@ -16,11 +15,6 @@ import {
   Chip,
   Tooltip,
   Input,
-  Dropdown,
-  DropdownTrigger,
-  Button,
-  DropdownMenu,
-  DropdownItem,
   Table,
   TableHeader,
   TableColumn,

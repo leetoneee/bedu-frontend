@@ -1,6 +1,6 @@
 'use client';
 
-import button, { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -25,7 +25,6 @@ type Props = {
 
 export default function DeleteProgramModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   programId,
@@ -33,15 +32,15 @@ export default function DeleteProgramModal({
   onDeleted
 }: Props) {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
-  const [name, setName] = useState<string>('');
-  const [id, setId] = useState<number>();
+  // const [name, setName] = useState<string>('');
+  // const [id, setId] = useState<number>();
 
-  useEffect(() => {
-    if (programId && programTitle) {
-      setName(programTitle);
-      setId(programId);
-    }
-  }, [programId, programTitle]);
+  // useEffect(() => {
+  //   if (programId && programTitle) {
+  //     setName(programTitle);
+  //     setId(programId);
+  //   }
+  // }, [programId, programTitle]);
 
   const handleDelete = async () => {
     setIsDeleting(true);

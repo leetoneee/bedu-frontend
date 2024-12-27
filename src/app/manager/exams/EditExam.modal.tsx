@@ -1,6 +1,6 @@
 'use client';
 
-import button, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -9,22 +9,13 @@ import {
   ModalFooter,
   ModalContent,
   Divider,
-  Checkbox,
-  Textarea,
-  Input,
   SelectItem,
   Select,
   Selection,
   Button
 } from '@nextui-org/react';
-import { InputFile } from '@/components';
 import { toast } from 'react-toastify';
-import {
-  createExam,
-  CreateExamDto,
-  editExam,
-  UpdateExamDto
-} from '@/services/exam.service';
+import { editExam, UpdateExamDto } from '@/services/exam.service';
 import { Exam } from '@/types/exam.type';
 
 type Props = {
@@ -46,7 +37,6 @@ const scroringTypes = [{ key: 'highest', label: 'Highest score' }];
 
 export default function EditExamModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   exam,

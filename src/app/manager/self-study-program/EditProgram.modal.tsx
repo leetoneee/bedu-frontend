@@ -1,6 +1,6 @@
 'use client';
 
-import button, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -10,8 +10,6 @@ import {
   ModalContent,
   Divider,
   Checkbox,
-  Textarea,
-  Input,
   SelectItem,
   Select,
   Selection,
@@ -40,7 +38,6 @@ const programTypes = [
 
 export default function EditProgramModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   program,

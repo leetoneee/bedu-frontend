@@ -3,8 +3,6 @@
 import { columns } from '@/data/program-course.data';
 import {
   EyeIcon,
-  MagnifyingGlassIcon,
-  PencilIcon,
   TrashIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
@@ -18,8 +16,6 @@ import {
   ModalFooter,
   SortDescriptor,
   Input,
-  Select,
-  SelectItem,
   Pagination,
   Table,
   TableBody,
@@ -37,13 +33,11 @@ import React, {
   SetStateAction,
   useCallback,
   useEffect,
-  useMemo,
   useState
 } from 'react';
 import { Course, statusColorMap } from '@/types/course.type';
 import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
-import { UpdateProgramDto } from '@/services/programs.service';
 
 type Props = {
   isOpen: boolean;
@@ -58,7 +52,6 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const AddCoursesModal = ({
   isOpen,
-  onOpen,
   onOpenChange,
   courseType,
   courses,

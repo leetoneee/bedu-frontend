@@ -36,7 +36,6 @@ export const questionTypes = [
 
 const UpdateQuestion = ({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   onUpdate,

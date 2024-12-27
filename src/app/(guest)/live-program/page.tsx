@@ -1,8 +1,7 @@
 'use client';
 
-import { Breadcrumb, ClassCard, Header, NavHeader } from '@/components';
+import { Breadcrumb, ClassCard } from '@/components';
 import { Crumb } from '@/types';
-import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 import useSWRInfinite from 'swr/infinite';
 import axios from '@/libs/axiosInstance';

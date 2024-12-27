@@ -1,6 +1,7 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
+import Link from 'next/link';
 import React from 'react';
 
 const Denied = () => {
@@ -17,12 +18,12 @@ const Denied = () => {
             sign in
           </span>{' '}
           to continue or visit{' '}
-          <a
+          <Link
             className="text-2xl text-on-primary hover:cursor-pointer hover:underline"
             href="/"
           >
             homepage
-          </a>
+          </Link>
           .
         </span>
       </div>

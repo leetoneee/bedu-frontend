@@ -25,7 +25,6 @@ type Props = {
 
 export default function DeleteClassModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   classId,
@@ -33,15 +32,15 @@ export default function DeleteClassModal({
   onDeleted
 }: Props) {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
-  const [name, setName] = useState<string>('');
-  const [id, setId] = useState<number>();
+  // const [name, setName] = useState<string>('');
+  // const [id, setId] = useState<number>();
 
-  useEffect(() => {
-    if (classId && classTitle) {
-      setName(classTitle);
-      setId(classId);
-    }
-  }, [classId, classTitle]);
+  // useEffect(() => {
+  //   if (classId && classTitle) {
+  //     setName(classTitle);
+  //     setId(classId);
+  //   }
+  // }, [classId, classTitle]);
 
   const handleDelete = async () => {
     setIsDeleting(true);

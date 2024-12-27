@@ -1,16 +1,9 @@
 'use client';
 
-import {
-  Breadcrumb,
-  Header,
-  NavHeader,
-  ProgramCard,
-  SelfStudyProgramCard
-} from '@/components';
+import { Breadcrumb, ProgramCard } from '@/components';
 import { Crumb } from '@/types';
 import { Program } from '@/types/program.type';
 import { Chip, Divider, Spinner } from '@nextui-org/react';
-import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 import axios from '@/libs/axiosInstance';
 import useSWRInfinite from 'swr/infinite';

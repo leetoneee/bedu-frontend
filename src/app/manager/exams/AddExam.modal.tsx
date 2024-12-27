@@ -1,6 +1,6 @@
 'use client';
 
-import button, { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -9,15 +9,11 @@ import {
   ModalFooter,
   ModalContent,
   Divider,
-  Checkbox,
-  Textarea,
-  Input,
   SelectItem,
   Select,
   Selection,
   Button
 } from '@nextui-org/react';
-import { InputFile } from '@/components';
 import { toast } from 'react-toastify';
 import { createExam, CreateExamDto } from '@/services/exam.service';
 
@@ -39,7 +35,6 @@ const scroringTypes = [{ key: 'highest', label: 'Highest score' }];
 
 export default function AddExamModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   onCreated
@@ -138,7 +133,7 @@ export default function AddExamModal({
         maxTries: Number(maxTries),
         resultTime: Number(resultTime),
         questionId: [],
-        description: description,
+        description: description
       };
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu

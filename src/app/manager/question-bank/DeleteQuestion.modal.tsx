@@ -25,7 +25,6 @@ type Props = {
 
 const DeleteQuestionModal = ({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   questionId,
@@ -34,15 +33,15 @@ const DeleteQuestionModal = ({
   onDeleted
 }: Props) => {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
-  const [name, setName] = useState<string>('');
-  const [id, setId] = useState<number>();
+  // const [name, setName] = useState<string>('');
+  // const [id, setId] = useState<number>();
 
-  useEffect(() => {
-    if (questionId && questionContent) {
-      setName(questionContent);
-      setId(questionId);
-    }
-  }, [questionId, questionContent]);
+  // useEffect(() => {
+  //   if (questionId && questionContent) {
+  //     setName(questionContent);
+  //     setId(questionId);
+  //   }
+  // }, [questionId, questionContent]);
 
   const handleDelete = async () => {
     if (relatedExam.length > 0) {
