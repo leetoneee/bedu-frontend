@@ -90,7 +90,7 @@ export default function SSP() {
       <Breadcrumb crumbs={crumbs} />
       <Divider />
       <div className="flex h-full w-full flex-col gap-2 rounded border border-on-surface/20 bg-white p-5 shadow-sm">
-        {events.length > 0 && <Schedule events={events} />}
+        <Schedule events={events} />
       </div>
     </main>
   );
