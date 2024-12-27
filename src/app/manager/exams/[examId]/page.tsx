@@ -11,6 +11,10 @@ import LOQ from './LOQ.Tab';
 import Config from './Configuration.Tab';
 import Statistical from './Statistical.Tab';
 import Result from './Result.Tab';
+import axios from '@/libs/axiosInstance';
+import useSWR from 'swr';
+
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const ExamDetail = () => {
   const params = useParams();
@@ -19,11 +23,18 @@ const ExamDetail = () => {
   const [exam, setExam] = useState<Exam | null>(null);
   const [activeTab, setActiveTab] = useState<string>('List of questions');
 
+  const {
+    data,
+    isLoading,
+    error: classError,
+    mutate: refreshEndpoint
+  } = useSWR(`/exams/item/${examId}`, fetcher);
+
   const crumbs: Crumb[] = useMemo(() => {
     return [
       {
-        label: 'Courses',
-        href: '/manager/courses'
+        label: 'Exams',
+        href: '/manager/exams'
       },
       {
         label: exam?.title || 'Loading...',
@@ -31,6 +42,13 @@ const ExamDetail = () => {
       }
     ];
   }, [examId, exam]);
+
+    useEffect(() => {
+      if (data?.metadata) {
+        setExam(data.metadata);
+        // setLessons(data.metadata.lesson);
+      }
+    }, [data]);
 
   return (
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">

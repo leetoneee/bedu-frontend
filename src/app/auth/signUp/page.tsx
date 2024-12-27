@@ -1,7 +1,7 @@
 'use client';
 
 import { classNames } from '@/components';
-import { CreateUserDto, createUser } from '@/services/users.service';
+import { signUp, SignUpDto } from '@/services/auth.service';
 import {
   EnvelopeIcon,
   LockClosedIcon,
@@ -85,7 +85,8 @@ const SignUpPage = () => {
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
-      const data: CreateUserDto = {
+      const birthDate = new Date(birthday);
+      const data: SignUpDto = {
         name: name,
         username: username,
         email: email,
@@ -93,14 +94,13 @@ const SignUpPage = () => {
         password: password,
         address: 'None',
         currentLevel: 'Beginner',
-        groupId: 1,
-        birthday: birthday,
+        birthday: birthDate,
         gender: selectedGender
       };
       try {
         setIsSubmitting(true);
         // Gọi API và đợi kết quả
-        const result = await createUser(data);
+        const result = await signUp(data);
         if (result) {
           // Reset form fields
           setName('');
