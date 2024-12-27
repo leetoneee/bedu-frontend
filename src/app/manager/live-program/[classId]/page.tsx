@@ -1,10 +1,7 @@
 'use client';
 
 import { Breadcrumb } from '@/components';
-import {
-  columns,
-  getLessonsByClassId,
-} from '@/data/lesson.data';
+import { columns, getLessonsByClassId } from '@/data/lesson.data';
 import { Crumb } from '@/types';
 import { Lesson } from '@/types/lesson.type';
 import {
@@ -23,7 +20,8 @@ import {
   TableHeader,
   TableRow,
   Textarea,
-  Tooltip
+  Tooltip,
+  useDisclosure
 } from '@nextui-org/react';
 import React, {
   Key,
@@ -45,6 +43,9 @@ import { useParams, useRouter } from 'next/navigation';
 import { EClass } from '@/types/class.type';
 import useSWR from 'swr';
 import axios from '@/libs/axiosInstance';
+import AddLessonModal from './AddLesson.modal';
+import { toast } from 'react-toastify';
+import ReactPlayer from 'react-player';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -52,13 +53,18 @@ const EClassDetail = () => {
   const params = useParams();
   const classId = params.classId;
   const router = useRouter();
+  //!  CONTROL Add modal
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [eclass, setEClass] = useState<EClass>();
 
-  const { data, error: classError } = useSWR(
-    `/classes/item/${classId}`,
-    fetcher
-  );
+  const {
+    data,
+    isLoading,
+    error: classError,
+    mutate: refreshEndpoint
+  } = useSWR(`/classes/item/${classId}`, fetcher);
 
   const crumbs: Crumb[] = useMemo(() => {
     return [
@@ -76,10 +82,9 @@ const EClassDetail = () => {
   useEffect(() => {
     if (data?.metadata) {
       setEClass(data.metadata);
-      // setLessons(data.metadata.lesson);
+      setLessons(data.metadata.lesson);
     }
   }, [data]);
-
 
   const [filterLessonName, setFilterLessonName] = useState<string>('');
   const hasSearchFilterName = Boolean(filterLessonName);
@@ -95,30 +100,37 @@ const EClassDetail = () => {
         case 'id':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue?.toString()}
+              </p>
             </div>
           );
         case 'type':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue ? cellValue.toString().toUpperCase() : ''}
+              </p>
             </div>
           );
         case 'title':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue?.toString()}
+              </p>
             </div>
           );
         case 'startDate':
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {new Date(cellValue).toLocaleDateString('vi-VE', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric'
-                })}
+                {cellValue &&
+                  new Date(cellValue.toString()).toLocaleDateString('vi-VE', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                  })}
               </p>
             </div>
           );
@@ -126,11 +138,12 @@ const EClassDetail = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {new Date(cellValue).toLocaleDateString('vi-VE', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric'
-                })}
+                {cellValue &&
+                  new Date(cellValue.toString()).toLocaleDateString('vi-VE', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                  })}
               </p>
             </div>
           );
@@ -138,21 +151,23 @@ const EClassDetail = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-wraps text-sm capitalize">
-                {cellValue}
+                {cellValue?.toString()}
               </p>
             </div>
           );
         case 'price':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue?.toString()}
+              </p>
             </div>
           );
         case 'timePerLesson':
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue} minutes
+                {cellValue?.toString()} minutes
               </p>
             </div>
           );
@@ -180,7 +195,7 @@ const EClassDetail = () => {
             </div>
           );
         default:
-          return cellValue;
+          return cellValue?.toString();
       }
     },
     []
@@ -192,7 +207,7 @@ const EClassDetail = () => {
   });
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 5;
 
   const pages = Math.ceil(lessons.length / rowsPerPage);
 
@@ -290,7 +305,7 @@ const EClassDetail = () => {
           className="my-auto ml-auto h-14 rounded-2xl bg-on-primary text-white shadow-md"
           startContent={<PlusIcon className="size-6 text-white" />}
           size="lg"
-          // onClick={onOpen}
+          onClick={onOpen}
         >
           Add
         </Button>
@@ -298,6 +313,23 @@ const EClassDetail = () => {
     );
   }, [filterLessonName]);
 
+  const handleCreated = () => {
+    toast.success('Lesson created successfully!');
+    refreshEndpoint();
+  };
+
+  const handleEdited = () => {
+    toast.success('Lesson edited successfully!');
+    refreshEndpoint();
+  };
+
+  const handleDeleted = () => {
+    toast.success('Lesson deleted successfully!');
+    refreshEndpoint();
+  };
+
+  const loadingState =
+    isLoading || data?.metadata.lesson.length === 0 ? 'loading' : 'idle';
   return (
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
       <Breadcrumb crumbs={crumbs} />
@@ -334,7 +366,7 @@ const EClassDetail = () => {
                   size="lg"
                   readOnly
                   placeholder="Enter your project name"
-                  value={eclass?.code}
+                  value={eclass?.type.toLocaleUpperCase()}
                   // onChange={(e) => setProjectName(e.target.value)}
                 />
               </div>
@@ -517,6 +549,18 @@ const EClassDetail = () => {
           </Button>
         </div> */}
       </div>
+      {eclass && (
+        <AddLessonModal
+          isOpen={isOpen}
+          onClose={onClose}
+          onOpen={onOpen}
+          eclassId={eclass.id}
+          eclassName={eclass.name}
+          eclassType={eclass.type}
+          onOpenChange={onOpenChange}
+          onCreated={handleCreated}
+        />
+      )}
     </main>
   );
 };

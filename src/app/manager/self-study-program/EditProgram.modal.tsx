@@ -32,7 +32,11 @@ type Props = {
   onEdited?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const programTypes = ['IELTS', 'TOEIC', 'TOEFL'];
+const programTypes = [
+  { key: 'ielts', label: 'IELTS' },
+  { key: 'toeic', label: 'TOEIC' },
+  { key: 'toefl', label: 'TOEFL' }
+];
 
 export default function EditProgramModal({
   isOpen,
@@ -47,7 +51,7 @@ export default function EditProgramModal({
   const [name, setName] = useState<string>('');
   const [code, setCode] = useState<string>('');
   // const [price, setPrice] = useState<string>();
-  const [sessionQuantity, setSessionQuantity] = useState<string>();
+  const [sessionQuantity, setSessionQuantity] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [type, setType] = useState<Selection>(new Set([]));
@@ -67,17 +71,17 @@ export default function EditProgramModal({
     description: ''
   });
 
-    useEffect(() => {
-      if (program) {
-        setName(program.title);
-        setCode(program.code);
-        setDescription(program.description);
-        setIsPublic(program.isActive);
-        setType(new Set([`${program.type}`]));
-        setSessionQuantity(program.sessionQuantity.toString());
-        // setPrice(program.price.toString());
-      }
-    }, [program]);
+  useEffect(() => {
+    if (program) {
+      setName(program.title);
+      setCode(program.code);
+      setDescription(program.description);
+      setIsPublic(program.isActive);
+      setType(new Set([`${program.type}`]));
+      setSessionQuantity(program.sessionQuantity.toString());
+      // setPrice(program.price.toString());
+    }
+  }, [program]);
 
   const validateInputs = () => {
     const newErrors = { ...errors };
@@ -132,7 +136,7 @@ export default function EditProgramModal({
       // Handle form submission logic here
       const data: UpdateProgramDto = {
         type: selectedType,
-        code: code,
+        // code: code,
         title: name,
         description: description,
         // image: url,
@@ -233,7 +237,7 @@ export default function EditProgramModal({
           <div className="ml-5">
             <div className="text-lg font-semibold">Add new program</div>
             <div className="text-wrap text-sm font-normal">
-            Edit information about the program
+              Edit information about the program
             </div>
           </div>
         </ModalHeader>
@@ -270,6 +274,7 @@ export default function EditProgramModal({
                   className="w-1/2 rounded-lg"
                   placeholder="Enter program code..."
                   value={code}
+                  readOnly
                   onChange={(e) => setCode(e.target.value)}
                 />
                 {renderError('code')}
@@ -287,7 +292,7 @@ export default function EditProgramModal({
                     onSelectionChange={setType}
                   >
                     {programTypes.map((type) => (
-                      <SelectItem key={type}>{type}</SelectItem>
+                      <SelectItem key={type.key}>{type.label}</SelectItem>
                     ))}
                   </Select>
                   {renderError('type')}

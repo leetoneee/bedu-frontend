@@ -4,11 +4,13 @@ import { classNames } from '@/components';
 import { LockClosedIcon, UserIcon } from '@heroicons/react/24/outline';
 import { Divider } from '@nextui-org/react';
 import { signIn } from 'next-auth/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const LoginPage = () => {
+  const { data: session } = useSession();
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const router = useRouter();
@@ -18,9 +20,18 @@ const LoginPage = () => {
       password: password,
       redirect: false
     });
-    router.replace('/manager/self-study-program');
+    // router.replace('/manager/self-study-program');
     console.log('🚀 ~ onSubmit ~ result:', result);
   };
+
+  useEffect(() => {
+    console.log("🚀 ~ useEffect ~ session:", session)
+    if (session) {
+      if (session.user.role.name === 'manager')
+        router.replace('/manager/self-study-program');
+      else router.replace('/my/profile');
+    }
+  }, [session]);
 
   return (
     <div className="absolute top-0 flex h-full w-full items-center justify-center bg-b-primary">

@@ -120,24 +120,30 @@ export default function CoursesPage() {
     keepPreviousData: true
   });
 
-  // const pages = React.useMemo(() => {
-  //   return data?.count ? Math.ceil(data.count / rowsPerPage) : 0;
-  // }, [data?.count, rowsPerPage]);
+  const pages = React.useMemo(() => {
+    if (data)
+      return data?.metadata.totalRecord
+        ? Math.ceil(data.metadata.totalRecord / rowsPerPage)
+        : 0;
+    return 1;
+  }, [data, rowsPerPage]);
 
-  const pages = 3;
   const loadingState =
-    isLoading || data?.metadata.length === 0 ? 'loading' : 'idle';
+    isLoading || data?.metadata.courses.length === 0 ? 'loading' : 'idle';
 
   // Load data
   useEffect(() => {
     if (error) setCourses([]);
-    else if (data) setCourses(data.metadata);
+    else if (data && data.metadata.courses) {
+      setCourses(data.metadata.courses);
+      setTotalCourses(data.metadata.totalRecord);
+    }
   }, [data, filter]);
   //
 
-  useEffect(() => {
-    setTotalCourses(courses.length);
-  }, [courses]);
+  // useEffect(() => {
+  //   setTotalCourses(courses.length);
+  // }, [courses]);
 
   const renderCell = useCallback(
     (course: Course, columnKey: Key): ReactNode => {

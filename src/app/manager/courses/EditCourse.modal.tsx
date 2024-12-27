@@ -36,7 +36,11 @@ type Props = {
   onEdited?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const courseTypes = ['IELTS', 'TOEIC', 'TOEFL'];
+const courseTypes = [
+  { key: 'ielts', label: 'IELTS' },
+  { key: 'toeic', label: 'TOEIC' },
+  { key: 'toefl', label: 'TOEFL' }
+];
 
 export default function EditCourseModal({
   isOpen,
@@ -76,7 +80,7 @@ export default function EditCourseModal({
 
   const [errors, setErrors] = useState<{
     name: string;
-    code: string;
+    // code: string;
     type: string;
     timePerLesson: string;
     price: string;
@@ -84,7 +88,7 @@ export default function EditCourseModal({
     description: string;
   }>({
     name: '',
-    code: '',
+    // code: '',
     type: '',
     timePerLesson: '',
     price: '',
@@ -96,7 +100,7 @@ export default function EditCourseModal({
     const newErrors = { ...errors };
 
     newErrors.name = name.trim() === '' ? 'Course name is required' : '';
-    newErrors.code = code.trim() === '' ? 'Course code is required' : '';
+    // newErrors.code = code.trim() === '' ? 'Course code is required' : '';
     newErrors.type =
       selectedType.trim() === '' ? 'Course type is required' : '';
 
@@ -150,12 +154,12 @@ export default function EditCourseModal({
       // Handle form submission logic here
       const data: UpdateCourseDto = {
         courseType: selectedType,
-        code: code,
+        // code: code,
         title: name,
         description: description,
         lessonQuantity: Number(lessonQuantity),
         timePerLesson: Number(timePerLesson),
-        price: Number(price),
+        price: Number(price)
         // isActive: isPublic
       };
       try {
@@ -193,7 +197,7 @@ export default function EditCourseModal({
     setIsPublic(false);
     setErrors({
       name: '',
-      code: '',
+      // code: '',
       type: '',
       timePerLesson: '',
       price: '',
@@ -288,10 +292,11 @@ export default function EditCourseModal({
                   type="text"
                   className="w-1/2 rounded-lg"
                   placeholder="Enter course code..."
+                  readOnly
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                 />
-                {renderError('code')}
+                {/* {renderError('code')} */}
 
                 <div className="relative flex w-1/2 flex-row gap-4">
                   <span className="text-sm font-medium text-black">
@@ -306,7 +311,7 @@ export default function EditCourseModal({
                     onSelectionChange={setType}
                   >
                     {courseTypes.map((type) => (
-                      <SelectItem key={type}>{type}</SelectItem>
+                      <SelectItem key={type.key}>{type.label}</SelectItem>
                     ))}
                   </Select>
                   {renderError('type')}

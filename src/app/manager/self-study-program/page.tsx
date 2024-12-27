@@ -109,7 +109,7 @@ export default function SSP() {
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
 
-  const endpoint = `/programs/all${filter ? `/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
+  const endpoint = `/programs/all${filter ? `/type/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
 
   const {
     data,
@@ -120,18 +120,22 @@ export default function SSP() {
     keepPreviousData: true
   });
 
-  // const pages = React.useMemo(() => {
-  //   return data?.count ? Math.ceil(data.count / rowsPerPage) : 0;
-  // }, [data?.count, rowsPerPage]);
+  const pages = React.useMemo(() => {
+    return data?.metadata.totalRecord
+      ? Math.ceil(data.metadata.totalRecord / rowsPerPage)
+      : 0;
+  }, [data?.metadata.totalRecord, rowsPerPage]);
 
-  const pages = 3;
   const loadingState =
-    isLoading || data?.metadata.length === 0 ? 'loading' : 'idle';
+    isLoading || data?.metadata.programs.length === 0 ? 'loading' : 'idle';
 
   // Load data
   useEffect(() => {
     if (error) setPrograms([]);
-    else if (data) setPrograms(data.metadata);
+    else if (data && data.metadata.programs) {
+      setTotalPrograms(data.metadata.totalRecord);
+      setPrograms(data.metadata.programs);
+    }
   }, [data, filter]);
   //
 
@@ -150,19 +154,25 @@ export default function SSP() {
         case 'id':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toString()}
+              </p>
             </div>
           );
         case 'code':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toString()}
+              </p>
             </div>
           );
         case 'title':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toString()}
+              </p>
             </div>
           );
         case 'isPublish':
@@ -186,7 +196,7 @@ export default function SSP() {
           return (
             <div className="flex basis-[10%] flex-col">
               <p className="text-bold text-wraps text-sm capitalize">
-                {cellValue}
+                {cellValue.toString()}
               </p>
             </div>
           );
@@ -201,7 +211,9 @@ export default function SSP() {
         case 'price':
           return (
             <div className="flex basis-[10%] flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toString()}
+              </p>
             </div>
           );
         case 'actions':
@@ -236,7 +248,7 @@ export default function SSP() {
             </div>
           );
         default:
-          return cellValue;
+          return cellValue.toString();
       }
     },
     []

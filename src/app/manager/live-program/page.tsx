@@ -109,7 +109,7 @@ export default function LiveProgramPage() {
   const rowsPerPage = 10;
 
   // ! fix route???
-  const endpoint = `/classes/all/type${filter ? `/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
+  const endpoint = `/classes/all${filter ? `/type/${filter}` : ''}?page=${page}&limit=${rowsPerPage}`;
 
   const {
     data,
@@ -120,18 +120,22 @@ export default function LiveProgramPage() {
     keepPreviousData: true
   });
 
-  // const pages = React.useMemo(() => {
-  //   return data?.count ? Math.ceil(data.count / rowsPerPage) : 0;
-  // }, [data?.count, rowsPerPage]);
+  const pages = React.useMemo(() => {
+    return data?.metadata.totalRecord
+      ? Math.ceil(data.metadata.totalRecord / rowsPerPage)
+      : 0;
+  }, [data?.metadata.totalRecord, rowsPerPage]);
 
-  const pages = 3;
   const loadingState =
-    isLoading || data?.metadata.length === 0 ? 'loading' : 'idle';
+    isLoading || data?.metadata.classes.length === 0 ? 'loading' : 'idle';
 
   // Load data
   useEffect(() => {
     if (error) setClasses([]);
-    else if (data) setClasses(data.metadata);
+    else if (data && data.metadata.classes) {
+      setTotalClasses(data.metadata.totalRecord);
+      setClasses(data.metadata.classes);
+    }
   }, [data, filter]);
   //
 

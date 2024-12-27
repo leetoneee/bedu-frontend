@@ -29,7 +29,11 @@ type Props = {
   onCreated?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const courseTypes = ['IELTS', 'TOEIC', 'TOEFL'];
+const courseTypes = [
+  { key: 'ielts', label: 'IELTS' },
+  { key: 'toeic', label: 'TOEIC' },
+  { key: 'toefl', label: 'TOEFL' }
+];
 
 export default function AddCourseModal({
   isOpen,
@@ -45,9 +49,9 @@ export default function AddCourseModal({
 
   const [name, setName] = useState<string>('');
   const [code, setCode] = useState<string>('');
-  const [timePerLesson, setTimePerLesson] = useState<string>();
-  const [price, setPrice] = useState<string>();
-  const [lessonQuantity, setLessonQuantity] = useState<string>();
+  const [timePerLesson, setTimePerLesson] = useState<string>('');
+  const [price, setPrice] = useState<string>('');
+  const [lessonQuantity, setLessonQuantity] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [type, setType] = useState<Selection>(new Set([]));
@@ -55,7 +59,7 @@ export default function AddCourseModal({
 
   const [errors, setErrors] = useState<{
     name: string;
-    code: string;
+    // code: string;
     type: string;
     timePerLesson: string;
     price: string;
@@ -63,7 +67,7 @@ export default function AddCourseModal({
     description: string;
   }>({
     name: '',
-    code: '',
+    // code: '',
     type: '',
     timePerLesson: '',
     price: '',
@@ -75,7 +79,7 @@ export default function AddCourseModal({
     const newErrors = { ...errors };
 
     newErrors.name = name.trim() === '' ? 'Course name is required' : '';
-    newErrors.code = code.trim() === '' ? 'Course code is required' : '';
+    // newErrors.code = code.trim() === '' ? 'Course code is required' : '';
     newErrors.type =
       selectedType.trim() === '' ? 'Course type is required' : '';
 
@@ -128,15 +132,15 @@ export default function AddCourseModal({
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
       const data: CreateCourseDto = {
-        courseType: selectedType,
-        code: code,
+        courseType: selectedType.toLowerCase(),
         title: name,
         description: description,
         image: '',
         lessonQuantity: Number(lessonQuantity),
         timePerLesson: Number(timePerLesson),
         price: Number(price),
-        programId: []
+        programId: [],
+        isActive: isPublic
       };
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
@@ -173,7 +177,7 @@ export default function AddCourseModal({
     setIsPublic(false);
     setErrors({
       name: '',
-      code: '',
+      // code: '',
       type: '',
       timePerLesson: '',
       price: '',
@@ -258,7 +262,7 @@ export default function AddCourseModal({
               </div>
             </div>
             {/* Course code */}
-            <div className="flex flex-row">
+            {/* <div className="flex flex-row">
               <div className="basis-[30%]">
                 <span className="text-sm font-medium text-black">
                   Course code<span className="text-danger">*</span>
@@ -293,7 +297,32 @@ export default function AddCourseModal({
                   {renderError('type')}
                 </div>
               </div>
+            </div> */}
+
+            {/* Type */}
+            <div className="flex flex-row">
+              <div className="basis-[30%]">
+                <span className="text-sm font-medium text-black">
+                  Type<span className="text-danger">*</span>
+                </span>
+              </div>
+              <div className="relative flex basis-[70%] gap-8">
+                <Select
+                  className="max-w-xs"
+                  placeholder="Select type"
+                  disallowEmptySelection
+                  selectedKeys={type}
+                  variant="bordered"
+                  onSelectionChange={setType}
+                >
+                  {courseTypes.map((type) => (
+                    <SelectItem key={type.key}>{type.label}</SelectItem>
+                  ))}
+                </Select>
+                {renderError('type')}
+              </div>
             </div>
+
             <Divider />
 
             {/* Program image  */}

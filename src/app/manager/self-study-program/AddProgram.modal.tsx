@@ -30,7 +30,11 @@ type Props = {
   onCreated?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const programTypes = ['IELTS', 'TOEIC', 'TOEFL'];
+const programTypes = [
+  { key: 'ielts', label: 'IELTS' },
+  { key: 'toeic', label: 'TOEIC' },
+  { key: 'toefl', label: 'TOEFL' }
+];
 
 export default function AddProgramModal({
   isOpen,
@@ -42,9 +46,9 @@ export default function AddProgramModal({
   const inputFileRef = useRef<InputFileHandle | null>(null);
 
   const [name, setName] = useState<string>('');
-  const [code, setCode] = useState<string>('');
+  // const [code, setCode] = useState<string>('');
   // const [price, setPrice] = useState<string>();
-  const [sessionQuantity, setSessionQuantity] = useState<string>();
+  const [sessionQuantity, setSessionQuantity] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [type, setType] = useState<Selection>(new Set([]));
@@ -52,13 +56,13 @@ export default function AddProgramModal({
 
   const [errors, setErrors] = useState<{
     name: string;
-    code: string;
+    // code: string;
     type: string;
     sessionQuantity: string;
     description: string;
   }>({
     name: '',
-    code: '',
+    // code: '',
     type: '',
     sessionQuantity: '',
     description: ''
@@ -68,7 +72,7 @@ export default function AddProgramModal({
     const newErrors = { ...errors };
 
     newErrors.name = name.trim() === '' ? 'Program name is required' : '';
-    newErrors.code = code.trim() === '' ? 'Program code is required' : '';
+    // newErrors.code = code.trim() === '' ? 'Program code is required' : '';
     newErrors.type =
       selectedType.trim() === '' ? 'Program type is required' : '';
 
@@ -118,15 +122,15 @@ export default function AddProgramModal({
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
         // Upload file
-        // const url = await handleUploadFile();
-        // if (!url) throw new Error('File upload failed');
+        const url = await handleUploadFile();
+        if (!url) throw new Error('File upload failed');
         // Gọi API và đợi kết quả
         const data: CreateProgramDto = {
-          type: selectedType,
-          code: code,
+          type: selectedType.toLowerCase(),
+          // code: code,
           title: name,
           description: description,
-          // image: url,
+          avatar: url,
           sessionQuantity: Number(sessionQuantity),
           courseId: []
         };
@@ -153,7 +157,7 @@ export default function AddProgramModal({
 
   const handleClose = () => {
     setName('');
-    setCode('');
+    // setCode('');
     // setPrice('');
     setSessionQuantity('');
     setType(new Set([]));
@@ -161,7 +165,7 @@ export default function AddProgramModal({
     setIsPublic(false);
     setErrors({
       name: '',
-      code: '',
+      // code: '',
       type: '',
       sessionQuantity: '',
       description: ''
@@ -243,7 +247,7 @@ export default function AddProgramModal({
               </div>
             </div>
             {/* Program code */}
-            <div className="flex flex-row">
+            {/* <div className="flex flex-row">
               <div className="basis-[30%]">
                 <span className="text-sm font-medium text-black">
                   Program code<span className="text-danger">*</span>
@@ -278,7 +282,32 @@ export default function AddProgramModal({
                   {renderError('type')}
                 </div>
               </div>
+            </div> */}
+
+            {/* Type */}
+            <div className="flex flex-row">
+              <div className="basis-[30%]">
+                <span className="text-sm font-medium text-black">
+                  Type<span className="text-danger">*</span>
+                </span>
+              </div>
+              <div className="relative flex basis-[70%] gap-8">
+                <Select
+                  className="max-w-xs"
+                  placeholder="Select type"
+                  disallowEmptySelection
+                  selectedKeys={type}
+                  variant="bordered"
+                  onSelectionChange={setType}
+                >
+                  {programTypes.map((type) => (
+                    <SelectItem key={type.key}>{type.label}</SelectItem>
+                  ))}
+                </Select>
+                {renderError('type')}
+              </div>
             </div>
+
             <Divider />
 
             {/* Program image  */}

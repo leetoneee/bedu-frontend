@@ -24,7 +24,8 @@ import { InputFileHandle } from '@/types';
 import {
   createClass,
   CreateClassDto,
-  editClass
+  editClass,
+  UpdateClassDto
 } from '@/services/classes.service';
 import { EClass } from '@/types/class.type';
 
@@ -37,7 +38,11 @@ type Props = {
   onEdited?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const classTypes = ['IELTS', 'TOEIC', 'TOEFL'];
+const classTypes = [
+  { key: 'ielts', label: 'IELTS' },
+  { key: 'toeic', label: 'TOEIC' },
+  { key: 'toefl', label: 'TOEFL' }
+];
 const studyForms = ['Online', 'Offline', 'Blended'];
 
 export default function EditClassModal({
@@ -56,10 +61,10 @@ export default function EditClassModal({
 
   const [name, setName] = useState<string>('');
   const [code, setCode] = useState<string>('');
-  const [timePerLesson, setTimePerLesson] = useState<string>();
+  const [timePerLesson, setTimePerLesson] = useState<string>('');
   const [startDate, setStartDate] = useState<string>();
   const [price, setPrice] = useState<string>();
-  const [lessonQuantity, setLessonQuantity] = useState<string>();
+  const [lessonQuantity, setLessonQuantity] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [type, setType] = useState<Selection>(new Set([]));
@@ -201,15 +206,14 @@ export default function EditClassModal({
 
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
-        // const url = await handleUploadFile();
-        // if (!url) throw new Error('File upload failed');
+        const url = await handleUploadFile();
+        if (!url) throw new Error('File upload failed');
         // Gọi API và đợi kết quả
-        const data: CreateClassDto = {
+        const data: UpdateClassDto = {
           type: selectedType,
-          code: code,
           name: name,
           description: description,
-          // image: url,
+          avatar: url,
           lessonQuantity: Number(lessonQuantity),
           timePerLesson: Number(timePerLesson),
           price: Number(price),
@@ -363,7 +367,7 @@ export default function EditClassModal({
                     onSelectionChange={setType}
                   >
                     {classTypes.map((type) => (
-                      <SelectItem key={type}>{type}</SelectItem>
+                      <SelectItem key={type.key}>{type.label}</SelectItem>
                     ))}
                   </Select>
                   {renderError('type')}

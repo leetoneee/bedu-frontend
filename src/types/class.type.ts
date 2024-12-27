@@ -9,6 +9,7 @@ export type EClass = {
   timePerLesson: number;
   type: string;
   price: number;
+  avatar: string;
   isActive: boolean;
 };
 

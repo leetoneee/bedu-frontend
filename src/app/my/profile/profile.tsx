@@ -18,7 +18,7 @@ const Profile = () => {
         {/* Full name */}
         <div className="flex flex-row items-center justify-between">
           <span>Full name</span>
-          <span>{session?.user.firstName}</span>
+          <span>{session?.user.name}</span>
         </div>
         <Divider />
         {/* Gender */}
@@ -30,7 +30,7 @@ const Profile = () => {
         {/* Birthday */}
         <div className="flex flex-row items-center justify-between">
           <span>Birthday</span>
-          <span>{session?.user.lastName}</span>
+          <span>{session?.user.birthday}</span>
         </div>
         <Divider />
         {/* Email */}
@@ -42,13 +42,13 @@ const Profile = () => {
         {/* Phone */}
         <div className="flex flex-row items-center justify-between">
           <span>Phone number</span>
-          <span>{session?.user.firstName}</span>
+          <span>{session?.user.phone}</span>
         </div>
         <Divider />
         {/* Customer code */}
         <div className="flex flex-row items-center justify-between">
           <span>Customer code</span>
-          <span>{session?.user.id}</span>
+          <span>{session?.user.cid}</span>
         </div>
         <Divider />
       </div>
