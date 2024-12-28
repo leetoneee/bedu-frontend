@@ -7,7 +7,7 @@ const columns = [
   { name: 'TYPE', uid: 'type' },
   { name: 'LESSON QUANTITY', uid: 'lessonQuantity', sortable: true },
   { name: 'PRICE', uid: 'price', sortable: true },
-  { name: 'ACTIONS', uid: 'actions' }
+  // { name: 'ACTIONS', uid: 'actions' }
 ];
 
 // const currCourses: Course[] = [

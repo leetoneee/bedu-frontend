@@ -1,8 +1,8 @@
 'use client';
 
 import { Question } from '@/types/question-bank.type';
-import { Chip, Divider } from '@nextui-org/react';
-import React, { ReactNode, useCallback, useState } from 'react';
+import { Checkbox, Chip, Divider, RadioGroup, Radio } from '@nextui-org/react';
+import React, { Fragment, ReactNode, useCallback, useState } from 'react';
 
 type Props = {
   question: Question;
@@ -10,9 +10,9 @@ type Props = {
 };
 
 const StaticQuestion = ({ question, index }: Props) => {
-  const [selectedAnswer, setSelectedAnswer] = useState<string | string[]>(
-    question.questionType === 'MultipleChoice' ? [] : ''
-  );
+  // const [selectedAnswer, setSelectedAnswer] = useState<string | string[]>(
+  //   question.questionType === 'MultipleChoice' ? [] : ''
+  // );
 
   const renderChip = useCallback((content: string): ReactNode => {
     switch (content) {
@@ -54,71 +54,72 @@ const StaticQuestion = ({ question, index }: Props) => {
     }
   }, []);
 
-  const handleAnswerChange = (answer: string) => {
-    if (question.questionType === 'MultipleChoice') {
-      setSelectedAnswer((prev) => {
-        if (Array.isArray(prev)) {
-          if (prev.includes(answer)) {
-            return prev.filter((item) => item !== answer);
-          } else {
-            return [...prev, answer];
-          }
-        }
-        return prev;
-      });
-    } else {
-      setSelectedAnswer(answer);
-    }
-  };
+  // const handleAnswerChange = (answer: string) => {
+  //   if (question.questionType === 'MultipleChoice') {
+  //     setSelectedAnswer((prev) => {
+  //       if (Array.isArray(prev)) {
+  //         if (prev.includes(answer)) {
+  //           return prev.filter((item) => item !== answer);
+  //         } else {
+  //           return [...prev, answer];
+  //         }
+  //       }
+  //       return prev;
+  //     });
+  //   } else {
+  //     setSelectedAnswer(answer);
+  //   }
+  // };
 
   const renderQuestionContent = () => {
     switch (question.questionType) {
       case 'FillInTheBlankChoice':
+        const correctAnswersF = question.answer.split('/');
         return (
-          <div>
-            <p>{question.content}</p>
-            <input
-              type="text"
-              value={selectedAnswer as string}
-              onChange={(e) => setSelectedAnswer(e.target.value)}
-              placeholder="Enter your answer"
-            />
-          </div>
-        );
-      case 'SingleChoice':
-        const singleChoices = question.possibleAnswer.split('/');
-        return (
-          <div>
-            <p>{question.content}</p>
-            {singleChoices.map((choice, index) => (
-              <label key={index}>
-                <input
-                  type="radio"
-                  name="singleChoice"
-                  value={choice}
-                  checked={selectedAnswer === choice}
-                  onChange={() => handleAnswerChange(choice)}
-                />
-                {choice}
-              </label>
+          <div className="flex flex-col gap-2">
+            {correctAnswersF.map((ans, index) => (
+              <input
+                key={index}
+                type="text"
+                value={ans}
+                className="w-full rounded border border-gray-300 p-2"
+                readOnly
+              />
             ))}
           </div>
         );
-      case 'MultipleChoice':
-        const multipleChoices = question.possibleAnswer.split('/');
+      case 'SingleChoice':
+        const possibleChoices = question.possibleAnswer.split('/');
+        const correctAnswers = question.answer
+          .split('/')
+          .filter((ans) => ans !== '@');
         return (
-          <div>
-            <p>{question.content}</p>
-            {multipleChoices.map((choice, index) => (
-              <label key={index}>
-                <input
-                  type="checkbox"
-                  value={choice}
-                  checked={(selectedAnswer as string[]).includes(choice)}
-                  onChange={() => handleAnswerChange(choice)}
-                />
-                {choice}
-              </label>
+          <RadioGroup value={correctAnswers[0]}>
+            {possibleChoices.map((choice, index) => (
+              <Fragment key={index}>
+                <Radio value={choice} readOnly>
+                  {choice}
+                </Radio>
+              </Fragment>
+            ))}
+          </RadioGroup>
+        );
+      case 'MultipleChoice':
+        const possibleChoicesM = question.possibleAnswer.split('/');
+        const correctAnswersM = question.answer
+          .split('/')
+          .filter((ans) => ans !== '@');
+        return (
+          <div className="flex flex-col gap-2">
+            {possibleChoicesM.map((choice, index) => (
+              <div key={index}>
+                <Checkbox
+                  readOnly
+                  isSelected={correctAnswersM.includes(choice)}
+                >
+                  {choice}
+                </Checkbox>
+              </div>
             ))}
           </div>
         );
@@ -128,47 +129,20 @@ const StaticQuestion = ({ question, index }: Props) => {
   };
 
   return (
-    <div className="w-full rounded border border-gray-300 bg-white">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="w-full rounded border border-gray-300 bg-white shadow-md">
+      <div className="flex items-center justify-between px-4 py-2">
         <div className="font-bold">{question.content}</div>
-        <div className="ml-auto p-4 text-danger font-bold text-base">{question.totalPoints}đ</div>
+        <div className="ml-auto pr-4 text-base font-bold text-danger">
+          {question.totalPoints.toFixed(2)}đ
+        </div>
         {renderChip(question.questionType)}
       </div>
       <Divider />
-      <div>
-        <p className="mb-2 font-bold text-wrap">
+      <div className="flex flex-col gap-4 p-4">
+        <span className="mb-2 text-wrap font-bold">
           Question {index}: {question.question}
-        </p>
-        <div className="mb-2">
-          <input
-            type="radio"
-            id="option1"
-            name="question1"
-            className="mr-2"
-            checked
-          />
-          <label htmlFor="option1">BinhDoHuyToanLoan</label>
-        </div>
-        <div className="mb-2">
-          <input type="radio" id="option2" name="question1" className="mr-2" />
-          <label htmlFor="option2">Binh</label>
-        </div>
-        <div className="mb-2">
-          <input type="radio" id="option3" name="question1" className="mr-2" />
-          <label htmlFor="option3">Do</label>
-        </div>
-        <div className="mb-2">
-          <input type="radio" id="option4" name="question1" className="mr-2" />
-          <label htmlFor="option4">Huy</label>
-        </div>
-        <div className="mb-2">
-          <input type="radio" id="option5" name="question1" className="mr-2" />
-          <label htmlFor="option5">Toan</label>
-        </div>
-        <div className="mb-2">
-          <input type="radio" id="option6" name="question1" className="mr-2" />
-          <label htmlFor="option6">Loan</label>
-        </div>
+        </span>
+        {renderQuestionContent()}
       </div>
     </div>
   );

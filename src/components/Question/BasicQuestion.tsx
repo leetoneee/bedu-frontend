@@ -72,6 +72,7 @@ const BasicQuestion = ({ question }: Props) => {
                 <input
                   type="checkbox"
                   value={choice}
+                  defaultChecked={(selectedAnswer as string[]).includes(choice)}
                   checked={(selectedAnswer as string[]).includes(choice)}
                   onChange={() => handleAnswerChange(choice)}
                 />
