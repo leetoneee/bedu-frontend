@@ -42,6 +42,11 @@ export default function DeleteProgramModal({
   //   }
   // }, [programId, programTitle]);
 
+  const handleClose = () => {
+    // Đóng modal
+    onClose();
+  };
+  
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
@@ -61,11 +66,6 @@ export default function DeleteProgramModal({
     } finally {
       setIsDeleting(false);
     }
-  };
-
-  const handleClose = () => {
-    // Đóng modal
-    onClose();
   };
 
   return (

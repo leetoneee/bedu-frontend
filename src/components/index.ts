@@ -13,15 +13,15 @@ import {
   OrderCard
 } from '@/components/ProgramCard';
 import Rating from '@/components/rating';
-import AddProgramModal from './ModalProgram/program.add';
-import EditProgramModal from './ModalProgram/EditProgram';
-import DeleteProgramModal from './ModalProgram/DeleteProgram';
-import AddCourseModal from './ModalCourse/course.add';
-import EditCourseModal from './ModalCourse/EditCourse';
-import DeleteCourseModal from './ModalCourse/DeleteCourse';
-import AddClassModal from './ModalClass/class.add';
-import EditClassModal from './ModalClass/EditClass';
-import DeleteClassModal from './ModalClass/DeleteClass';
+// import AddProgramModal from './ModalProgram/program.add';
+// import EditProgramModal from './ModalProgram/EditProgram';
+// import DeleteProgramModal from './ModalProgram/DeleteProgram';
+// import AddCourseModal from './ModalCourse/course.add';
+// import EditCourseModal from './ModalCourse/EditCourse';
+// import DeleteCourseModal from './ModalCourse/DeleteCourse';
+// import AddClassModal from './ModalClass/class.add';
+// import EditClassModal from './ModalClass/EditClass';
+// import DeleteClassModal from './ModalClass/DeleteClass';
 import Input from './Input/input';
 import { InputFile } from './Input/input-file';
 import Checkbox from './Checkbox';
@@ -34,6 +34,8 @@ import ProgramCard from './ProgramCard/ProgramCard';
 import ClassCard from './ProgramCard/ClassCard';
 import ProgramOverviewCard from './ProgramCard/ProgramOverviewCard';
 import ClassOverviewCard from './ProgramCard/ClassOverviewCard';
+import BasicQuestion from './Question/BasicQuestion';
+import StaticQuestion from './Question/StaticQuestion';
 export { classNames };
 export { Sidebar };
 export { Header, NavHeader };
@@ -50,9 +52,9 @@ export {
   ProgramOverviewCard,
   ClassOverviewCard
 };
-export { AddProgramModal, EditProgramModal, DeleteProgramModal };
-export { AddCourseModal, EditCourseModal, DeleteCourseModal };
-export { AddClassModal, EditClassModal, DeleteClassModal };
+// export { AddProgramModal, EditProgramModal, DeleteProgramModal };
+// export { AddCourseModal, EditCourseModal, DeleteCourseModal };
+// export { AddClassModal, EditClassModal, DeleteClassModal };
 export { Input, InputFile };
 export { Checkbox };
 export { Navigation };
@@ -60,3 +62,4 @@ export { Footer };
 export { Accordion };
 export { OtpInput };
 export { Schedule };
+export { BasicQuestion, StaticQuestion };

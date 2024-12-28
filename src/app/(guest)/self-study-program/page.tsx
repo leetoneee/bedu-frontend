@@ -22,9 +22,16 @@ export default function ProgramPage() {
     }
   ];
 
-  const getKey = (pageIndex: number, previousPageData: any) => {
+  interface PageData {
+    metadata: {
+      programs: Program[];
+      totalRecord: number;
+    };
+  }
+
+  const getKey = (pageIndex: number, previousPageData: PageData | null): string | null => {
     pageIndex += 1;
-    if (previousPageData && !previousPageData.length) return null; // reached the end
+    if (previousPageData && !previousPageData.metadata.programs.length) return null; // reached the end
     return `/programs/all${filter ? `/type/${filter}` : ''}?page=${pageIndex}&limit=10`; // SWR key
   };
 

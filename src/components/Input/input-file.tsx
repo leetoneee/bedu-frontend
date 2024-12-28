@@ -1,11 +1,6 @@
 'use client';
 
-import button, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState
-} from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useEdgeStore } from '@/libs/edgestore';
 import { InputFileHandle, InputFileProps } from '@/types';
 import { Progress } from '@nextui-org/react';
@@ -16,7 +11,7 @@ export const InputFile = forwardRef<InputFileHandle, InputFileProps>(
     const [file, setFile] = useState<File>();
     const [tempname, setTempname] = useState<string>(filename || '');
     const [progress, setProgress] = useState<number>(0);
-    const [url, setUrl] = useState<string>('');
+    // const [url, setUrl] = useState<string>('');
 
     const { edgestore } = useEdgeStore();
 

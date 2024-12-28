@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  Accordion,
-  Breadcrumb,
-  OrderCard,
-  Rating,
-} from '@/components';
+import { Accordion, Breadcrumb, OrderCard, Rating } from '@/components';
 import Image from 'next/image';
 import { Crumb } from '@/types';
 import { useParams } from 'next/navigation';
@@ -22,10 +17,7 @@ export default function DetailProgramPage() {
   const params = useParams();
   const programId = params.programId;
 
-  const { data, error: courseError } = useSWR(
-    `/programs/item/${programId}`,
-    fetcher
-  );
+  const { data } = useSWR(`/programs/item/${programId}`, fetcher);
 
   const rating = 4.5;
   const feedbacks = 150;

@@ -1,11 +1,7 @@
 'use client';
 
 import { columns } from '@/data/program-course.data';
-import {
-  EyeIcon,
-  TrashIcon,
-  XMarkIcon
-} from '@heroicons/react/24/outline';
+import { EyeIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import {
   Selection,
   Button,
@@ -103,8 +99,8 @@ const AddCoursesModal = ({
 
   const {
     data: coursesData,
-    error,
-    isLoading
+    error
+    // isLoading
   } = useSWR(endpoint, fetcher, {
     keepPreviousData: true
   });

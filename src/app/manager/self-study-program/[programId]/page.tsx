@@ -50,7 +50,7 @@ const ProgramDetail = () => {
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const { data, error: courseError } = useSWR(
+  const { data } = useSWR(
     `/programs/item/${programId}`,
     fetcher
   );
@@ -192,7 +192,7 @@ const ProgramDetail = () => {
   });
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 6;
+  // const rowsPerPage = 6;
 
   // const pages = React.useMemo(() => {
   //   return data?.count ? Math.ceil(data.count / rowsPerPage) : 0;

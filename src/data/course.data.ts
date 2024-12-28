@@ -1,4 +1,4 @@
-import { Course } from '@/types/course.type';
+// import { Course } from '@/types/course.type';
 
 const columns = [
   { name: '#', uid: 'id', sortable: true },

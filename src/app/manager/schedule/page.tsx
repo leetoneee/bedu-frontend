@@ -28,7 +28,7 @@ export default function SSP() {
   const {
     data: eventsData,
     isLoading,
-    mutate: refreshEndpoint
+    // mutate: refreshEndpoint
   } = useSWR(`/lessons/all?page=${page}&limit=${rowsPerPage}`, fetcher, {
     keepPreviousData: true
   });

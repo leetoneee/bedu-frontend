@@ -13,10 +13,6 @@ function Input({
   type = 'text',
   suport
 }: InputProps) {
-  const handleInputChange = (e: any) => {
-    const value = e.target.value;
-    onChange(value);
-  };
 
   const borderClass =
     valid === 'error_AtLeast' || valid === 'error_SameName'
@@ -42,7 +38,7 @@ function Input({
             id={title}
             readOnly={readOnly}
             disabled={readOnly}
-            onChange={handleInputChange}
+            onChange={(e) => onChange(e)}
             required={required}
             type={type}
           />

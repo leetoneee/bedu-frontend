@@ -199,7 +199,7 @@ export default function EditExamModal({
       </span>
     );
 
-  const size: '2xl' = '2xl';
+  const size = '2xl';
   return (
     <Modal
       size={size}

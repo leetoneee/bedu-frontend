@@ -103,7 +103,7 @@ export default function EditLessonModal({
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
-      const today = new Date();
+      // const today = new Date();
 
       const data: UpdateLessonDto = {
         // title: name,
@@ -155,7 +155,7 @@ export default function EditLessonModal({
       </span>
     );
 
-  const size: '2xl' = '2xl';
+  const size = '2xl';
   return (
     <Modal
       size={size}

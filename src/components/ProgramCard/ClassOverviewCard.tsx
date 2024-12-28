@@ -3,22 +3,20 @@ import Image from 'next/image';
 import { Rating } from '@/components';
 import { LuBookMinus, LuClock3 } from 'react-icons/lu';
 import { MdOutlineDateRange } from 'react-icons/md';
-import { useRouter } from 'next/router';
-import { LiveProgramCardProps } from '@/types/programCard.type';
 import { EClass } from '@/types/class.type';
 
 const ClassOverviewCard = ({ eclass }: { eclass: EClass }) => {
   const {
-    id,
+    // id,
     code,
-    type,
-    description,
+    // type,
+    // description,
     avatar,
     lessonQuantity,
     name,
     price,
     startDate,
-    studyForm,
+    // studyForm,
     timePerLesson
   } = eclass;
 
@@ -31,9 +29,9 @@ const ClassOverviewCard = ({ eclass }: { eclass: EClass }) => {
     }).format(number);
   };
 
-  const formatSchedule = (schedule: string[]): string => {
-    return schedule.join(', '); // Nối tất cả phần tử bằng dấu phẩy và khoảng trắng
-  };
+  // const formatSchedule = (schedule: string[]): string => {
+  //   return schedule.join(', '); // Nối tất cả phần tử bằng dấu phẩy và khoảng trắng
+  // };
 
   const formattedDate = (startDate: string) => {
     return new Intl.DateTimeFormat('en-US', {

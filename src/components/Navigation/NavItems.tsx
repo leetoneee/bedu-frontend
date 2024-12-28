@@ -1,5 +1,4 @@
 import { UserIcon, VideoCameraIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { MdOutlineClass } from 'react-icons/md';
 

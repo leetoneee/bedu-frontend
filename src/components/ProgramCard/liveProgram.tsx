@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { Rating } from '@/components';
 import { LuBookMinus, LuClock3 } from 'react-icons/lu';
 import { MdOutlineDateRange } from 'react-icons/md';
-import { useRouter } from 'next/router';
 import { LiveProgramCardProps } from '@/types/programCard.type';
 
 const LiveProgramCard = ({
@@ -17,15 +16,15 @@ const LiveProgramCard = ({
   // }
 
   const {
-    id,
-    code,
-    description,
-    image,
+    // id,
+    // code,
+    // description,
+    // image,
     lessonQuantity,
     name,
     price,
     startDate,
-    studyForm,
+    // studyForm,
     timePerLesson,
     rating,
     feedbacks
@@ -38,9 +37,9 @@ const LiveProgramCard = ({
     }).format(number);
   };
 
-  const formatSchedule = (schedule: string[]): string => {
-    return schedule.join(', '); // Nối tất cả phần tử bằng dấu phẩy và khoảng trắng
-  };
+  // const formatSchedule = (schedule: string[]): string => {
+  //   return schedule.join(', '); // Nối tất cả phần tử bằng dấu phẩy và khoảng trắng
+  // };
 
   const formattedDate = (startDate: string) => {
     return new Intl.DateTimeFormat('en-US', {

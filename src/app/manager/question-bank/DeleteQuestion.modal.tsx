@@ -9,7 +9,7 @@ import {
   ModalFooter,
   Button
 } from '@nextui-org/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 type Props = {
@@ -45,7 +45,9 @@ const DeleteQuestionModal = ({
 
   const handleDelete = async () => {
     if (relatedExam.length > 0) {
-      toast.error('This question is also in the exams, please remove it before deleting the question.');
+      toast.error(
+        'This question is also in the exams, please remove it before deleting the question.'
+      );
       onClose();
     }
     setIsDeleting(true);
