@@ -4,7 +4,7 @@ import ButtonBase from './ButtonBase';
 
 const ButtonSolid = ({
   content,
-  isPrimary = false,
+  // isPrimary = false,
   isDisabled = false,
   className = '',
   iconLeft,

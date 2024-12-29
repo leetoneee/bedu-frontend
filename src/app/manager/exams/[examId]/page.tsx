@@ -25,9 +25,9 @@ const ExamDetail = () => {
 
   const {
     data,
-    isLoading,
-    error: classError,
-    mutate: refreshEndpoint
+    // isLoading,
+    // error: classError,
+    // mutate: refreshEndpoint
   } = useSWR(`/exams/item/${examId}`, fetcher);
 
   const crumbs: Crumb[] = useMemo(() => {

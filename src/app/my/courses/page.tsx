@@ -1,14 +1,7 @@
 'use client';
 
-import {
-  Breadcrumb,
-  NavHeader,
-  Navigation,
-  ProgramCard,
-  ProgramOverviewCard
-} from '@/components';
+import { Breadcrumb, Navigation, ProgramOverviewCard } from '@/components';
 import React, { Fragment, useEffect, useState } from 'react';
-import Image from 'next/image';
 import { Crumb } from '@/types';
 import { Divider, Input, Spinner } from '@nextui-org/react';
 import axios from '@/libs/axiosInstance';
@@ -33,9 +26,16 @@ const MyCoursesPage = () => {
     }
   ];
 
-  const getKey = (pageIndex: number, previousPageData: any) => {
+  interface PreviousPageData {
+    metadata: {
+      enrollments: Enrollment[];
+      total: number;
+    };
+  }
+
+  const getKey = (pageIndex: number, previousPageData: PreviousPageData | null): string | null => {
     pageIndex += 1;
-    if (previousPageData && !previousPageData.length) return null; // reached the end
+    if (previousPageData && !previousPageData.metadata.enrollments.length) return null; // reached the end
     return `/users_programs/all/user/${session?.user.id}?page=${pageIndex}&limit=10`; // SWR key
   };
 
@@ -82,12 +82,12 @@ const MyCoursesPage = () => {
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
       <Breadcrumb crumbs={crumbs} />
       <Divider />
-      <div className="flex flex-row gap-4 w-full">
-        <div className="flex-none w-72">
+      <div className="flex w-full flex-row gap-4">
+        <div className="w-72 flex-none">
           <Navigation />
         </div>
         {/* Code ở đây */}
-        <div className="flex shrink w-full flex-col gap-4">
+        <div className="flex w-full shrink flex-col gap-4">
           <Input
             className="mr-auto w-56 bg-white"
             variant="bordered"

@@ -3,8 +3,6 @@
 import React, { Fragment } from 'react';
 import { NavItems } from './NavItems';
 import NavigationItem from './NavigationItem';
-import ButtonSolid from '../Button/ButtonSolid';
-import { signOut } from 'next-auth/react';
 const Navigation = () => {
   const navItems = NavItems();
 

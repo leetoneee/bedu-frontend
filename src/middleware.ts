@@ -1,7 +1,6 @@
 // import withAuth from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getToken } from 'next-auth/jwt';
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get('next-auth.session-token');

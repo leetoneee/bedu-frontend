@@ -1,7 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { DocumentTextIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
-import { Crumb, TabButtonProps } from '@/types';
+import React from 'react';
+import { TabButtonProps } from '@/types';
 
 type Props = {
   activeTab: string;
@@ -10,7 +8,7 @@ type Props = {
 
 const ExamHeader = ({ activeTab, setActiveTab }: Props) => {
   return (
-    <div className="w-full rounded-t-lg bg-white shadow-sm px-7 py-4">
+    <div className="w-full rounded-t-lg bg-white px-7 py-4 shadow-sm">
       {/* TABS */}
       <div className="flex w-full flex-wrap-reverse gap-2 pt-2 md:items-center">
         <div className="flex flex-1 items-center gap-2 md:gap-4">

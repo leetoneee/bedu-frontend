@@ -1,4 +1,3 @@
-import { Program } from '@/types/program.type';
 
 export const columns = [
   { name: '#', uid: 'id', sortable: true },

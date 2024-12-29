@@ -44,7 +44,8 @@ const handler = NextAuth({
     })
   ],
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt',
+    maxAge: 3 * 24 * 60 * 60
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === 'development',
@@ -60,6 +61,9 @@ const handler = NextAuth({
     },
     async session({ session, token }) {
       session.user = token as any;
+      session.expires = new Date(
+        Date.now() + 1 * 24 * 60 * 60 * 1000
+      ).toISOString(); // 1 days
       return session;
     }
   },

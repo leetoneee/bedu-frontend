@@ -6,10 +6,8 @@ import { Crumb } from '@/types';
 import { Course } from '@/types/course.type';
 import { Lesson, statusColorMap } from '@/types/lesson.type';
 import {
-  Button,
   CalendarDate,
   Chip,
-  DateInput,
   Divider,
   Input,
   Pagination,
@@ -28,7 +26,6 @@ import {
 import React, {
   Key,
   ReactNode,
-  use,
   useCallback,
   useEffect,
   useMemo,
@@ -42,7 +39,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useParams, useRouter } from 'next/navigation';
 import axios from '@/libs/axiosInstance';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import AddLessonModal from './AddLesson.modal';
 import { toast } from 'react-toastify';
 import EditLessonModal from './EditLesson.modal';
@@ -123,8 +120,8 @@ const CourseDetail = () => {
 
   const [filterLessonName, setFilterLessonName] = useState<string>('');
   const hasSearchFilterName = Boolean(filterLessonName);
-  const [filterStartDate, setFilterStartDate] = useState<CalendarDate>();
-  const [filterEndDate, setFilterEndDate] = useState<CalendarDate>();
+  const [filterStartDate] = useState<CalendarDate>();
+  const [filterEndDate] = useState<CalendarDate>();
 
   const renderCell = useCallback(
     (lesson: Lesson, columnKey: Key): ReactNode => {

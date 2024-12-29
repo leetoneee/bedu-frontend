@@ -1,11 +1,7 @@
 'use client';
 
-import { columns } from '@/data/program-course.data';
-import {
-  EyeIcon,
-  TrashIcon,
-  XMarkIcon
-} from '@heroicons/react/24/outline';
+import { columns } from '@/data/exam-question.data';
+import { EyeIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import {
   Selection,
   Button,
@@ -38,58 +34,49 @@ import React, {
 import { Course, statusColorMap } from '@/types/course.type';
 import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
+import { Question } from '@/types/question-bank.type';
 
 type Props = {
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: () => void;
   courseType: string;
-  courses: Course[];
-  setCourses: Dispatch<SetStateAction<Course[]>>;
+  questions: Question[];
+  setQuestions: Dispatch<SetStateAction<Question[]>>;
 };
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-const AddCoursesModal = ({
+const AddQuestionsModal = ({
   isOpen,
   onOpenChange,
-  courseType,
-  courses,
-  setCourses
+  questions,
+  setQuestions
 }: Props) => {
   const [filterMemberName, setFilterMemberName] = useState<string>('');
   const hasSearchFilterName = Boolean(filterMemberName);
 
   // defaultKeys and disabledKey for Table in Modal
-  const [listCourses, setListCourses] = useState<Course[]>([]);
+  const [listQuestions, setListQuestions] = useState<Question[]>([]);
   // const [filter, setFilter] = useState<string | null>(null); // 'ielts', 'toeic', 'toefl', or null
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [lastSelectedKeys, setLastSelectedKeys] = useState<Selection>(
     new Set([])
   );
-  const [disabledKeys, setDisabledKeys] = useState<Selection>(new Set([]));
-
-  useEffect(() => {
-    const disabledIds = new Set(
-      listCourses
-        .filter((course) => course.isActive === false)
-        .map((course) => course.id.toString())
-    );
-    setDisabledKeys(disabledIds);
-  }, [listCourses]);
+  // const [disabledKeys, setDisabledKeys] = useState<Selection>(new Set([]));
 
   useEffect(() => {
     // Find matching assignee IDs
     const selectedIds = new Set(
-      listCourses
-        .filter((listcourse) =>
-          courses.some((course) => course.id === listcourse.id)
+      listQuestions
+        .filter((listQuestion) =>
+          questions.some((question) => question.id === listQuestion.id)
         )
         .map((listcourse) => listcourse.id.toString())
     );
     setSelectedKeys(selectedIds);
     setLastSelectedKeys(selectedIds);
-  }, [listCourses, courses]);
+  }, [listQuestions, questions]);
   //
 
   const [page, setPage] = useState(1);
@@ -99,10 +86,10 @@ const AddCoursesModal = ({
   //   return data?.count ? Math.ceil(data.count / rowsPerPage) : 0;
   // }, [data?.count, rowsPerPage]);
   const pages = 3;
-  const endpoint = `/courses/all${courseType ? `/${courseType}` : ''}?page=${page}&limit=${rowsPerPage}`;
+  const endpoint = `/question/all?page=${page}&limit=${rowsPerPage}`;
 
   const {
-    data: coursesData,
+    data: questionsData,
     error
     // isLoading
   } = useSWR(endpoint, fetcher, {
@@ -116,14 +103,58 @@ const AddCoursesModal = ({
 
   // Load data
   useEffect(() => {
-    if (error) setListCourses([]);
-    else if (coursesData) setListCourses(coursesData.metadata.courses);
-  }, [coursesData]);
+    if (error) setListQuestions([]);
+    else if (questionsData) {
+      setListQuestions(questionsData.metadata.questions);
+    }
+  }, [questionsData]);
+
+  const renderChip = useCallback((content: string): ReactNode => {
+    switch (content) {
+      case 'FillInTheBlankChoice':
+        return (
+          <Chip
+            className="capitalize"
+            color={'success'}
+            size="lg"
+            variant="bordered"
+          >
+            Fill in the blank
+          </Chip>
+        );
+      case 'SingleChoice':
+        return (
+          <Chip
+            className="capitalize"
+            color={'warning'}
+            size="lg"
+            variant="bordered"
+          >
+            Single Choice Questions
+          </Chip>
+        );
+      case 'MultipleChoice':
+        return (
+          <Chip
+            className="capitalize"
+            color={'danger'}
+            size="lg"
+            variant="bordered"
+          >
+            Multiple Choice Questions
+          </Chip>
+        );
+      default:
+        <span>{content}</span>;
+    }
+  }, []);
 
   const renderCell = useCallback(
-    (course: Course, columnKey: Key): ReactNode => {
+    (course: Question, columnKey: Key): ReactNode => {
       const cellValue =
-        columnKey !== 'actions' ? course[columnKey as keyof Course] : 'actions';
+        columnKey !== 'actions'
+          ? course[columnKey as keyof Question]
+          : 'actions';
 
       switch (columnKey) {
         case 'id':
@@ -132,36 +163,21 @@ const AddCoursesModal = ({
               <p className="text-bold text-sm capitalize">{cellValue}</p>
             </div>
           );
-        case 'code':
+        case 'content':
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">{cellValue}</p>
             </div>
           );
-        case 'title':
+        case 'question':
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">{cellValue}</p>
             </div>
           );
-        case 'isPublish':
-          return (
-            <Chip
-              className="capitalize"
-              color={
-                statusColorMap[
-                  (course.isActive
-                    ? 'Published'
-                    : 'Unpublished') as keyof typeof statusColorMap
-                ]
-              }
-              size="sm"
-              variant="flat"
-            >
-              {course.isActive ? 'Published' : 'Unpublished'}
-            </Chip>
-          );
-        case 'lessonQuantity':
+        case 'examType':
+          return renderChip((cellValue ?? '').toString());
+        case 'examType':
           return (
             <div className="flex flex-col">
               <p className="text-bold text-wraps text-sm capitalize">
@@ -169,18 +185,10 @@ const AddCoursesModal = ({
               </p>
             </div>
           );
-        case 'price':
+        case 'totalPoints':
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">{cellValue}</p>
-            </div>
-          );
-        case 'timePerLesson':
-          return (
-            <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">
-                {cellValue} minutes
-              </p>
             </div>
           );
         case 'actions':
@@ -209,16 +217,16 @@ const AddCoursesModal = ({
   );
 
   const filteredItems = React.useMemo(() => {
-    let filteredListCourses = [...listCourses];
+    let filteredListQuestions = [...listQuestions];
 
     if (hasSearchFilterName) {
-      filteredListCourses = filteredListCourses.filter((member) =>
-        member.title.toLowerCase().includes(filterMemberName.toLowerCase())
+      filteredListQuestions = filteredListQuestions.filter((question) =>
+        question.question.toLowerCase().includes(filterMemberName.toLowerCase())
       );
     }
 
-    return filteredListCourses;
-  }, [listCourses, filterMemberName]);
+    return filteredListQuestions;
+  }, [listQuestions, filterMemberName]);
 
   // const items = React.useMemo(() => {
   //   const start = (page - 1) * rowsPerPage;
@@ -228,9 +236,9 @@ const AddCoursesModal = ({
   // }, [page, filteredItems]);
 
   const sortedItems = React.useMemo(() => {
-    return [...filteredItems].sort((a: Course, b: Course) => {
-      const first = a[sortDescriptor.column as keyof Course] as number;
-      const second = b[sortDescriptor.column as keyof Course] as number;
+    return [...filteredItems].sort((a: Question, b: Question) => {
+      const first = a[sortDescriptor.column as keyof Question] as number;
+      const second = b[sortDescriptor.column as keyof Question] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp;
@@ -243,13 +251,13 @@ const AddCoursesModal = ({
       <div className="flex w-full flex-row gap-16">
         {/* Search Name*/}
         <div className="flex flex-col gap-2">
-          <span>Project name</span>
+          <span>Question name</span>
           <Input
             className="w-full bg-white"
             variant="bordered"
             size={'md'}
             type=""
-            placeholder="Find your team member"
+            placeholder="Find your question"
             value={filterMemberName}
             onChange={(e) => setFilterMemberName(e.target.value)}
           />
@@ -267,15 +275,15 @@ const AddCoursesModal = ({
   }, [filterMemberName]);
 
   const handleContinue = () => {
-    const selectedCourses: Course[] = listCourses.filter((listcourse) => {
+    const selectedCourses: Question[] = listQuestions.filter((listquestion) => {
       if (selectedKeys === 'all') return true;
       if (selectedKeys instanceof Set) {
-        return selectedKeys.has(listcourse.id.toString());
+        return selectedKeys.has(listquestion.id.toString());
       }
     });
     console.log('🚀 ~ handleContinue ~ selectedCourses:', selectedCourses);
 
-    setCourses(selectedCourses);
+    setQuestions(selectedCourses);
   };
 
   const handleClose = () => {
@@ -308,7 +316,7 @@ const AddCoursesModal = ({
           <>
             <ModalHeader className="flex flex-row justify-between">
               <span className="text-4xl font-semibold">
-                Add Courses To Program
+                Add Questions To Exam
               </span>
               <XMarkIcon
                 className="size-10 hover:cursor-pointer"
@@ -329,7 +337,7 @@ const AddCoursesModal = ({
                     topContentPlacement="inside"
                     sortDescriptor={sortDescriptor}
                     onSortChange={setSortDescriptor}
-                    disabledKeys={disabledKeys}
+                    // disabledKeys={disabledKeys}
                     selectedKeys={selectedKeys}
                     onSelectionChange={setSelectedKeys}
                   >
@@ -403,4 +411,4 @@ const AddCoursesModal = ({
   );
 };
 
-export default AddCoursesModal;
+export default AddQuestionsModal;

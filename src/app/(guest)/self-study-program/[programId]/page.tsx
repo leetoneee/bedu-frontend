@@ -22,10 +22,7 @@ export default function DetailProgramPage() {
   const params = useParams();
   const programId = params.programId;
 
-  const { data, error: courseError } = useSWR(
-    `/programs/item/${programId}`,
-    fetcher
-  );
+  const { data } = useSWR(`/programs/item/${programId}`, fetcher);
 
   const rating = 4.5;
   const feedbacks = 150;

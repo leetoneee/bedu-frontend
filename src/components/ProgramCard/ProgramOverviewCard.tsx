@@ -1,35 +1,30 @@
 'use client';
 import Image from 'next/image';
-import { LuBookMinus, LuClock3 } from 'react-icons/lu';
-import { RiUserLine } from 'react-icons/ri';
-import { SSProgramCardProps } from '@/types/programCard.type';
+import { LuBookMinus } from 'react-icons/lu';
 import { Program } from '@/types/program.type';
-import { use, useEffect, useState } from 'react';
-import axios from '@/libs/axiosInstance';
-import useSWR from 'swr';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+// const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const ProgramOverviewCard = ({ program }: { program: Program }) => {
   const {
-    id,
+    // id,
     code,
     type,
-    description,
+    // description,
     avatar,
     sessionQuantity,
     price,
     title,
-    course
+    // course
   } = program;
 
   // const [lessonQuantity, setLessonQuantity] = useState<number>(0);
-  const [totalTime, setTotalTime] = useState<number>(0);
-  const [studentQuantity, setStudentQuantity] = useState<number>(0);
+  // const [totalTime, setTotalTime] = useState<number>(0);
+  // const [studentQuantity, setStudentQuantity] = useState<number>(0);
 
-  const page = 1;
-  const rowsPerPage = 10;
+  // const page = 1;
+  // const rowsPerPage = 10;
 
   // const endpoint = `/users_programs/all/program/${program.id}?page=${page}&limit=${rowsPerPage}`;
 

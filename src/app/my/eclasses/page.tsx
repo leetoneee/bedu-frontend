@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  Breadcrumb,
-  ClassOverviewCard,
-  NavHeader,
-  Navigation
-} from '@/components';
+import { Breadcrumb, ClassOverviewCard, Navigation } from '@/components';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Crumb } from '@/types';
 import { Divider, Input, Spinner } from '@nextui-org/react';
@@ -36,9 +31,17 @@ const MyClassPage = () => {
   const [filterClassName, setFilterClassName] = useState<string>('');
   const hasSearchFilter = Boolean(filterClassName);
 
-  const getKey = (pageIndex: number, previousPageData: any) => {
+  interface PageData {
+    metadata: {
+      userClasses: EnrollmentClass[];
+      totalRecord: number;
+    };
+  }
+
+  const getKey = (pageIndex: number, previousPageData: PageData | null) => {
     pageIndex += 1;
-    if (previousPageData && !previousPageData.length) return null; // reached the end
+    if (previousPageData && !previousPageData.metadata.userClasses.length)
+      return null; // reached the end
     return `/users-classes/all/student/${session?.user.id}?page=${pageIndex}&limit=10`; // SWR key
   };
 

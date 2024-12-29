@@ -1,9 +1,5 @@
 import ButtonSolid from '@/components/Button/ButtonSolid';
-import {
-  OrderCardProps,
-  LiveProgramCardProps,
-  SSProgramCardProps
-} from '@/types/programCard.type';
+import { OrderCardProps } from '@/types/programCard.type';
 import Image from 'next/image';
 
 const OrderCard = ({ detail }: OrderCardProps) => {

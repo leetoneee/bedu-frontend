@@ -22,9 +22,16 @@ export default function LivePage() {
     }
   ];
 
-  const getKey = (pageIndex: number, previousPageData: any) => {
+  interface PageData {
+    metadata: {
+      classes: EClass[];
+      totalRecord: number;
+    };
+  }
+
+  const getKey = (pageIndex: number, previousPageData: PageData | null): string | null => {
     pageIndex += 1;
-    if (previousPageData && !previousPageData.length) return null; // reached the end
+    if (previousPageData && !previousPageData.metadata.classes.length) return null; // reached the end
     return `/classes/all${filter ? `/type/${filter}` : ''}?page=${pageIndex}&limit=10`; // SWR key
   };
 

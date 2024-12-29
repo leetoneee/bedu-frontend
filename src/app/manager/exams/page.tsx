@@ -246,34 +246,34 @@ export default function ExamsPage() {
     }
   }, []);
 
-  const renderChip = useCallback((content: string): ReactNode => {
-    switch (content) {
-      case 'Published':
-        return (
-          <Chip
-            className="capitalize"
-            color={'success'}
-            size="sm"
-            variant="flat"
-          >
-            {content}
-          </Chip>
-        );
-      case 'Unpublished':
-        return (
-          <Chip
-            className="capitalize"
-            color={'default'}
-            size="sm"
-            variant="flat"
-          >
-            {content}
-          </Chip>
-        );
-      default:
-        <span>{content}</span>;
-    }
-  }, []);
+  // const renderChip = useCallback((content: string): ReactNode => {
+  //   switch (content) {
+  //     case 'Published':
+  //       return (
+  //         <Chip
+  //           className="capitalize"
+  //           color={'success'}
+  //           size="sm"
+  //           variant="flat"
+  //         >
+  //           {content}
+  //         </Chip>
+  //       );
+  //     case 'Unpublished':
+  //       return (
+  //         <Chip
+  //           className="capitalize"
+  //           color={'default'}
+  //           size="sm"
+  //           variant="flat"
+  //         >
+  //           {content}
+  //         </Chip>
+  //       );
+  //     default:
+  //       <span>{content}</span>;
+  //   }
+  // }, []);
 
   const filteredItems = React.useMemo(() => {
     let filteredExams = [...exams];
@@ -500,8 +500,8 @@ export default function ExamsPage() {
       {selectedExam && (
         <EditExamModal 
           isOpen={isOpenE}
-          onClose={onCloseE}
           onOpen={onOpenE}
+          onClose={handleCloseEditModal}
           onOpenChange={onOpenChangeE}
           onEdited={handleEdited}
           exam={selectedExam}
@@ -512,7 +512,7 @@ export default function ExamsPage() {
           isOpen={isOpenD}
           onOpen={onOpenD}
           onOpenChange={onOpenChangeD}
-          onClose={onCloseD}
+          onClose={handleCloseDeleteModal}
           examId={selectedExam.id}
           examTitle={selectedExam.title}
           onDeleted={handleDeleted}

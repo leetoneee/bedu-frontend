@@ -1,5 +1,3 @@
-import { Lesson } from '@/types/lesson.type';
-
 export const columns = [
   { name: '#', uid: 'id', sortable: true },
   { name: 'TYPE', uid: 'type' },

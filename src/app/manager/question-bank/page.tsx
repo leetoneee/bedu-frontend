@@ -86,7 +86,7 @@ export default function QuestionBank() {
   const [totalQuestions, setTotalQuestions] = useState<number>(0);
   const [filterQuestionName, setFilterQuestionName] = useState<string>('');
   const hasSearchFilter = Boolean(filterQuestionName);
-  const [selectedStatus, setSelectedStatus] = useState<Selection>(
+  const [selectedStatus] = useState<Selection>(
     new Set(['all'])
   );
   const seletecValue = React.useMemo(

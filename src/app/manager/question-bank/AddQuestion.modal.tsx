@@ -67,7 +67,7 @@ const AddQuestionModal = ({
     answers: { id: number; answer: string }[],
     correctAnswers: number[]
   ) => {
-    let possibleAnswersAPI = answers.map((answer) => answer.answer).join('/');
+    const possibleAnswersAPI = answers.map((answer) => answer.answer).join('/');
     let answerAPI: string = '';
     if (typeQuestion === 'FillInTheBlankChoice') {
       answerAPI = possibleAnswersAPI;
@@ -257,10 +257,10 @@ const AddQuestionModal = ({
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
-      let pointDivisionAPI = pointDivision
+      const pointDivisionAPI = pointDivision
         .map((division) => division.point)
         .join('/');
-      let { answerAPI, possibleAnswersAPI } = makeAnswer(
+      const { answerAPI, possibleAnswersAPI } = makeAnswer(
         selectedType,
         answers,
         correctAnswers
@@ -447,7 +447,7 @@ const AddQuestionModal = ({
     });
   };
 
-  const size: '2xl' = '2xl';
+  const size = '2xl';
   return (
     <Modal
       size={size}

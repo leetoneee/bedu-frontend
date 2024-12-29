@@ -17,9 +17,9 @@ const Profile = () => {
   const [user, setUser] = useState<User>();
   const {
     data,
-    isLoading,
-    error: courseError,
-    mutate: refreshEndpoint
+    // isLoading,
+    // error: courseError,
+    // mutate: refreshEndpoint
   } = useSWR(`/users/item/${session?.user.id}`, fetcher);
 
   useEffect(() => {
