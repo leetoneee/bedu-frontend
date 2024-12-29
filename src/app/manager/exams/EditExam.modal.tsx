@@ -200,6 +200,7 @@ export default function EditExamModal({
     );
 
   const size = '2xl';
+        
   return (
     <Modal
       size={size}

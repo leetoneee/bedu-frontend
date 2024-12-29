@@ -1,7 +1,11 @@
 'use client';
 
 import { columns } from '@/data/program-course.data';
-import { EyeIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+  EyeIcon,
+  TrashIcon,
+  XMarkIcon
+} from '@heroicons/react/24/outline';
 import {
   Selection,
   Button,

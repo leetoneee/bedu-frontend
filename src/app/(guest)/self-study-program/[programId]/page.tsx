@@ -1,6 +1,11 @@
 'use client';
 
-import { Accordion, Breadcrumb, OrderCard, Rating } from '@/components';
+import {
+  Accordion,
+  Breadcrumb,
+  OrderCard,
+  Rating,
+} from '@/components';
 import Image from 'next/image';
 import { Crumb } from '@/types';
 import { useParams } from 'next/navigation';
