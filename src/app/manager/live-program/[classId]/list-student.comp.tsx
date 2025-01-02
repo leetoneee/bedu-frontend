@@ -18,21 +18,20 @@ import React, { Key, ReactNode, useCallback, useEffect, useState } from 'react';
 import { columns } from '@/data/program-user.data';
 import useSWR from 'swr';
 import axios from '@/libs/axiosInstance';
-import { Enrollment } from '@/types/enrollment.type';
-import { time } from 'console';
+import { Enrollment, EnrollmentClass } from '@/types/enrollment.type';
 import { toast } from 'react-toastify';
-import DeleteUserProgramModal from './DeleteUserProgram.modal';
-import AddUserProgramModal from './AddUserProgram.modal';
+import AddUserClassModal from './AddUserClass.modal';
+import DeleteUserClassModal from './DeleteUserClass.modal';
 
 type Props = {
-  programId: string;
+  classId: string;
 };
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-const ListStudent = ({ programId }: Props) => {
-  const [selectedUserProgram, setSelectedUserProgram] =
-    useState<Enrollment | null>(null);
+const ListStudent = ({ classId }: Props) => {
+  const [selectedUserClass, setSelectedUserClass] =
+    useState<EnrollmentClass | null>(null);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   //!  CONTROL Delete modal
   const {
@@ -42,13 +41,13 @@ const ListStudent = ({ programId }: Props) => {
     onClose: onCloseD
   } = useDisclosure();
   const handleDeleteClick = (user: User) => {
-    const userProgram = enrollments.find(
-      (enrollment: Enrollment) => enrollment.user.id === user.id
+    const userClass = enrollments.find(
+      (enrollment: EnrollmentClass) => enrollment.user.id === user.id
     );
-    if (userProgram) {
-      setSelectedUserProgram(userProgram);
+    if (userClass) {
+      setSelectedUserClass(userClass);
     } else {
-      setSelectedUserProgram(null);
+      setSelectedUserClass(null);
     }
     onOpenD();
   };
@@ -57,7 +56,7 @@ const ListStudent = ({ programId }: Props) => {
 
   //! STUDENT LIST
   const [users, setUsers] = useState<User[]>([]);
-  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [enrollments, setEnrollments] = useState<EnrollmentClass[]>([]);
   const [filterUserName, setFilterUserName] = useState<string>('');
   const hasSearchFilterUserName = Boolean(filterUserName);
   const [page, setPage] = useState(1);
@@ -67,14 +66,14 @@ const ListStudent = ({ programId }: Props) => {
   });
 
   const { data, mutate: refreshEndpoint } = useSWR(
-    `/users_programs/all/program/${programId}?page=${page}&limit=${rowsPerPage}`,
+    `/users-classes/all/type/${classId}?page=${page}&limit=${rowsPerPage}`,
     fetcher
   );
 
   useEffect(() => {
     if (data && data.metadata && data.metadata.enrollments) {
       setEnrollments(data.metadata.enrollments);
-      const listUsers = data.metadata.enrollments.map(
+      const listUsers = data.metadata.userClasses.map(
         (enrollment: Enrollment) => ({
           id: enrollment.user.id,
           cid: enrollment.user.cid,
@@ -247,14 +246,14 @@ const ListStudent = ({ programId }: Props) => {
   //
 
   const handleCreated = () => {
-    toast.success('Student has been added to the program');
+    toast.success('Student has been added to the class');
     refreshEndpoint();
   };
 
   const handleDelete = () => {
-    toast.success('Student has been removed from the program');
+    toast.success('Student has been removed from the class');
     refreshEndpoint();
-  }
+  };
 
   return (
     <div className="flex w-full flex-col">
@@ -319,23 +318,23 @@ const ListStudent = ({ programId }: Props) => {
       </div>
 
       {/* Add User Modal */}
-      <AddUserProgramModal
+      <AddUserClassModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         onClose={onClose}
         onOpen={onOpen}
-        programId={programId}
+        classId={classId}
         onCreated={handleCreated}
       />
       {/* Delete Modal */}
-      {selectedUserProgram && (
-        <DeleteUserProgramModal
+      {selectedUserClass && (
+        <DeleteUserClassModal
           isOpen={isOpenD}
           onOpenChange={onOpenChangeD}
           onClose={onCloseD}
-          programName={selectedUserProgram.program.title}
-          userProgramId={selectedUserProgram.id}
-          userProgramTitle={selectedUserProgram.user.name}
+          className={selectedUserClass.class.name}
+          userClassId={selectedUserClass.id}
+          userClassTitle={selectedUserClass.user.name}
           onDeleted={handleDelete}
         />
       )}

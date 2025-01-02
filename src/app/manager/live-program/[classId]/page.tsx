@@ -43,6 +43,7 @@ import useSWR from 'swr';
 import axios from '@/libs/axiosInstance';
 import AddLessonModal from './AddLesson.modal';
 import { toast } from 'react-toastify';
+import ListStudent from './list-student.comp';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -525,6 +526,8 @@ const EClassDetail = () => {
               </div>
             </div>
           </div>
+          <Divider />
+          <ListStudent classId={classId as string}/>
         </div>
 
         {/* Save Button */}

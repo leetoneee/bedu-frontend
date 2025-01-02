@@ -9,31 +9,26 @@ import {
   ModalHeader,
   Spinner
 } from '@nextui-org/react';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import axios from '@/libs/axiosInstance';
 import { toast } from 'react-toastify';
 import { findUserByCID } from '@/services/users.service';
-import {
-  createUserProgram,
-  CreateUserProgramDto
-} from '@/services/users-programs.service';
+import { createUserClass, CreateUserClassDto } from '@/services/users-classes.service';
 
 type Props = {
   isOpen: boolean;
   onOpen: () => void;
-  programId: string;
+  classId: string;
   onOpenChange: () => void;
   onClose: () => void;
   onCreated?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-
-const AddUserProgram = ({
+const AddUserClass = ({
   isOpen,
   onOpenChange,
   onClose,
-  programId,
+  classId,
   onCreated
 }: Props) => {
   // State
@@ -102,12 +97,12 @@ const AddUserProgram = ({
     try {
       if (!user) return;
       const now = new Date();
-      const data: CreateUserProgramDto = {
+      const data: CreateUserClassDto = {
         userId: user.id,
-        programId: Number(programId),
+        classId: Number(classId),
         time: now
       };
-      const result = await createUserProgram(data);
+      const result = await createUserClass(data);
       if (result) {
         handleClose();
         if (onCreated) {
@@ -172,9 +167,9 @@ const AddUserProgram = ({
             </svg>
           </div>
           <div className="ml-5">
-            <div className="text-lg font-semibold">Add user to program</div>
+            <div className="text-lg font-semibold">Add user to class</div>
             <div className="text-wrap text-sm font-normal">
-              Add user to the program to give them access to the program content
+              Add user to the class to give them access to the class content
             </div>
           </div>
         </ModalHeader>
@@ -304,4 +299,4 @@ const AddUserProgram = ({
   );
 };
 
-export default AddUserProgram;
+export default AddUserClass;
