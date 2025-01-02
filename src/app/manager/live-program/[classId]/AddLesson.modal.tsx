@@ -289,7 +289,7 @@ export default function AddLessonModal({
 
   const handleClose = () => {
     setName('');
-    setType(new Set([]));
+    setType(new Set([`${eclassType}`]));
     setTeacher(new Set([]));
     setStartDate('');
     setEndDate('');

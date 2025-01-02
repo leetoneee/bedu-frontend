@@ -26,21 +26,21 @@ export default function SSP() {
   const rowsPerPage = 100;
 
   const {
-    data: eventsData,
-    isLoading,
+    data,
+    isLoading
     // mutate: refreshEndpoint
   } = useSWR(`/lessons/all?page=${page}&limit=${rowsPerPage}`, fetcher, {
     keepPreviousData: true
   });
 
   useEffect(() => {
-    if (eventsData && eventsData.metadata && eventsData.metadata.lessons) {
+    if (data && data.metadata && data.metadata.lessons) {
       console.log(
         '🚀 ~ useEffect ~ eventsData.metadata.lessons:',
-        eventsData.metadata.lessons
+        data.metadata.lessons
       );
       // convert eventsData to EventPropsF
-      const events: EventProps[] = eventsData.metadata.lessons
+      const eventsData: EventProps[] = data.metadata.lessons
         .filter((lesson: Lesson) => lesson?.class !== null)
         .map((lesson: Lesson) => ({
           id: lesson.id,
@@ -51,9 +51,9 @@ export default function SSP() {
           people: [lesson?.teacher?.name]
         }));
       console.log('🚀 ~ useEffect ~ events:', events);
-      setEvents(events);
+      if (eventsData.length) setEvents(eventsData);
     }
-  }, [eventsData]);
+  }, [data]);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -64,7 +64,7 @@ export default function SSP() {
   //     start: '2024-12-26 10:30',
   //     end: '2024-12-26 11:30',
   //     description: 'This is the online class Listening 900+',
-  //     people: []
+  //     people: ['Teacher']
   //   },
   //   {
   //     id: 11,
@@ -72,7 +72,7 @@ export default function SSP() {
   //     start: '2024-12-24 10:30',
   //     end: '2024-12-24 11:30',
   //     description: 'This is the online class Listening 900+',
-  //     people: []
+  //     people: ['Teacher']
   //   },
   //   {
   //     id: 10,
@@ -80,7 +80,7 @@ export default function SSP() {
   //     start: '2024-12-21 10:30',
   //     end: '2024-12-21 11:30',
   //     description: 'This is the online class Listening 900+',
-  //     people: []
+  //     people: ['Teacher']
   //   }
   // ];
 

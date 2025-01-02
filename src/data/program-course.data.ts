@@ -4,10 +4,10 @@ const columns = [
   { name: '#', uid: 'id', sortable: true },
   { name: 'CODE', uid: 'code' },
   { name: 'TITLE', uid: 'title', sortable: true },
-  { name: 'TYPE', uid: 'type' },
+  // { name: 'TYPE', uid: 'type' },
   { name: 'LESSON QUANTITY', uid: 'lessonQuantity', sortable: true },
   { name: 'PRICE', uid: 'price', sortable: true },
-  // { name: 'ACTIONS', uid: 'actions' }
+  { name: 'ACTIONS', uid: 'actions' }
 ];
 
 // const currCourses: Course[] = [
