@@ -1,11 +1,7 @@
 'use client';
 
 import { columns } from '@/data/program-course.data';
-import {
-  EyeIcon,
-  TrashIcon,
-  XMarkIcon
-} from '@heroicons/react/24/outline';
+import { EyeIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import {
   Selection,
   Button,
@@ -186,16 +182,25 @@ const AddCoursesModal = ({
         case 'actions':
           return (
             <div className="relative flex items-center justify-center gap-2">
-              <Tooltip content="Details" className="bg-on-primary" delay={1000}>
+              {/* <Tooltip content="Details" className="bg-on-primary" delay={1000}>
                 <span
                   className="cursor-pointer text-lg text-on-primary active:opacity-50"
                   // onClick={() => router.push(`courses/${course.id}`)}
                 >
                   <EyeIcon className="size-5" />
                 </span>
-              </Tooltip>
+              </Tooltip> */}
               <Tooltip color="danger" content="Delete" delay={1000}>
-                <span className="cursor-pointer text-lg text-danger active:opacity-50">
+                <span
+                  className="cursor-pointer text-lg text-danger active:opacity-50"
+                  onClick={() => {
+                    setCourses((prevCourses) =>
+                      prevCourses.filter(
+                        (prevCourse) => prevCourse.id !== course.id
+                      )
+                    );
+                  }}
+                >
                   <TrashIcon className="size-5" />
                 </span>
               </Tooltip>
