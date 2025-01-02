@@ -22,6 +22,7 @@ import { Enrollment } from '@/types/enrollment.type';
 import { time } from 'console';
 import { toast } from 'react-toastify';
 import DeleteUserProgramModal from './DeleteUserProgram.modal';
+import AddUserProgramModal from './AddUserProgram.modal';
 
 type Props = {
   programId: string;
@@ -32,7 +33,7 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 const ListStudent = ({ programId }: Props) => {
   const [selectedUserProgram, setSelectedUserProgram] =
     useState<Enrollment | null>(null);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   //!  CONTROL Delete modal
   const {
     isOpen: isOpenD,
@@ -41,10 +42,14 @@ const ListStudent = ({ programId }: Props) => {
     onClose: onCloseD
   } = useDisclosure();
   const handleDeleteClick = (user: User) => {
-    const userProgram = data.metadata.enrollments.find(
+    const userProgram = enrollments.find(
       (enrollment: Enrollment) => enrollment.user.id === user.id
     );
-    setSelectedUserProgram(userProgram);
+    if (userProgram) {
+      setSelectedUserProgram(userProgram);
+    } else {
+      setSelectedUserProgram(null);
+    }
     onOpenD();
   };
 
@@ -52,6 +57,7 @@ const ListStudent = ({ programId }: Props) => {
 
   //! STUDENT LIST
   const [users, setUsers] = useState<User[]>([]);
+  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [filterUserName, setFilterUserName] = useState<string>('');
   const hasSearchFilterUserName = Boolean(filterUserName);
   const [page, setPage] = useState(1);
@@ -67,6 +73,7 @@ const ListStudent = ({ programId }: Props) => {
 
   useEffect(() => {
     if (data && data.metadata && data.metadata.enrollments) {
+      setEnrollments(data.metadata.enrollments);
       const listUsers = data.metadata.enrollments.map(
         (enrollment: Enrollment) => ({
           id: enrollment.user.id,
@@ -94,26 +101,32 @@ const ListStudent = ({ programId }: Props) => {
       case 'id':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
+            <p className="text-bold text-sm capitalize">
+              {cellValue?.toString()}
+            </p>
           </div>
         );
       case 'cid':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
+            <p className="text-bold text-sm capitalize">
+              {cellValue?.toString()}
+            </p>
           </div>
         );
       case 'name':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
+            <p className="text-bold text-sm capitalize">
+              {cellValue?.toString()}
+            </p>
           </div>
         );
       case 'email':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-wraps text-sm capitalize">
-              {cellValue}
+            <p className="text-bold text-wraps text-sm">
+              {cellValue?.toString()}
             </p>
           </div>
         );
@@ -121,13 +134,14 @@ const ListStudent = ({ programId }: Props) => {
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize">
-              {new Date(cellValue).toLocaleDateString('vn-VN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
+              {cellValue &&
+                new Date(cellValue.toString()).toLocaleDateString('vn-VN', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
             </p>
           </div>
         );
@@ -153,7 +167,7 @@ const ListStudent = ({ programId }: Props) => {
           </div>
         );
       default:
-        return cellValue;
+        return cellValue?.toString();
     }
   }, []);
 
@@ -200,7 +214,7 @@ const ListStudent = ({ programId }: Props) => {
           className="my-auto ml-auto h-14 rounded-2xl bg-on-primary text-white shadow-md"
           startContent={<PlusIcon className="size-6 text-white" />}
           size="lg"
-          // onClick={onOpen}
+          onClick={onOpen}
         >
           Add
         </Button>
@@ -231,6 +245,11 @@ const ListStudent = ({ programId }: Props) => {
     });
   }, [sortDescriptor, filteredItems]);
   //
+
+  const handleCreated = () => {
+    toast.success('Student has been added to the program');
+    refreshEndpoint();
+  };
 
   return (
     <div className="flex w-full flex-col">
@@ -293,6 +312,16 @@ const ListStudent = ({ programId }: Props) => {
           />
         </div>
       </div>
+
+      {/* Add User Modal */}
+      <AddUserProgramModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        onClose={onClose}
+        onOpen={onOpen}
+        programId={programId}
+        onCreated={handleCreated}
+      />
       {/* Delete Modal */}
       {selectedUserProgram && (
         <DeleteUserProgramModal

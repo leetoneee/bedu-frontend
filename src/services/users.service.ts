@@ -22,3 +22,13 @@ export const createUser = async (data: CreateUserDto) => {
     throw error;
   }
 };
+
+export const findUserByCID = async (cid: string) => {
+  try {
+    const res = await axios.get(`/users/cid/${cid}`);
+    return res.data;
+  } catch (error) {
+    console.log('🚫 ~ findUserByCID ~ error:', error);
+    throw error;
+  }
+}

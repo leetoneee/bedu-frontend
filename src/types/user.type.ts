@@ -10,4 +10,8 @@ export type User = {
   currentLevel: string;
   username: string;
   password: string;
+  role?: {
+    id: number;
+    name: string;
+  }
 };

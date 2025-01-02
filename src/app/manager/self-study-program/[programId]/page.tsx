@@ -160,7 +160,7 @@ const ProgramDetail = () => {
               <Tooltip content="Details" className="bg-on-primary" delay={1000}>
                 <span
                   className="cursor-pointer text-lg text-on-primary active:opacity-50"
-                  onClick={() => router.push(`courses/${course.id}`)}
+                  onClick={() => router.replace(`manager/courses/${course.id}`)}
                 >
                   <EyeIcon className="size-5" />
                 </span>
