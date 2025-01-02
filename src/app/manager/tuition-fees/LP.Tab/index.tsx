@@ -21,6 +21,9 @@ import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
 import { toast } from 'react-toastify';
 import DeletePaymentModal from '../DeletePayment.modal';
+import AddTuition from './AddTuition.modal';
+import { formatNumberWithCommas } from '@/helpers';
+import EditTuition from './EditTuition.modal';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -164,7 +167,7 @@ const LPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue.toString()} VND
+                {formatNumberWithCommas(cellValue.toString())} VND
               </p>
             </div>
           );
@@ -182,7 +185,7 @@ const LPTab = () => {
               <Tooltip content="Edit" color="warning" delay={1000}>
                 <span
                   className="cursor-pointer text-lg text-on-secondary active:opacity-50"
-                  // onClick={() => handleEditClick(course)}
+                  onClick={() => handleEditClick(payment)}
                 >
                   <PencilIcon className="size-5" />
                 </span>
@@ -247,14 +250,17 @@ const LPTab = () => {
   }, [sortDescriptor, filteredItems]);
 
   const handleCreated = () => {
+    toast.success('Create payment successfully!');
     refreshEndpoint();
   };
 
   const handleEdited = () => {
+    toast.success('Edit payment successfully!');
     refreshEndpoint();
   };
 
   const handleDeleted = () => {
+    toast.success('Delete payment successfully!');
     refreshEndpoint();
   };
 
@@ -311,7 +317,7 @@ const LPTab = () => {
             content="Create"
             className="my-auto ml-auto h-14 rounded-2xl bg-blue-500 text-white shadow-md"
             iconLeft={<PlusIcon className="size-6 text-white" />}
-            // onClick={onOpen}
+            onClick={onOpen}
           />
         </div>
       </div>
@@ -367,6 +373,26 @@ const LPTab = () => {
         />
       </div>
       {/* Modal */}
+      {/* Add Modal */}
+      <AddTuition
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+        onClose={onClose}
+        onCreated={handleCreated}
+      />
+      {selectedPayment && (
+        <EditTuition 
+        onOpen={onOpenE}
+        isOpen={isOpenE}
+        onOpenChange={onOpenChangeE}
+        onClose={handleCloseEditModal}
+        payment={selectedPayment}
+        onEdited={handleEdited}
+        />
+      )
+
+      }
       {selectedPayment && (
         <DeletePaymentModal
           onOpen={onOpenD}

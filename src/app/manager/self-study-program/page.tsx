@@ -43,6 +43,7 @@ import { toast } from 'react-toastify';
 import AddProgramModal from './AddProgram.modal';
 import EditProgramModal from './EditProgram.modal';
 import DeleteProgramModal from './DeleteProgram.modal';
+import { formatNumberWithCommas } from '@/helpers';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -212,7 +213,7 @@ export default function SSP() {
           return (
             <div className="flex basis-[10%] flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue.toString()}
+                {formatNumberWithCommas(cellValue.toString())}
               </p>
             </div>
           );

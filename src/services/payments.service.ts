@@ -2,8 +2,8 @@ import axios from '@/libs/axiosInstance';
 
 export type CreatePaymentDto = {
   userId: number;
-  programId: number;
-  classId: number;
+  programId: number | null;
+  classId: number | null;
   amount: number;
   method: string;
   transactionId: string;

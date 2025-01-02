@@ -42,6 +42,7 @@ import AddCourseModal from './AddCourse.modal';
 import { toast } from 'react-toastify';
 import EditCourseModal from './EditCourse.modal';
 import DeleteCourseModal from './DeleteCourse.modal';
+import { formatNumberWithCommas } from '@/helpers';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -205,7 +206,9 @@ export default function CoursesPage() {
         case 'price':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {formatNumberWithCommas(cellValue.toString())} VND
+              </p>
             </div>
           );
         case 'timePerLesson':

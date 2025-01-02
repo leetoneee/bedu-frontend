@@ -22,6 +22,9 @@ import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
 import { toast } from 'react-toastify';
 import DeletePaymentModal from '../DeletePayment.modal';
+import AddTuition from './AddTuition.modal';
+import { formatNumberWithCommas } from '@/helpers';
+import EditTuition from './EditTuition.modal';
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const SSPTab = () => {
@@ -164,7 +167,7 @@ const SSPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue.toString()} VND
+                {formatNumberWithCommas(cellValue.toString())} VND
               </p>
             </div>
           );
@@ -182,7 +185,7 @@ const SSPTab = () => {
               <Tooltip content="Edit" color="warning" delay={1000}>
                 <span
                   className="cursor-pointer text-lg text-on-secondary active:opacity-50"
-                  // onClick={() => handleEditClick(course)}
+                  onClick={() => handleEditClick(payment)}
                 >
                   <PencilIcon className="size-5" />
                 </span>
@@ -249,10 +252,12 @@ const SSPTab = () => {
   }, [sortDescriptor, filteredItems]);
 
   const handleCreated = () => {
+    toast.success('Payment created successfully');
     refreshEndpoint();
   };
 
   const handleEdited = () => {
+    toast.success('Payment edited successfully');
     refreshEndpoint();
   };
 
@@ -314,7 +319,7 @@ const SSPTab = () => {
             content="Create"
             className="my-auto ml-auto h-14 rounded-2xl bg-blue-500 text-white shadow-md"
             iconLeft={<PlusIcon className="size-6 text-white" />}
-            // onClick={onOpen}
+            onClick={onOpen}
           />
         </div>
       </div>
@@ -370,6 +375,23 @@ const SSPTab = () => {
         />
       </div>
       {/* Modals */}
+      <AddTuition
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+        onClose={onClose}
+        onCreated={handleCreated}
+      />
+      {selectedPayment && (
+        <EditTuition
+          isOpen={isOpenE}
+          onOpen={onOpenE}
+          onOpenChange={onOpenChangeE}
+          onClose={onCloseE}
+          payment={selectedPayment}
+          onEdited={handleEdited}
+        />
+      )}
       {selectedPayment && (
         <DeletePaymentModal
           isOpen={isOpenD}
