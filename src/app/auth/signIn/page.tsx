@@ -22,6 +22,9 @@ const LoginPage = () => {
     });
     // router.replace('/manager/self-study-program');
     console.log('🚀 ~ onSubmit ~ result:', result);
+    if (result?.ok === false) {
+      toast.error('Invalid username or password');
+    }
   };
 
   useEffect(() => {
@@ -33,6 +36,9 @@ const LoginPage = () => {
       } else if (session.user.role === 'student') {
         router.replace('/my/profile');
         toast.success('Welcome back, student!');
+      } else if (session.user.role === 'teacher') {
+        router.replace('/teacher/schedule');
+        toast.success('Welcome back, teacher!');
       }
     }
   }, [session]);
