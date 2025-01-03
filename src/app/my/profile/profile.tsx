@@ -2,25 +2,27 @@
 
 import { Divider } from '@nextui-org/react';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ButtonSolid } from '@/components';
 import useSWR from 'swr';
 import { User } from '@/types/user.type';
 import axios from '@/libs/axiosInstance';
+import { AuthType } from '@/types';
+import { AppContext } from '@/contexts';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const Profile = () => {
-  const { data: session } = useSession();
+  const { auth } = useContext(AppContext) as AuthType;
   const router = useRouter();
   const [user, setUser] = useState<User>();
   const {
-    data,
+    data
     // isLoading,
     // error: courseError,
     // mutate: refreshEndpoint
-  } = useSWR(`/users/item/${session?.user.id}`, fetcher);
+  } = useSWR(`/users/item/${auth.id}`, fetcher);
 
   useEffect(() => {
     if (data) {

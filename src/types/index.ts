@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Program } from './program.type';
 
 export type ButtonProps = {
   content?: string;
@@ -23,7 +24,11 @@ export type InputProps = {
   value?: string | number;
   radioValues?: string[];
   readOnly?: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+  onChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => void;
   required?: boolean;
   type?: string;
   suport?: string;
@@ -58,3 +63,23 @@ export type TabButtonProps = {
   activeTab: string;
   icon?: ReactNode;
 };
+
+export type UserAuth = {
+  id: number;
+  name: string;
+  accessToken: string;
+  role: string;
+  // avatar: string;
+};
+
+export type AuthType = {
+  auth: UserAuth;
+  setAuth: React.Dispatch<React.SetStateAction<UserAuth | undefined>>;
+}
+
+export type MyProgramContextType = {
+  programId: string;
+  setProgramId: React.Dispatch<React.SetStateAction<string>>;
+  classId: string;
+  setClassId: React.Dispatch<React.SetStateAction<string>>;
+}

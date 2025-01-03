@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useContext } from 'react';
 import Image from 'next/image';
 import SignInButton from '../Button/SignInButton';
 import { signOut, useSession } from 'next-auth/react';
@@ -12,9 +12,11 @@ import {
 } from '@nextui-org/react';
 import SignUpButton from '../Button/SignUpButton';
 import { useRouter } from 'next/navigation';
+import { AppContext } from '@/contexts';
+import { AuthType } from '@/types';
 
 const Header = () => {
-  const { data: session } = useSession();
+  const { auth, setAuth } = useContext(AppContext) as AuthType;
   const router = useRouter();
   return (
     <header className="flex h-16 shrink-0 items-center justify-between bg-b-primary px-4 drop-shadow md:px-6">
@@ -25,11 +27,11 @@ const Header = () => {
       {/* <div className='flex flex-row bg-slate-400 h-full w-full'>
 
       </div> */}
-      {session && session.user ? (
+      {auth ? (
         <div className="flex flex-row items-center gap-4">
           <div className="flex flex-col items-end">
-            <span className="font-semibold">{session.user.name}</span>
-            <span className="capitalize">{session.user.role}</span>
+            <span className="font-semibold">{auth.name}</span>
+            <span className="capitalize">{auth.role}</span>
           </div>
           <Dropdown>
             <DropdownTrigger>
@@ -50,7 +52,10 @@ const Header = () => {
               </DropdownItem>
               <DropdownItem
                 key="signout"
-                onClick={() => signOut({ callbackUrl: '/' })}
+                onClick={() => {
+                  setAuth(undefined);
+                  signOut({ callbackUrl: '/' });
+                }}
               >
                 Sign out
               </DropdownItem>

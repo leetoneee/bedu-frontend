@@ -1,6 +1,5 @@
 'use client';
 
-import LessonAccordion from '@/components/Accordion/Accordion/LessonAccordion';
 import { Course } from '@/types/course.type';
 import { Lesson } from '@/types/lesson.type';
 import { useEffect, useRef, useState } from 'react';
@@ -8,6 +7,7 @@ import { FaRegFolder } from 'react-icons/fa';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa6';
 import useSWR from 'swr';
 import axios from '@/libs/axiosInstance';
+import LessonAccordion from './LessonAccordion';
 
 type Props = {
   course: Course;
@@ -16,7 +16,7 @@ type Props = {
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const CourseAccordion = ({ course }: Props) => {
-  const [expanded, setExpanded] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(true);
   const contentRef = useRef<HTMLDivElement>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const {

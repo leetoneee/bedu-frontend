@@ -4,13 +4,19 @@ import { classNames } from '@/components';
 import { LockClosedIcon, UserIcon } from '@heroicons/react/24/outline';
 import { Divider } from '@nextui-org/react';
 import { signIn } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
+import { AppContext } from '@/contexts';
+import { AuthType } from '@/types';
 
 const LoginPage = () => {
   const { data: session } = useSession();
+  const { setAuth } = useContext(
+    AppContext
+  ) as AuthType;
+
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const router = useRouter();
@@ -30,6 +36,7 @@ const LoginPage = () => {
   useEffect(() => {
     console.log('🚀 ~ useEffect ~ session:', session);
     if (session) {
+      setAuth(session.user);
       if (session.user.role === 'manager') {
         router.replace('/manager/self-study-program');
         toast.success('Welcome back, manager!');

@@ -1,19 +1,19 @@
 'use client';
 
 import { Breadcrumb, Navigation, ProgramOverviewCard } from '@/components';
-import React, { Fragment, useEffect, useState } from 'react';
-import { Crumb } from '@/types';
+import React, { Fragment, use, useContext, useEffect, useState } from 'react';
+import { AuthType, Crumb } from '@/types';
 import { Divider, Input, Spinner } from '@nextui-org/react';
 import axios from '@/libs/axiosInstance';
 import useSWRInfinite from 'swr/infinite';
 import { Program } from '@/types/program.type';
 import { Enrollment } from '@/types/enrollment.type';
-import { useSession } from 'next-auth/react';
+import { AppContext } from '@/contexts';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const MyCoursesPage = () => {
-  const { data: session } = useSession();
+  const { auth } = useContext(AppContext) as AuthType;
 
   const crumbs: Crumb[] = [
     {
@@ -33,10 +33,14 @@ const MyCoursesPage = () => {
     };
   }
 
-  const getKey = (pageIndex: number, previousPageData: PreviousPageData | null): string | null => {
+  const getKey = (
+    pageIndex: number,
+    previousPageData: PreviousPageData | null
+  ): string | null => {
     pageIndex += 1;
-    if (previousPageData && !previousPageData.metadata.enrollments.length) return null; // reached the end
-    return `/users_programs/all/user/${session?.user.id}?page=${pageIndex}&limit=10`; // SWR key
+    if (previousPageData && !previousPageData.metadata.enrollments.length)
+      return null; // reached the end
+    return `/users_programs/all/user/${auth.id}?page=${pageIndex}&limit=10`; // SWR key
   };
 
   const [programs, setPrograms] = useState<Program[]>([]);

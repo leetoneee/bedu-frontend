@@ -1,19 +1,22 @@
 'use client';
 
 import { Breadcrumb, ClassOverviewCard, Navigation } from '@/components';
-import React, { Fragment, useEffect, useState } from 'react';
-import { Crumb } from '@/types';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
+import { AuthType, Crumb, UserAuth } from '@/types';
 import { Divider, Input, Spinner } from '@nextui-org/react';
 import axios from '@/libs/axiosInstance';
 import useSWRInfinite from 'swr/infinite';
 import { useSession } from 'next-auth/react';
 import { EClass } from '@/types/class.type';
 import { EnrollmentClass } from '@/types/enrollment.type';
+import { AppContext } from '@/contexts';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const MyClassPage = () => {
-  const { data: session } = useSession();
+  const { auth } = useContext(
+    AppContext
+  ) as AuthType;
 
   const crumbs: Crumb[] = [
     {
@@ -42,7 +45,7 @@ const MyClassPage = () => {
     pageIndex += 1;
     if (previousPageData && !previousPageData.metadata.userClasses.length)
       return null; // reached the end
-    return `/users-classes/all/student/${session?.user.id}?page=${pageIndex}&limit=10`; // SWR key
+    return `/users-classes/all/student/${auth.id}?page=${pageIndex}&limit=10`; // SWR key
   };
 
   const { data, isLoading, size, setSize } = useSWRInfinite(getKey, fetcher, {

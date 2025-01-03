@@ -1,5 +1,5 @@
-import CourseAccordion from '@/components/Accordion/Accordion/CourseAccordion';
 import { Course } from '@/types/course.type';
+import CourseAccordion from './CourseAccordion';
 
 type Props = {
   courses: Course[];

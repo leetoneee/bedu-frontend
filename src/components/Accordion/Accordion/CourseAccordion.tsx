@@ -16,7 +16,7 @@ type Props = {
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const CourseAccordion = ({ course }: Props) => {
-  const [expanded, setExpanded] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(true);
   const contentRef = useRef<HTMLDivElement>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const {

@@ -51,7 +51,7 @@ export default function SSP() {
           people: [lesson?.teacher?.name]
         }));
       console.log('🚀 ~ useEffect ~ events:', events);
-      if (eventsData.length) setEvents(eventsData);
+      if (eventsData.length > 0) setEvents(eventsData);
     }
   }, [data]);
 
@@ -89,7 +89,7 @@ export default function SSP() {
       <Breadcrumb crumbs={crumbs} />
       <Divider />
       <div className="flex h-full w-full flex-col gap-2 rounded border border-on-surface/20 bg-white p-5 shadow-sm">
-        <Schedule events={events} />
+        <Schedule key={events.length} events={events} />
       </div>
     </main>
   );
