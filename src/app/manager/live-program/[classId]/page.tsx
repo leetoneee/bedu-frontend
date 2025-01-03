@@ -215,7 +215,7 @@ const EClassDetail = () => {
 
     if (hasSearchFilterName) {
       filteredLessons = filteredLessons.filter((lesson) =>
-        lesson.name.toLowerCase().includes(filterLessonName.toLowerCase())
+        lesson.title.toLowerCase().includes(filterLessonName.toLowerCase())
       );
     }
 

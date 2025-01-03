@@ -20,7 +20,7 @@ const LessonAccordion = ({ lessons }: lessonAccordionProps) => {
             <div className="flex h-[80px] max-w-[90%] items-center">
               <div className="h-[80px] border-l-8 border-outline-focus"></div>
               <div className="ml-4 mr-4 flex-1 overflow-hidden text-ellipsis whitespace-nowrap md:text-2xl">
-                <span className="sm:text-xl">{lesson.name}</span>
+                <span className="sm:text-xl">{lesson.title}</span>
               </div>
             </div>
             <div className="flex items-center justify-center rounded-full border-2 border-outline-focus p-2">

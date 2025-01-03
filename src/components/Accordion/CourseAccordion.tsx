@@ -57,7 +57,7 @@ const CourseAccordion = ({ course }: courseAccordionProps) => {
           maxHeight: expanded ? `${contentRef.current?.scrollHeight}px` : '0px'
         }}
       >
-        <LessonAccordion lessons={lessonsCourse} />
+        {/* <LessonAccordion lessons={lessonsCourse} /> */}
       </div>
     </div>
   );
