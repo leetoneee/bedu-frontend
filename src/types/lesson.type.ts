@@ -1,6 +1,6 @@
 export type Lesson = {
   id: number;
-  name: string;
+  title: string;
   startDate: string;
   endDate: string;
   type: string;

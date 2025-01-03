@@ -88,6 +88,7 @@ const CourseDetail = () => {
 
   const {
     data,
+    error,
     isLoading,
     error: courseError,
     mutate: refreshEndpoint
@@ -109,14 +110,17 @@ const CourseDetail = () => {
   }, [courseId, course]);
 
   useEffect(() => {
+    if (error) {
+      setLessons([]);
+    }
     if (data?.metadata) {
       setCourse(data.metadata);
-      setLessons(data.metadata.lesson);
+      if (data.metadata.lesson.length > 0) setLessons(data.metadata.lesson);
+      else setLessons([]);
     }
   }, [data]);
 
-  const loadingState =
-    isLoading || data?.metadata.lesson.length === 0 ? 'loading' : 'idle';
+  const loadingState = isLoading ? 'loading' : 'idle';
 
   const [filterLessonName, setFilterLessonName] = useState<string>('');
   const hasSearchFilterName = Boolean(filterLessonName);
@@ -272,7 +276,7 @@ const CourseDetail = () => {
 
     if (hasSearchFilterName) {
       filteredLessons = filteredLessons.filter((lesson) =>
-        lesson.name.toLowerCase().includes(filterLessonName.toLowerCase())
+        lesson.title.toLowerCase().includes(filterLessonName.toLowerCase())
       );
     }
 
@@ -637,7 +641,7 @@ const CourseDetail = () => {
           onOpen={onOpenD}
           onOpenChange={onOpenChangeD}
           lessonId={selectedLesson.id}
-          lessonTitle={'selectedLesson.title'}
+          lessonTitle={selectedLesson.title}
           onDeleted={handleDeleted}
         />
       )}

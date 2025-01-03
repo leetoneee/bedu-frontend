@@ -10,7 +10,7 @@ export const columns = [
 export const columnsForCouse = [
   { name: '#', uid: 'id', sortable: true },
   { name: 'TYPE', uid: 'type' },
-  { name: 'TITLE', uid: 'name' },
+  { name: 'TITLE', uid: 'title' },
   { name: 'STATUS', uid: 'isPublish' },
   { name: 'VIDEO URL', uid: 'videoUrl' },
   { name: 'ACTIONS', uid: 'actions' }

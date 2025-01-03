@@ -36,7 +36,7 @@ export default function DetailProgramPage() {
     return [
       {
         label: 'Self-study Program',
-        href: '/manager/self-study-program'
+        href: '/self-study-program'
       },
       {
         label: program?.title || 'Loading...',
@@ -47,6 +47,7 @@ export default function DetailProgramPage() {
 
   useEffect(() => {
     if (data?.metadata) {
+      console.log("🚀 ~ useEffect ~ data?.metadata:", data?.metadata)
       setProgram(data.metadata);
       setCourses(data.metadata.course);
     }
@@ -196,7 +197,7 @@ export default function DetailProgramPage() {
                 Program detail
               </div>
               <div className="h-full xsm:px-4 sm:px-10 md:px-24 lg:px-36">
-                <Accordion programId={Number(programId)} />
+                {/* <Accordion programId={Number(programId)} /> */}
               </div>
             </div>
           </div>
