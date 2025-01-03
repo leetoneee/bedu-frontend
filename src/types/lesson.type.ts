@@ -1,3 +1,8 @@
+import { EClass } from "./class.type";
+import { Course } from "./course.type";
+import { Exam } from "./exam.type";
+import { User } from "./user.type";
+
 export type Lesson = {
   id: number;
   title: string;
@@ -6,17 +11,10 @@ export type Lesson = {
   type: string;
   videoUrl: string;
   classId: number;
-  class: {
-    id: number;
-    name: string;
-  } | null;
-  teacher: {
-    id: number;
-    name: string;
-  };
-  courseId: number;
-  examId: number;
-  teacherId: number;
+  class: EClass;
+  teacher: User;
+  course: Course;
+  exam: Exam[];
   isActive: boolean;
 };
 
