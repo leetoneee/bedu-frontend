@@ -13,8 +13,7 @@ import { useSearchParams } from 'next/navigation';
 import LessonHeader from './LessonHeader';
 import CommentTab from './Comment.Tab';
 import DocumentTab from './Document.Tab';
-import ExercisesTab from './Exams.Tab';
-
+import ExercisesTab from './Exercises.Tab';
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const LessonDetail = () => {
