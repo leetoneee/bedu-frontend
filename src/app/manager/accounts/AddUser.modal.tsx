@@ -1,7 +1,5 @@
-import { User } from '@/types/user.type';
 import {
   Button,
-  Divider,
   Modal,
   ModalBody,
   ModalContent,
@@ -12,7 +10,7 @@ import {
   SelectItem
 } from '@nextui-org/react';
 import React, { useState } from 'react';
-import axios from '@/libs/axiosInstance';
+// import axios from '@/libs/axiosInstance';
 import { toast } from 'react-toastify';
 import { createUser, CreateUserDto } from '@/services/users.service';
 
@@ -24,7 +22,7 @@ type Props = {
   onCreated?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+// const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const roleOptions = [
   {
@@ -39,7 +37,7 @@ const roleOptions = [
 
 const genderOptions = [
   {
-    key: 'None',
+    key: 'none',
     label: 'None'
   },
   {
@@ -56,7 +54,7 @@ const AddUserModal = ({ isOpen, onOpenChange, onClose, onCreated }: Props) => {
   const [name, setName] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [birthday, setBirthday] = useState<string>('');
-  const [gender, setGender] = useState<Selection>(new Set(['None']));
+  const [gender, setGender] = useState<Selection>(new Set(['none']));
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -175,7 +173,7 @@ const AddUserModal = ({ isOpen, onOpenChange, onClose, onCreated }: Props) => {
     setName('');
     setUsername('');
     setBirthday('');
-    setGender(new Set(['None']));
+    setGender(new Set(['none']));
     setEmail('');
     setPassword('');
     setConfirmPass('');

@@ -13,7 +13,7 @@ import {
   Spinner
 } from '@nextui-org/react';
 import React, { Fragment, useEffect, useState } from 'react';
-import axios from '@/libs/axiosInstance';
+// import axios from '@/libs/axiosInstance';
 import { toast } from 'react-toastify';
 import { findUserByCID } from '@/services/users.service';
 import { editPayment, UpdatePaymentDto } from '@/services/payments.service';
@@ -29,7 +29,7 @@ type Props = {
   onEdited?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+// const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const tuitionTypes = [
   {
@@ -421,7 +421,7 @@ const EditTuition = ({
                   placeholder="Find class..."
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
-                  onBlur={() => handleFindUser()}
+                  onBlur={() => handleFindClass()}
                   onFocus={() => {
                     setErrors({
                       ...errors,

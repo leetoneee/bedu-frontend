@@ -210,7 +210,7 @@ const LOQ = ({ id }: Props) => {
                       <DropdownItem
                         key="view"
                         startContent={
-                          <EyeIcon className={'size-6 text-danger'} />
+                          <EyeIcon className={'size-6 text-primary'} />
                         }
                         onClick={() => {
                           handleViewClick(index);

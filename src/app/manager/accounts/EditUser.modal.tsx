@@ -40,7 +40,7 @@ const roleOptions = [
 
 const genderOptions = [
   {
-    key: 'None',
+    key: 'none',
     label: 'None'
   },
   {
@@ -63,7 +63,7 @@ const EditUserModal = ({
   const [name, setName] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [birthday, setBirthday] = useState<string>('');
-  const [gender, setGender] = useState<Selection>(new Set(['None']));
+  const [gender, setGender] = useState<Selection>(new Set(['none']));
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   // const [password, setPassword] = useState<string>('');
@@ -93,10 +93,10 @@ const EditUserModal = ({
     // mutate: refreshEndpoint
   } = useSWR(`/users/item/${userId}`, fetcher);
 
-  const selectedRole = React.useMemo(
-    () => Array.from(role).join(', ').replaceAll('_', ' '),
-    [role]
-  );
+  // const selectedRole = React.useMemo(
+  //   () => Array.from(role).join(', ').replaceAll('_', ' '),
+  //   [role]
+  // );
 
   useEffect(() => {
     if (data && data.metadata) {

@@ -31,7 +31,6 @@ import React, {
   useEffect,
   useState
 } from 'react';
-import { Course, statusColorMap } from '@/types/course.type';
 import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
 import { Question } from '@/types/question-bank.type';

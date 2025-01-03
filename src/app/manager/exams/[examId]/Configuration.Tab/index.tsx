@@ -63,8 +63,8 @@ const Config = ({ id }: Props) => {
 
   const {
     data,
-    error,
-    isLoading,
+    // error,
+    // isLoading,
     mutate: refreshEndpoint
   } = useSWR(endpoint, fetcher, {
     keepPreviousData: true

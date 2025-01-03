@@ -19,7 +19,6 @@ import { columns } from '@/data/program-user.data';
 import useSWR from 'swr';
 import axios from '@/libs/axiosInstance';
 import { Enrollment } from '@/types/enrollment.type';
-import { time } from 'console';
 import { toast } from 'react-toastify';
 import DeleteUserProgramModal from './DeleteUserProgram.modal';
 import AddUserProgramModal from './AddUserProgram.modal';
@@ -57,7 +56,7 @@ const ListStudent = ({ programId }: Props) => {
 
   //! STUDENT LIST
   const [users, setUsers] = useState<User[]>([]);
-  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  // const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [filterUserName, setFilterUserName] = useState<string>('');
   const hasSearchFilterUserName = Boolean(filterUserName);
   const [page, setPage] = useState(1);

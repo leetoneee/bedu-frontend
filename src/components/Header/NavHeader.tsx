@@ -1,9 +1,9 @@
 'use client';
 
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import Image from 'next/image';
 import SignInButton from '../Button/SignInButton';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import {
   Dropdown,
   DropdownItem,
@@ -14,9 +14,12 @@ import SignUpButton from '../Button/SignUpButton';
 import { NavItems } from './NavItems';
 import { useRouter } from 'next/navigation';
 import { classNames } from '../classNames';
+import { AppContext } from '@/contexts';
+import { AuthType } from '@/types';
 
 const NavHeader = () => {
-  const { data: session } = useSession();
+  const { auth, setAuth } = useContext(AppContext) as AuthType;
+
   const navItems = NavItems();
   const router = useRouter();
 
@@ -45,11 +48,11 @@ const NavHeader = () => {
           );
         })}
       </div>
-      {session && session.user ? (
+      {auth ? (
         <div className="flex flex-row items-center gap-4">
           <div className="flex flex-col items-end">
-            <span className="font-semibold">{session.user.name}</span>
-            <span className="capitalize">{session.user.role}</span>
+            <span className="font-semibold">{auth.name}</span>
+            <span className="capitalize">{auth.role}</span>
           </div>
           <Dropdown>
             <DropdownTrigger>
@@ -70,7 +73,10 @@ const NavHeader = () => {
               </DropdownItem>
               <DropdownItem
                 key="signout"
-                onClick={() => signOut({ callbackUrl: '/' })}
+                onClick={() => {
+                  setAuth(undefined);
+                  signOut({ callbackUrl: '/' });
+                }}
               >
                 Sign out
               </DropdownItem>
