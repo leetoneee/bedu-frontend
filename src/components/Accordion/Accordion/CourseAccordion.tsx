@@ -1,22 +1,43 @@
 'use client';
 
-import LessonAccordion from '@/components/Accordion/LessonAccordion';
-import { getLessonsByCourseId } from '@/data/lesson.data';
-import { courseAccordionProps } from '@/types/accordion.type';
-import { useRef, useState } from 'react';
+import LessonAccordion from '@/components/Accordion/Accordion/LessonAccordion';
+import { Course } from '@/types/course.type';
+import { useEffect, useRef, useState } from 'react';
 import { FaRegFolder } from 'react-icons/fa';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa6';
+import useSWR from 'swr';
+import axios from '@/libs/axiosInstance';
+import { Lesson } from '@/types/lesson.type';
 
-const CourseAccordion = ({ course }: courseAccordionProps) => {
+type Props = {
+  course: Course;
+};
+
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
+const CourseAccordion = ({ course }: Props) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const contentRef = useRef<HTMLDivElement>(null);
-  const lessonsCourse = getLessonsByCourseId(course.id);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const {
+    data
+    // isLoading,
+    // error: classError,
+    // mutate: refreshEndpoint
+  } = useSWR(`/courses/item/${course.id}`, fetcher);
+
+  useEffect(() => {
+    if (data && data.metadata) {
+      setLessons(data.metadata.lesson);
+    }
+  }, [data]);
+
   const toggleDropDown = () => {
     setExpanded(!expanded);
   };
 
   return (
-    <div className="pt-4 w-full">
+    <div className="w-full pt-4">
       <div
         className="flex h-[80px] cursor-pointer items-center justify-between rounded-xl border-2 border-outline-focus bg-outline-focus px-4 py-2 text-surface"
         onClick={() => toggleDropDown()}
@@ -32,9 +53,7 @@ const CourseAccordion = ({ course }: courseAccordionProps) => {
               </p>
             </div>
             <div>
-              <p className="truncate text-sm">
-                {course.lessonQuantity} lessons
-              </p>
+              <p className="truncate text-sm">{lessons.length} lessons</p>
             </div>
           </div>
         </div>
@@ -57,7 +76,7 @@ const CourseAccordion = ({ course }: courseAccordionProps) => {
           maxHeight: expanded ? `${contentRef.current?.scrollHeight}px` : '0px'
         }}
       >
-        {/* <LessonAccordion lessons={lessonsCourse} /> */}
+        <LessonAccordion lessons={lessons} />
       </div>
     </div>
   );

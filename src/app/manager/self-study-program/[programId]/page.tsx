@@ -40,6 +40,7 @@ import axios from '@/libs/axiosInstance';
 import { editProgram, UpdateProgramDto } from '@/services/programs.service';
 import { toast } from 'react-toastify';
 import ListStudent from './list-student.comp';
+import { formatNumberWithCommas } from '@/helpers';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -100,19 +101,25 @@ const ProgramDetail = () => {
         case 'id':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toString()}
+              </p>
             </div>
           );
         case 'code':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toString()}
+              </p>
             </div>
           );
         case 'title':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {cellValue.toString()}
+              </p>
             </div>
           );
         case 'isPublish':
@@ -136,21 +143,23 @@ const ProgramDetail = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-wraps text-sm capitalize">
-                {cellValue}
+                {cellValue.toString()}
               </p>
             </div>
           );
         case 'price':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue} VND</p>
+              <p className="text-bold text-sm capitalize">
+                {formatNumberWithCommas(cellValue.toString())} VND
+              </p>
             </div>
           );
         case 'timePerLesson':
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue} minutes
+                {cellValue.toString()} minutes
               </p>
             </div>
           );
@@ -160,7 +169,9 @@ const ProgramDetail = () => {
               <Tooltip content="Details" className="bg-on-primary" delay={1000}>
                 <span
                   className="cursor-pointer text-lg text-on-primary active:opacity-50"
-                  onClick={() => router.replace(`/manager/courses/${course.id}`)}
+                  onClick={() =>
+                    router.replace(`/manager/courses/${course.id}`)
+                  }
                 >
                   <EyeIcon className="size-5" />
                 </span>
@@ -176,7 +187,7 @@ const ProgramDetail = () => {
             </div>
           );
         default:
-          return cellValue;
+          return cellValue.toString();
       }
     },
     []

@@ -1,9 +1,12 @@
 'use client';
 
-import { lessonAccordionProps } from '@/types/accordion.type';
+import { Lesson } from '@/types/lesson.type';
 import { FaArrowRight } from 'react-icons/fa6';
 
-const LessonAccordion = ({ lessons }: lessonAccordionProps) => {
+type Props = {
+  lessons: Lesson[];
+}
+const LessonAccordion = ({ lessons }: Props) => {
   // Chưa làm vấn đề Program đã thuộc sở hữu thì mới được vào bài học, dưới chỉ là demo cho roadmap
   if (!lessons) {
     return <div></div>;
@@ -23,9 +26,9 @@ const LessonAccordion = ({ lessons }: lessonAccordionProps) => {
                 <span className="sm:text-xl">{lesson.title}</span>
               </div>
             </div>
-            <div className="flex items-center justify-center rounded-full border-2 border-outline-focus p-2">
+            {/* <div className="flex items-center justify-center rounded-full border-2 border-outline-focus p-2">
               <FaArrowRight size={15} />
-            </div>
+            </div> */}
           </div>
         </div>
       ))}

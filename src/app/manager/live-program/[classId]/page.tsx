@@ -44,6 +44,7 @@ import axios from '@/libs/axiosInstance';
 import AddLessonModal from './AddLesson.modal';
 import { toast } from 'react-toastify';
 import ListStudent from './list-student.comp';
+import { formatNumberWithCommas } from '@/helpers';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -157,7 +158,7 @@ const EClassDetail = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue?.toString()}
+                {formatNumberWithCommas(cellValue?.toString())}
               </p>
             </div>
           );
@@ -527,7 +528,7 @@ const EClassDetail = () => {
             </div>
           </div>
           <Divider />
-          <ListStudent classId={classId as string}/>
+          <ListStudent classId={classId as string} />
         </div>
 
         {/* Save Button */}

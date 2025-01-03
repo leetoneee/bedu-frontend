@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  Accordion,
-  Breadcrumb,
-  OrderCard,
-  Rating,
-} from '@/components';
+import { Accordion, Breadcrumb, OrderCard, Rating } from '@/components';
 import Image from 'next/image';
 import { Crumb } from '@/types';
 import { useParams } from 'next/navigation';
@@ -47,7 +42,6 @@ export default function DetailProgramPage() {
 
   useEffect(() => {
     if (data?.metadata) {
-      console.log("🚀 ~ useEffect ~ data?.metadata:", data?.metadata)
       setProgram(data.metadata);
       setCourses(data.metadata.course);
     }
@@ -197,7 +191,7 @@ export default function DetailProgramPage() {
                 Program detail
               </div>
               <div className="h-full xsm:px-4 sm:px-10 md:px-24 lg:px-36">
-                {/* <Accordion programId={Number(programId)} /> */}
+                {courses && <Accordion courses={courses} />}
               </div>
             </div>
           </div>
