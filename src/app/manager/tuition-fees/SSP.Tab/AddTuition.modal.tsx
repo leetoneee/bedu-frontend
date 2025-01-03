@@ -19,6 +19,7 @@ import { findUserByCID } from '@/services/users.service';
 import { createPayment, CreatePaymentDto } from '@/services/payments.service';
 import { EClass } from '@/types/class.type';
 import { Program } from '@/types/program.type';
+import { findProgramByCode } from '@/services/programs.service';
 
 type Props = {
   isOpen: boolean;
@@ -127,7 +128,7 @@ const AddTuition = ({ isOpen, onOpenChange, onClose, onCreated }: Props) => {
     if (!code) {
       setErrors({
         ...errors,
-        code: 'Class code is required'
+        code: 'Program code is required'
       });
       return;
     }
@@ -135,14 +136,14 @@ const AddTuition = ({ isOpen, onOpenChange, onClose, onCreated }: Props) => {
     // Call API
     try {
       setIsProgramLoading(true);
-      const result = await findUserByCID(cid);
+      const result = await findProgramByCode(code);
       if (result && result.metadata) {
-        setUser(result.metadata);
+        setProgram(result.metadata);
         setIsProgramLoading(false);
       } else {
         setErrors({
           ...errors,
-          code: 'Class not found'
+          code: 'Program not found'
         });
         setUser(undefined);
       }
@@ -150,7 +151,7 @@ const AddTuition = ({ isOpen, onOpenChange, onClose, onCreated }: Props) => {
       console.error('🚫 ~ onSubmit ~ Error:', error);
       toast.error(
         error.response?.data?.message ||
-          'Failed to find class. Please try again.'
+          'Failed to find program. Please try again.'
       );
     } finally {
       setIsProgramLoading(false);
@@ -402,11 +403,11 @@ const AddTuition = ({ isOpen, onOpenChange, onClose, onCreated }: Props) => {
                   placeholder="Find program..."
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
-                  onBlur={() => handleFindUser()}
+                  onBlur={() => handleFindProgram()}
                   onFocus={() => {
                     setErrors({
                       ...errors,
-                      cid: ''
+                      code: ''
                     });
                   }}
                 />

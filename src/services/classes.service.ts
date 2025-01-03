@@ -43,3 +43,13 @@ export const deleteClass = async (id: number) => {
     throw error;
   }
 };
+
+export const findClassByCode = async (code: string) => {
+  try {
+    const res = await axios.get(`/classes/code/${code}`);
+    return res.data;
+  } catch (error) {
+    console.log('🚫 ~ findClassByCode ~ error:', error);
+    throw error;
+  }
+}

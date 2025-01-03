@@ -18,7 +18,7 @@ import React, { Key, ReactNode, useCallback, useEffect, useState } from 'react';
 import { columns } from '@/data/program-user.data';
 import useSWR from 'swr';
 import axios from '@/libs/axiosInstance';
-import { Enrollment, EnrollmentClass } from '@/types/enrollment.type';
+import { EnrollmentClass } from '@/types/enrollment.type';
 import { toast } from 'react-toastify';
 import AddUserClassModal from './AddUserClass.modal';
 import DeleteUserClassModal from './DeleteUserClass.modal';
@@ -41,7 +41,7 @@ const ListStudent = ({ classId }: Props) => {
     onClose: onCloseD
   } = useDisclosure();
   const handleDeleteClick = (user: User) => {
-    const userClass = enrollments.find(
+    const userClass = data.metadata.userClasses.find(
       (enrollment: EnrollmentClass) => enrollment.user.id === user.id
     );
     if (userClass) {
@@ -56,7 +56,6 @@ const ListStudent = ({ classId }: Props) => {
 
   //! STUDENT LIST
   const [users, setUsers] = useState<User[]>([]);
-  const [enrollments, setEnrollments] = useState<EnrollmentClass[]>([]);
   const [filterUserName, setFilterUserName] = useState<string>('');
   const hasSearchFilterUserName = Boolean(filterUserName);
   const [page, setPage] = useState(1);
@@ -65,16 +64,21 @@ const ListStudent = ({ classId }: Props) => {
     direction: 'ascending'
   });
 
-  const { data, mutate: refreshEndpoint } = useSWR(
-    `/users-classes/all/type/${classId}?page=${page}&limit=${rowsPerPage}`,
+  const {
+    data,
+    error,
+    mutate: refreshEndpoint
+  } = useSWR(
+    `/users-classes/all/${classId}?page=${page}&limit=${rowsPerPage}`,
     fetcher
   );
 
   useEffect(() => {
-    if (data && data.metadata && data.metadata.enrollments) {
-      setEnrollments(data.metadata.enrollments);
+    if (error) {
+      setUsers([]);
+    } else if (data && data.metadata && data.metadata.userClasses) {
       const listUsers = data.metadata.userClasses.map(
-        (enrollment: Enrollment) => ({
+        (enrollment: EnrollmentClass) => ({
           id: enrollment.user.id,
           cid: enrollment.user.cid,
           name: enrollment.user.name,

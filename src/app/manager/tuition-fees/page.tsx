@@ -27,34 +27,6 @@ export default function TuitionPage() {
         {activeTab === 'Self-study Program' && <SSPTab />}
         {activeTab === 'Live Program' && <LPTab />}
       </div>
-      {/* <AddCourseModal
-      isOpen={isOpen}
-      onOpen={onOpen}
-      onOpenChange={onOpenChange}
-      onClose={onClose}
-      onCreated={handleCreated}
-    />
-    {isOpenE && selectedCourse && (
-      <EditCourseModal
-        isOpen={isOpenE}
-        onOpen={onOpenE}
-        onOpenChange={onOpenChangeE}
-        course={selectedCourse}
-        onClose={handleCloseEditModal}
-        onEdited={handleEdited}
-      />
-    )}
-    {isOpenD && selectedCourse && (
-      <DeleteCourseModal
-        isOpen={isOpenD}
-        onOpen={onOpenD}
-        onOpenChange={onOpenChangeD}
-        onClose={handleCloseDeleteModal}
-        courseId={selectedCourse.id}
-        courseTitle={selectedCourse.title}
-        onDeleted={handleDeleted}
-      />
-    )} */}
     </main>
   );
 }

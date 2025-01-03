@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import { findUserByCID } from '@/services/users.service';
 import { createPayment, CreatePaymentDto } from '@/services/payments.service';
 import { EClass } from '@/types/class.type';
+import { findClassByCode } from '@/services/classes.service';
 
 type Props = {
   isOpen: boolean;
@@ -134,9 +135,9 @@ const AddTuition = ({ isOpen, onOpenChange, onClose, onCreated }: Props) => {
     // Call API
     try {
       setIsClassLoading(true);
-      const result = await findUserByCID(cid);
+      const result = await findClassByCode(code);
       if (result && result.metadata) {
-        setUser(result.metadata);
+        setEClass(result.metadata);
         setIsClassLoading(false);
       } else {
         setErrors({
@@ -401,7 +402,7 @@ const AddTuition = ({ isOpen, onOpenChange, onClose, onCreated }: Props) => {
                   placeholder="Find class..."
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
-                  onBlur={() => handleFindUser()}
+                  onBlur={() => handleFindClass()}
                   onFocus={() => {
                     setErrors({
                       ...errors,
