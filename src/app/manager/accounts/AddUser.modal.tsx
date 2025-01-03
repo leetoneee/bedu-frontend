@@ -37,7 +37,7 @@ const roleOptions = [
 
 const genderOptions = [
   {
-    key: 'None',
+    key: 'none',
     label: 'None'
   },
   {
@@ -54,7 +54,7 @@ const AddUserModal = ({ isOpen, onOpenChange, onClose, onCreated }: Props) => {
   const [name, setName] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [birthday, setBirthday] = useState<string>('');
-  const [gender, setGender] = useState<Selection>(new Set(['None']));
+  const [gender, setGender] = useState<Selection>(new Set(['none']));
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -173,7 +173,7 @@ const AddUserModal = ({ isOpen, onOpenChange, onClose, onCreated }: Props) => {
     setName('');
     setUsername('');
     setBirthday('');
-    setGender(new Set(['None']));
+    setGender(new Set(['none']));
     setEmail('');
     setPassword('');
     setConfirmPass('');

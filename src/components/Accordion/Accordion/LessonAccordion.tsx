@@ -1,7 +1,7 @@
 'use client';
 
 import { Lesson } from '@/types/lesson.type';
-import { FaArrowRight } from 'react-icons/fa6';
+// import { FaArrowRight } from 'react-icons/fa6';
 
 type Props = {
   lessons: Lesson[];

@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { Program } from './program.type';
 
 export type ButtonProps = {
   content?: string;

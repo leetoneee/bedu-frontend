@@ -1,7 +1,6 @@
 'use client';
 
 import { Divider } from '@nextui-org/react';
-import { useSession } from 'next-auth/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ButtonSolid } from '@/components';
@@ -22,7 +21,7 @@ const Profile = () => {
     // isLoading,
     // error: courseError,
     // mutate: refreshEndpoint
-  } = useSWR(`/users/item/${auth.id}`, fetcher);
+  } = useSWR(`/users/item/${auth?.id}`, fetcher);
 
   useEffect(() => {
     if (data) {

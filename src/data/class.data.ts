@@ -1,4 +1,3 @@
-import { EClass } from '@/types/class.type';
 
 const columns = [
   { name: '#', uid: 'id', sortable: true },

@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import useSWR from 'swr';
 import axios from '@/libs/axiosInstance';
 import { Lesson } from '@/types/lesson.type';

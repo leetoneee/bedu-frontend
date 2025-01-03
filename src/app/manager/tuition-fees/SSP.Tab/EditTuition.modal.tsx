@@ -29,7 +29,7 @@ type Props = {
   onEdited?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+// const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const tuitionTypes = [
   {

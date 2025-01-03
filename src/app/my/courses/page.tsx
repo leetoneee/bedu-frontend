@@ -1,7 +1,7 @@
 'use client';
 
 import { Breadcrumb, Navigation, ProgramOverviewCard } from '@/components';
-import React, { Fragment, use, useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { AuthType, Crumb } from '@/types';
 import { Divider, Input, Spinner } from '@nextui-org/react';
 import axios from '@/libs/axiosInstance';
@@ -40,7 +40,7 @@ const MyCoursesPage = () => {
     pageIndex += 1;
     if (previousPageData && !previousPageData.metadata.enrollments.length)
       return null; // reached the end
-    return `/users_programs/all/user/${auth.id}?page=${pageIndex}&limit=10`; // SWR key
+    return `/users_programs/all/user/${auth?.id}?page=${pageIndex}&limit=10`; // SWR key
   };
 
   const [programs, setPrograms] = useState<Program[]>([]);

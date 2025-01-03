@@ -3,7 +3,7 @@
 import React, { useContext } from 'react';
 import Image from 'next/image';
 import SignInButton from '../Button/SignInButton';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import {
   Dropdown,
   DropdownItem,
