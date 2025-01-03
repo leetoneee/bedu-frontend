@@ -9,7 +9,7 @@ import {
   ModalHeader,
   Spinner
 } from '@nextui-org/react';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import axios from '@/libs/axiosInstance';
 import { toast } from 'react-toastify';
 import { findUserByCID } from '@/services/users.service';
@@ -27,7 +27,7 @@ type Props = {
   onCreated?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+// const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const AddUserProgram = ({
   isOpen,

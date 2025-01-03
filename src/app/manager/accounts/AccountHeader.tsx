@@ -28,7 +28,7 @@ const AccountHeader = ({ activeTab, setActiveTab }: Props) => {
   );
 };
 
-const TabButton = ({ name, setActiveTab, activeTab, icon }: TabButtonProps) => {
+const TabButton = ({ name, setActiveTab, activeTab }: TabButtonProps) => {
   const isActive = activeTab === name;
 
   return (

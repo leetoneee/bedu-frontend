@@ -12,7 +12,7 @@ import {
   SelectItem,
   Spinner
 } from '@nextui-org/react';
-import React, { Fragment, use, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import axios from '@/libs/axiosInstance';
 import { toast } from 'react-toastify';
 import { findUserByCID } from '@/services/users.service';
@@ -420,7 +420,7 @@ const EditTuition = ({
                   placeholder="Find program..."
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
-                  onBlur={() => handleFindUser()}
+                  onBlur={() => handleFindProgram()}
                   onFocus={() => {
                     setErrors({
                       ...errors,

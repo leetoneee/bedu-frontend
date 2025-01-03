@@ -1,7 +1,5 @@
-import { User } from '@/types/user.type';
 import {
   Button,
-  Divider,
   Modal,
   ModalBody,
   ModalContent,
@@ -12,7 +10,7 @@ import {
   SelectItem
 } from '@nextui-org/react';
 import React, { useState } from 'react';
-import axios from '@/libs/axiosInstance';
+// import axios from '@/libs/axiosInstance';
 import { toast } from 'react-toastify';
 import { createUser, CreateUserDto } from '@/services/users.service';
 
@@ -24,7 +22,7 @@ type Props = {
   onCreated?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+// const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const roleOptions = [
   {
