@@ -11,7 +11,7 @@ import useSWR from 'swr';
 import LessonHeader from './LessonHeader';
 import CommentTab from './Comment.Tab';
 import DocumentTab from './Document.Tab';
-import ExamsTab from './Exams.Tab';
+import ExercisesTab from './Exercises.Tab';
 import InformationTab from './Infomation.Tab';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -67,7 +67,9 @@ const LessonPage = () => {
         {activeTab === 'Documents' && (
           <DocumentTab lessonId={lessonId as string} />
         )}
-        {activeTab === 'Exams' && <ExamsTab lessonId={lessonId as string} />}
+        {activeTab === 'Exercises' && (
+          <ExercisesTab lessonId={lessonId as string} />
+        )}
       </div>
     </main>
   );

@@ -13,21 +13,16 @@ const LessonHeader = ({ activeTab, setActiveTab }: Props) => {
       <div className="flex w-full flex-wrap-reverse gap-2 pt-2 md:items-center">
         <div className="flex flex-1 items-center gap-2 md:gap-4">
           <TabButton
-            name="Information"
+            name="Discussion"
             setActiveTab={setActiveTab}
             activeTab={activeTab}
           />
           <TabButton
-            name="Comments"
-            setActiveTab={setActiveTab}
-            activeTab={activeTab}
-          />
-                    <TabButton
             name="Documents"
             setActiveTab={setActiveTab}
             activeTab={activeTab}
           />
-                    <TabButton
+          <TabButton
             name="Exercises"
             setActiveTab={setActiveTab}
             activeTab={activeTab}

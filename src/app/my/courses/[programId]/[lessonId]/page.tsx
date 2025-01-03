@@ -10,6 +10,10 @@ import { Divider, Spinner } from '@nextui-org/react';
 import ReactPlayer from 'react-player/lazy';
 import { Course } from '@/types/course.type';
 import { useSearchParams } from 'next/navigation';
+import LessonHeader from './LessonHeader';
+import CommentTab from './Comment.Tab';
+import DocumentTab from './Document.Tab';
+import ExercisesTab from './Exams.Tab';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -21,6 +25,7 @@ const LessonDetail = () => {
   const lessonId = params.lessonId;
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
+  const [activeTab, setActiveTab] = useState<string>('Discussion');
 
   const { data, error } = useSWR(`/lessons/item/${lessonId}`, fetcher);
 
@@ -59,7 +64,17 @@ const LessonDetail = () => {
               height={475}
             />
           </div>
-          
+          <div className="flex w-full flex-col">
+        <LessonHeader activeTab={activeTab} setActiveTab={setActiveTab} />
+        <Divider />
+        {activeTab === 'Discussion' && (
+          <CommentTab lessonId={lessonId as string} />
+        )}
+        {activeTab === 'Documents' && (
+          <DocumentTab lessonId={lessonId as string} />
+        )}
+        {activeTab === 'Exercises' && <ExercisesTab lessonId={lessonId as string} />}
+      </div>
         </div>
         <div className="flex basis-[30%] flex-col items-center">
           {isLoading && <Spinner />}
