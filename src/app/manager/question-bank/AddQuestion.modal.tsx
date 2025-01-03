@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ToastContainer, Bounce, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import {
   Modal,
   ModalHeader,
@@ -8,20 +8,13 @@ import {
   ModalContent,
   Divider,
   Checkbox,
-  Input,
   SelectItem,
   Select,
   Selection,
   Button,
   Tooltip
 } from '@nextui-org/react';
-import {
-  EyeIcon,
-  MagnifyingGlassIcon,
-  PencilIcon,
-  PlusIcon,
-  TrashIcon
-} from '@heroicons/react/24/outline';
+import { TrashIcon } from '@heroicons/react/24/outline';
 import { ButtonSolid } from '@/components';
 import {
   createQuestion,
@@ -44,7 +37,6 @@ export const questionTypes = [
 
 const AddQuestionModal = ({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   onCreated
@@ -73,7 +65,7 @@ const AddQuestionModal = ({
     answers: { id: number; answer: string }[],
     correctAnswers: number[]
   ) => {
-    let possibleAnswersAPI = answers.map((answer) => answer.answer).join('/');
+    const possibleAnswersAPI = answers.map((answer) => answer.answer).join('/');
     let answerAPI: string = '';
     if (typeQuestion === 'FillInTheBlankChoice') {
       answerAPI = possibleAnswersAPI;
@@ -125,6 +117,17 @@ const AddQuestionModal = ({
       }
       newErrors.correctAnswers =
         correctAnswers.length === 0 ? 'Please select a correct answer' : '';
+      // Tổng pointDivision phải bằng totalPoints
+      const totalPointsSum = pointDivision.reduce(
+        (sum, point) =>
+          sum + (correctAnswers.includes(point.id) ? point.point : 0),
+        0
+      );
+      newErrors.totalPoints =
+        isNaN(parseFloat(totalPoints)) ||
+        totalPointsSum !== parseFloat(totalPoints)
+          ? `Total points (${totalPointsSum}) must equal the total point (${totalPoints})`
+          : '';
     }
 
     // Fill in the blank
@@ -186,6 +189,18 @@ const AddQuestionModal = ({
       }
       newErrors.correctAnswers =
         correctAnswers.length === 0 ? 'Please select a correct answer' : '';
+      const totalPointsSum = pointDivision.reduce(
+        (sum, point) =>
+          sum + (correctAnswers.includes(point.id) ? point.point : 0),
+        0
+      );
+      if (pointDivision.length !== 0) {
+        newErrors.totalPoints =
+          isNaN(parseFloat(totalPoints)) ||
+          totalPointsSum !== parseFloat(totalPoints)
+            ? `Total points (${totalPointsSum}) must equal the total point (${totalPoints})`
+            : '';
+      }
     }
 
     // Fill in the blank
@@ -235,7 +250,6 @@ const AddQuestionModal = ({
   };
 
   const renderError = (field: keyof typeof errors) => {
-    //Bug questionType hiện ở dưới Modal
     if (errors[field]) {
       if (['pointDivision', 'answers', 'correctAnswers'].includes(field)) {
         // Hiển thị toast warning với cấu hình yêu cầu
@@ -252,21 +266,30 @@ const AddQuestionModal = ({
   };
 
   const handleSubmit = async () => {
-    if (!validateInputsSpec()) {
-      if (selectedType === 'FillInTheBlankChoice') {
-        renderError('pointDivision');
+    // TH đặc biệt của error
+    // Lỗi là khi bỏ chọn đáp án đúng, phải ấn submit 2 lần thì mới ra toast
+    // Tương tự khi chọn đáp án đúng lần đầu (tức là chưa chọn đáp án nào là đúng), sẽ hiện toast lỗi
+    if (selectedType === 'SingleChoice' || selectedType === 'MultipleChoice') {
+      if (answers.length === 0) {
+        errors.answers = 'List of answers cannot be empty';
+      } else {
+        const emptyAnswers = answers.filter(
+          (answer) => answer.answer.trim() === ''
+        );
+        errors.answers =
+          emptyAnswers.length > 0 ? 'Answer choices cannot be empty' : '';
       }
-      renderError('answers');
-      renderError('correctAnswers'); // Kiểm tra correctAnswers là bước cuối cùng
+      errors.correctAnswers =
+        correctAnswers.length === 0 ? 'Please select a correct answer' : '';
     }
 
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
-      let pointDivisionAPI = pointDivision
+      const pointDivisionAPI = pointDivision
         .map((division) => division.point)
         .join('/');
-      let { answerAPI, possibleAnswersAPI } = makeAnswer(
+      const { answerAPI, possibleAnswersAPI } = makeAnswer(
         selectedType,
         answers,
         correctAnswers
@@ -283,7 +306,7 @@ const AddQuestionModal = ({
         examId: [],
         documentId: []
       };
-      // console.log('data: ', data);
+      console.log('data: ', data);
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
         //Gọi API và đợi kết quả trả về
@@ -304,6 +327,9 @@ const AddQuestionModal = ({
         setIsSubmitting(false); // Hoàn tất gửi yêu cầu
       }
     } else {
+      renderError('pointDivision');
+      renderError('answers');
+      renderError('correctAnswers');
       console.log('Form has errors. Fix them to proceed.');
     }
   };
@@ -370,12 +396,8 @@ const AddQuestionModal = ({
   const deleteAnswer = (id: number) => {
     // Xóa câu trả lời trong answers
     setAnswers(answers.filter((ans) => ans.id !== id));
-
-    if (selectedType === 'FillInTheBlankChoice') {
-      // Với type fillin, xóa pointDivision của id tương ứng
-      setPointDivision(pointDivision.filter((point) => point.id !== id));
-    }
-
+    // Xóa pointDivision của id tương ứng
+    setPointDivision(pointDivision.filter((point) => point.id !== id));
     // Xóa id tương ứng khỏi correctAnswers
     setCorrectAnswers(correctAnswers.filter((correctId) => correctId !== id));
   };
@@ -390,7 +412,7 @@ const AddQuestionModal = ({
         )
       );
       if (correctAnswers.length === 0) {
-        console.log('correctAnswers length: ', correctAnswers.length);
+        // console.log('correctAnswers length: ', correctAnswers.length);
         setCorrectAnswers([id]);
       } else {
         setCorrectAnswers((prevCorrectAnswers) =>
@@ -432,7 +454,6 @@ const AddQuestionModal = ({
     }
   };
 
-  // Dành riêng cho fillin
   const updatePointDivision = (id: number, newPoint: number) => {
     setPointDivision((prevPointDivision) => {
       // Nếu pointDivision rỗng, thêm đối tượng mới
@@ -453,7 +474,7 @@ const AddQuestionModal = ({
     });
   };
 
-  const size: '2xl' = '2xl';
+  const size = '2xl';
   return (
     <Modal
       size={size}
@@ -505,9 +526,8 @@ const AddQuestionModal = ({
                 <span className="text-sm font-medium text-black">
                   Question type <span className="text-danger">*</span>
                 </span>
-                {renderError('questionType')}
               </div>
-              <div className="basis-[70%]">
+              <div className="relative flex basis-[70%] gap-8">
                 <Select
                   className="max-w-xs text-black"
                   placeholder="Select an question type"
@@ -521,6 +541,7 @@ const AddQuestionModal = ({
                     </SelectItem>
                   ))}
                 </Select>
+                {renderError('questionType')}
               </div>
             </div>
             {/**Score */}
@@ -612,6 +633,36 @@ const AddQuestionModal = ({
                             }}
                             onFocus={(e) => e.target.select()}
                           />
+                          <div className="flex flex-row gap-2">
+                            <div className="flex flex-row">
+                              <div className="basis-[30%]">
+                                <span className="text-sm font-medium text-black">
+                                  Point
+                                  <span className="text-danger">*</span>
+                                </span>
+                              </div>
+                              <div className="relative basis-[70%]">
+                                <input
+                                  type="number"
+                                  className="w-full rounded-lg"
+                                  placeholder="Enter point..."
+                                  value={
+                                    pointDivision.find(
+                                      (point) => point.id === answer.id
+                                    )?.point
+                                  }
+                                  onChange={(e) => {
+                                    updatePointDivision(
+                                      answer.id,
+                                      e.target.value === ''
+                                        ? 0
+                                        : parseFloat(e.target.value)
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
 
                           {/* Nút xóa */}
                           <Tooltip color="danger" content="Delete" delay={200}>
@@ -663,6 +714,37 @@ const AddQuestionModal = ({
                             }}
                             onFocus={(e) => e.target.select()}
                           />
+
+                          <div className="flex flex-row gap-2">
+                            <div className="flex flex-row">
+                              <div className="basis-[30%]">
+                                <span className="text-sm font-medium text-black">
+                                  Point
+                                  <span className="text-danger">*</span>
+                                </span>
+                              </div>
+                              <div className="relative basis-[70%]">
+                                <input
+                                  type="number"
+                                  className="w-full rounded-lg"
+                                  placeholder="Enter point..."
+                                  value={
+                                    pointDivision.find(
+                                      (point) => point.id === answer.id
+                                    )?.point
+                                  }
+                                  onChange={(e) => {
+                                    updatePointDivision(
+                                      answer.id,
+                                      e.target.value === ''
+                                        ? 0
+                                        : parseFloat(e.target.value)
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
 
                           {/* Nút xóa */}
                           <Tooltip color="danger" content="Delete" delay={200}>

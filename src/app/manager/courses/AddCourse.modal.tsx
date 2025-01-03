@@ -1,6 +1,6 @@
 'use client';
 
-import button, { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -10,14 +10,11 @@ import {
   ModalContent,
   Divider,
   Checkbox,
-  Textarea,
-  Input,
   SelectItem,
   Select,
   Selection,
   Button
 } from '@nextui-org/react';
-import { InputFile } from '@/components';
 import { toast } from 'react-toastify';
 import { createCourse, CreateCourseDto } from '@/services/courses.service';
 
@@ -37,7 +34,6 @@ const courseTypes = [
 
 export default function AddCourseModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   onCreated
@@ -48,7 +44,7 @@ export default function AddCourseModal({
   // }>();
 
   const [name, setName] = useState<string>('');
-  const [code, setCode] = useState<string>('');
+  // const [code, setCode] = useState<string>('');
   const [timePerLesson, setTimePerLesson] = useState<string>('');
   const [price, setPrice] = useState<string>('');
   const [lessonQuantity, setLessonQuantity] = useState<string>('');
@@ -168,7 +164,7 @@ export default function AddCourseModal({
 
   const handleClose = () => {
     setName('');
-    setCode('');
+    // setCode('');
     setTimePerLesson('');
     setPrice('');
     setLessonQuantity('');
@@ -195,7 +191,7 @@ export default function AddCourseModal({
       </span>
     );
 
-  const size: '2xl' = '2xl';
+  const size = '2xl';
   return (
     <Modal
       size={size}

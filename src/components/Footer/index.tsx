@@ -65,7 +65,7 @@ const Footer = () => {
           {/* BEDU's information  */}
           <div className="col-span-1">
             <p className="text-2xl font-bold text-on-primary 2xl:text-3xl">
-              BEDU's Information
+              BEDU&apos;s Information
             </p>
             <p className="mt-6 text-xs">Course List</p>
             <p className="mt-3 text-xs">Feedback from students</p>

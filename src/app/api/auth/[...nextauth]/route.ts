@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { cookies } from 'next/headers';
 
 const handler = NextAuth({
   providers: [
@@ -14,7 +15,7 @@ const handler = NextAuth({
         username: { label: 'Username', type: 'text' },
         password: { label: 'Password', type: 'password' }
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
         // that is false/null if the credentials are invalid.
@@ -44,22 +45,28 @@ const handler = NextAuth({
     })
   ],
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60 // 24 hours
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === 'development',
   callbacks: {
     async jwt({ token, user }) {
+      const cookieStore = await cookies();
+
       if (user) {
         token.id = user.id; // Include only the required fields
         token.name = user.name;
         token.accessToken = user.accessToken;
+        cookieStore.set('jwt', user.accessToken);
         token.role = user.role.name;
       }
       return token;
     },
     async session({ session, token }) {
       session.user = token as any;
+      session.expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000); // 1 days
       return session;
     }
   },

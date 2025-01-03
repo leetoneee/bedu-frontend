@@ -4,7 +4,6 @@ import { ButtonSolid, Breadcrumb } from '@/components';
 import { Crumb } from '@/types';
 import {
   EyeIcon,
-  MagnifyingGlassIcon,
   PencilIcon,
   PlusIcon,
   TrashIcon
@@ -16,11 +15,6 @@ import {
   Chip,
   Tooltip,
   Input,
-  Dropdown,
-  DropdownTrigger,
-  Button,
-  DropdownMenu,
-  DropdownItem,
   Table,
   TableHeader,
   TableColumn,
@@ -41,6 +35,8 @@ import useSWR from 'swr';
 import { toast } from 'react-toastify';
 import { statusColorMap } from '@/types/course.type';
 import AddExamModal from './AddExam.modal';
+import EditExamModal from './EditExam.modal';
+import DeleteExamModal from './DeleteExam.modal';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -153,19 +149,25 @@ export default function ExamsPage() {
       case 'id':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
+            <p className="text-bold text-sm capitalize">
+              {cellValue.toString()}
+            </p>
           </div>
         );
       case 'title':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
+            <p className="text-bold text-sm capitalize">
+              {cellValue.toString()}
+            </p>
           </div>
         );
       case 'duaration':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
+            <p className="text-bold text-sm capitalize">
+              {cellValue.toString()}
+            </p>
           </div>
         );
 
@@ -198,14 +200,16 @@ export default function ExamsPage() {
         return (
           <div className="flex flex-col">
             <p className="text-bold text-wraps text-sm capitalize">
-              {cellValue}
+              {exam.questions.length} {exam.questions.length > 1 ? "questions" : "question"} 
             </p>
           </div>
         );
       case 'resultTime':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue} minutes</p>
+            <p className="text-bold text-sm capitalize">
+              {cellValue.toString()} minutes
+            </p>
           </div>
         );
       case 'actions':
@@ -238,38 +242,38 @@ export default function ExamsPage() {
           </div>
         );
       default:
-        return cellValue;
+        return cellValue.toString();
     }
   }, []);
 
-  const renderChip = useCallback((content: string): ReactNode => {
-    switch (content) {
-      case 'Published':
-        return (
-          <Chip
-            className="capitalize"
-            color={'success'}
-            size="sm"
-            variant="flat"
-          >
-            {content}
-          </Chip>
-        );
-      case 'Unpublished':
-        return (
-          <Chip
-            className="capitalize"
-            color={'default'}
-            size="sm"
-            variant="flat"
-          >
-            {content}
-          </Chip>
-        );
-      default:
-        <span>{content}</span>;
-    }
-  }, []);
+  // const renderChip = useCallback((content: string): ReactNode => {
+  //   switch (content) {
+  //     case 'Published':
+  //       return (
+  //         <Chip
+  //           className="capitalize"
+  //           color={'success'}
+  //           size="sm"
+  //           variant="flat"
+  //         >
+  //           {content}
+  //         </Chip>
+  //       );
+  //     case 'Unpublished':
+  //       return (
+  //         <Chip
+  //           className="capitalize"
+  //           color={'default'}
+  //           size="sm"
+  //           variant="flat"
+  //         >
+  //           {content}
+  //         </Chip>
+  //       );
+  //     default:
+  //       <span>{content}</span>;
+  //   }
+  // }, []);
 
   const filteredItems = React.useMemo(() => {
     let filteredExams = [...exams];
@@ -493,6 +497,27 @@ export default function ExamsPage() {
         onOpenChange={onOpenChange}
         onCreated={handleCreated}
       />
+      {selectedExam && (
+        <EditExamModal 
+          isOpen={isOpenE}
+          onOpen={onOpenE}
+          onClose={handleCloseEditModal}
+          onOpenChange={onOpenChangeE}
+          onEdited={handleEdited}
+          exam={selectedExam}
+        />
+      )}
+      {selectedExam && (
+        <DeleteExamModal
+          isOpen={isOpenD}
+          onOpen={onOpenD}
+          onOpenChange={onOpenChangeD}
+          onClose={handleCloseDeleteModal}
+          examId={selectedExam.id}
+          examTitle={selectedExam.title}
+          onDeleted={handleDeleted}
+        />
+      )}
     </main>
   );
 }

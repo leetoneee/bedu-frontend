@@ -1,6 +1,6 @@
 'use client';
 
-import button, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -10,8 +10,6 @@ import {
   ModalContent,
   Divider,
   Checkbox,
-  Textarea,
-  Input,
   SelectItem,
   Select,
   Selection,
@@ -19,14 +17,8 @@ import {
 } from '@nextui-org/react';
 import { InputFile } from '@/components';
 import { toast } from 'react-toastify';
-import { createCourse, CreateCourseDto } from '@/services/courses.service';
 import { InputFileHandle } from '@/types';
-import {
-  createClass,
-  CreateClassDto,
-  editClass,
-  UpdateClassDto
-} from '@/services/classes.service';
+import { editClass, UpdateClassDto } from '@/services/classes.service';
 import { EClass } from '@/types/class.type';
 
 type Props = {
@@ -47,7 +39,6 @@ const studyForms = ['Online', 'Offline', 'Blended'];
 
 export default function EditClassModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   eclass,
@@ -272,7 +263,7 @@ export default function EditClassModal({
       </span>
     );
 
-  const size: '2xl' = '2xl';
+  const size = '2xl';
   return (
     <Modal
       size={size}

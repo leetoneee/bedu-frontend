@@ -1,6 +1,6 @@
 'use client';
 
-import button, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -10,21 +10,13 @@ import {
   ModalContent,
   Divider,
   Checkbox,
-  Textarea,
-  Input,
   SelectItem,
   Select,
   Selection,
   Button
 } from '@nextui-org/react';
-import { InputFile } from '@/components';
 import { toast } from 'react-toastify';
-import {
-  createLesson,
-  CreateLessonDto,
-  editLesson,
-  UpdateLessonDto
-} from '@/services/lessons.service';
+import { editLesson, UpdateLessonDto } from '@/services/lessons.service';
 import { Lesson } from '@/types/lesson.type';
 
 type Props = {
@@ -45,7 +37,6 @@ const courseTypes = [
 
 export default function EditLessonModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   courseName,
@@ -112,7 +103,7 @@ export default function EditLessonModal({
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
-      const today = new Date();
+      // const today = new Date();
 
       const data: UpdateLessonDto = {
         // title: name,
@@ -164,7 +155,7 @@ export default function EditLessonModal({
       </span>
     );
 
-  const size: '2xl' = '2xl';
+  const size = '2xl';
   return (
     <Modal
       size={size}

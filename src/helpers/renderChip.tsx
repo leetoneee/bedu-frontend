@@ -1,5 +1,5 @@
 import { Chip } from '@nextui-org/react';
-import { ReactNode, useCallback } from 'react';
+import { ReactNode } from 'react';
 
 export const renderChip = (content: string): ReactNode => {
   switch (content) {

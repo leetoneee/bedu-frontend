@@ -1,7 +1,7 @@
 'use client';
 
 import { Breadcrumb } from '@/components';
-import { columns, getLessonsByClassId } from '@/data/lesson.data';
+import { columns } from '@/data/lesson.data';
 import { Crumb } from '@/types';
 import { Lesson } from '@/types/lesson.type';
 import {
@@ -26,13 +26,11 @@ import {
 import React, {
   Key,
   ReactNode,
-  use,
   useCallback,
   useEffect,
   useMemo,
   useState
 } from 'react';
-import Image from 'next/image';
 import {
   EyeIcon,
   PencilIcon,
@@ -45,7 +43,7 @@ import useSWR from 'swr';
 import axios from '@/libs/axiosInstance';
 import AddLessonModal from './AddLesson.modal';
 import { toast } from 'react-toastify';
-import ReactPlayer from 'react-player';
+import ListStudent from './list-student.comp';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -61,8 +59,8 @@ const EClassDetail = () => {
 
   const {
     data,
-    isLoading,
-    error: classError,
+    // isLoading,
+    // error: classError,
     mutate: refreshEndpoint
   } = useSWR(`/classes/item/${classId}`, fetcher);
 
@@ -318,18 +316,18 @@ const EClassDetail = () => {
     refreshEndpoint();
   };
 
-  const handleEdited = () => {
-    toast.success('Lesson edited successfully!');
-    refreshEndpoint();
-  };
+  // const handleEdited = () => {
+  //   toast.success('Lesson edited successfully!');
+  //   refreshEndpoint();
+  // };
 
-  const handleDeleted = () => {
-    toast.success('Lesson deleted successfully!');
-    refreshEndpoint();
-  };
+  // const handleDeleted = () => {
+  //   toast.success('Lesson deleted successfully!');
+  //   refreshEndpoint();
+  // };
 
-  const loadingState =
-    isLoading || data?.metadata.lesson.length === 0 ? 'loading' : 'idle';
+  // const loadingState =
+  //   isLoading || data?.metadata.lesson.length === 0 ? 'loading' : 'idle';
   return (
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
       <Breadcrumb crumbs={crumbs} />
@@ -528,6 +526,8 @@ const EClassDetail = () => {
               </div>
             </div>
           </div>
+          <Divider />
+          <ListStudent classId={classId as string}/>
         </div>
 
         {/* Save Button */}

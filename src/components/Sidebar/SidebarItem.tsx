@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import React from 'react';
-import TooltipItem from '../Tooltip';
 import { classNames } from '../classNames';
 import { Tooltip } from '@nextui-org/react';
 
@@ -14,7 +13,7 @@ const SidebarItem = ({
   isSidebarExpanded
 }: {
   label: string;
-  icon: any;
+  icon: React.ReactNode;
   path: string;
   active: boolean;
   isSidebarExpanded: boolean;

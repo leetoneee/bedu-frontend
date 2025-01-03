@@ -1,4 +1,4 @@
-import { Header, NavHeader } from '@/components';
+import { NavHeader } from '@/components';
 import Image from 'next/image';
 import girl_1 from '../../public/images/girl_1.svg';
 import girl_2 from '../../public/images/girl_2.svg';
@@ -40,7 +40,7 @@ export default function Home() {
                             our comprehensive educational
                           </span>
                           <span className="text-base">
-                            platform. You're a student, educator, or lifelong
+                            platform. You&apos;re a student, educator, or lifelong
                             learner, our site offers
                           </span>
                           <span className="text-base">
@@ -191,13 +191,13 @@ export default function Home() {
                           </p>
                           <p className="mt-6">
                             Discover a world of learning at your fingertips with
-                            our comprehensive educational platform.you're a
+                            our comprehensive educational platform.you&apos;re a
                             student, educator, or lifelong learner, our site
                             offers an extensive collection of resources
                           </p>
                           <p className="mt-7">
                             Discover a world of learning at your fingertips with
-                            our comprehensive educational platform.you're a
+                            our comprehensive educational platform.you&apos;re a
                             student, educator, or lifelong learner, our site
                             offers an extensive collection of resources
                           </p>

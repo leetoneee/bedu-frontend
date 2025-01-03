@@ -1,6 +1,6 @@
 'use client';
 
-import button, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -10,26 +10,19 @@ import {
   ModalContent,
   Divider,
   Checkbox,
-  Textarea,
-  Input,
   SelectItem,
   Select,
   Selection,
   Button,
   Tooltip
 } from '@nextui-org/react';
-import { InputFile } from '@/components';
 import { toast } from 'react-toastify';
-import { createCourse, CreateCourseDto } from '@/services/courses.service';
 import {
-  createLesson,
-  CreateLessonDto,
   createRecurringLesson,
   CreateRecurringLessonDto
 } from '@/services/lessons.service';
 import useSWR from 'swr';
 import axios from '@/libs/axiosInstance';
-import ReactPlayer from 'react-player';
 import { User } from '@/types/user.type';
 import { getFullDayName } from '@/helpers';
 import { TrashIcon } from '@heroicons/react/24/outline';
@@ -67,7 +60,6 @@ const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 export default function AddLessonModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   eclassId,
@@ -81,8 +73,7 @@ export default function AddLessonModal({
   // }>();
 
   const [name, setName] = useState<string>('');
-  const [url, setUrl] = useState<string>('');
-  const [isPublic, setIsPublic] = useState<boolean>(false);
+  // const [url, setUrl] = useState<string>('');
   const [type, setType] = useState<Selection>(new Set([`${eclassType}`]));
   const [teacher, setTeacher] = useState<Selection>(new Set([]));
   const [startDate, setStartDate] = useState<string>('');
@@ -143,8 +134,8 @@ export default function AddLessonModal({
   const {
     data: listTeacherData,
     isLoading,
-    error: classError,
-    mutate: refreshEndpoint
+    // error: classError,
+    // mutate: refreshEndpoint
   } = useSWR(`/users/groupUser/teacher?page=1&limit=10`, fetcher);
 
   useEffect(() => {
@@ -298,7 +289,7 @@ export default function AddLessonModal({
 
   const handleClose = () => {
     setName('');
-    setType(new Set([]));
+    setType(new Set([`${eclassType}`]));
     setTeacher(new Set([]));
     setStartDate('');
     setEndDate('');

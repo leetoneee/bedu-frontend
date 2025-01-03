@@ -10,9 +10,9 @@ const SelfStudyProgramCard = ({
   ProgramInfo: SSProgramCardProps;
 }) => {
   const {
-    id,
-    code,
-    description,
+    // id,
+    // code,
+    // description,
     avatar,
     lessonQuantity,
     price,

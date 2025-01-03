@@ -42,6 +42,7 @@ import axios from '@/libs/axiosInstance';
 import DeleteClassModal from './DeleteClass.modal';
 import AddClassModal from './AddClass.modal';
 import EditClassModal from './EditClass.modal';
+import { formatNumberWithCommas } from '@/helpers';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -195,7 +196,9 @@ export default function LiveProgramPage() {
         case 'price':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">
+                {formatNumberWithCommas(cellValue.toString())} VND
+              </p>
             </div>
           );
         case 'timePerLesson':

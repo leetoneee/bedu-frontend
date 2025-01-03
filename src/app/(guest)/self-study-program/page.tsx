@@ -1,16 +1,9 @@
 'use client';
 
-import {
-  Breadcrumb,
-  Header,
-  NavHeader,
-  ProgramCard,
-  SelfStudyProgramCard
-} from '@/components';
+import { Breadcrumb, ProgramCard } from '@/components';
 import { Crumb } from '@/types';
 import { Program } from '@/types/program.type';
 import { Chip, Divider, Spinner } from '@nextui-org/react';
-import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 import axios from '@/libs/axiosInstance';
 import useSWRInfinite from 'swr/infinite';
@@ -29,9 +22,16 @@ export default function ProgramPage() {
     }
   ];
 
-  const getKey = (pageIndex: number, previousPageData: any) => {
+  interface PageData {
+    metadata: {
+      programs: Program[];
+      totalRecord: number;
+    };
+  }
+
+  const getKey = (pageIndex: number, previousPageData: PageData | null): string | null => {
     pageIndex += 1;
-    if (previousPageData && !previousPageData.length) return null; // reached the end
+    if (previousPageData && !previousPageData.metadata.programs.length) return null; // reached the end
     return `/programs/all${filter ? `/type/${filter}` : ''}?page=${pageIndex}&limit=10`; // SWR key
   };
 

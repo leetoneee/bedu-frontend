@@ -1,6 +1,6 @@
 'use client';
 
-import button, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -10,21 +10,13 @@ import {
   ModalContent,
   Divider,
   Checkbox,
-  Textarea,
-  Input,
   SelectItem,
   Select,
   Selection,
   Button
 } from '@nextui-org/react';
-import { InputFile } from '@/components';
 import { toast } from 'react-toastify';
-import {
-  createCourse,
-  CreateCourseDto,
-  editCourse,
-  UpdateCourseDto
-} from '@/services/courses.service';
+import { editCourse, UpdateCourseDto } from '@/services/courses.service';
 import { Course } from '@/types/course.type';
 
 type Props = {
@@ -44,7 +36,6 @@ const courseTypes = [
 
 export default function EditCourseModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   course,
@@ -215,7 +206,7 @@ export default function EditCourseModal({
       </span>
     );
 
-  const size: '2xl' = '2xl';
+  const size = '2xl';
   return (
     <Modal
       size={size}

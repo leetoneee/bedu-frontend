@@ -1,13 +1,12 @@
 'use client';
 
-import button, { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
   ModalHeader,
   ModalBody,
   ModalFooter,
-  useDisclosure,
   ModalContent
 } from '@nextui-org/react';
 import { Button } from '@nextui-org/react';
@@ -26,7 +25,6 @@ type Props = {
 
 export default function DeleteLessonModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   lessonId,
@@ -34,15 +32,15 @@ export default function DeleteLessonModal({
   onDeleted
 }: Props) {
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
-  const [name, setName] = useState<string>('');
-  const [id, setId] = useState<number>();
+  // const [name, setName] = useState<string>('');
+  // const [id, setId] = useState<number>();
 
-  useEffect(() => {
-    if (lessonId && lessonTitle) {
-      setName(lessonTitle);
-      setId(lessonId);
-    }
-  }, [lessonId, lessonTitle]);
+  // useEffect(() => {
+  //   if (lessonId && lessonTitle) {
+  //     setName(lessonTitle);
+  //     setId(lessonId);
+  //   }
+  // }, [lessonId, lessonTitle]);
 
   const handleDelete = async () => {
     setIsDeleting(true);

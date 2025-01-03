@@ -7,9 +7,7 @@ import { Course } from '@/types/course.type';
 import { statusColorMap } from '@/types/lesson.type';
 import {
   Button,
-  CalendarDate,
   Chip,
-  DateInput,
   Divider,
   Input,
   Pagination,
@@ -41,6 +39,7 @@ import useSWR from 'swr';
 import axios from '@/libs/axiosInstance';
 import { editProgram, UpdateProgramDto } from '@/services/programs.service';
 import { toast } from 'react-toastify';
+import ListStudent from './list-student.comp';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -50,10 +49,7 @@ const ProgramDetail = () => {
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const { data, error: courseError } = useSWR(
-    `/programs/item/${programId}`,
-    fetcher
-  );
+  const { data } = useSWR(`/programs/item/${programId}`, fetcher);
 
   const [courses, setCourses] = useState<Course[]>([]);
   const [program, setProgram] = useState<Program>();
@@ -81,8 +77,8 @@ const ProgramDetail = () => {
   // State for filter
   const [filterCourseName, setFilterCourseName] = useState<string>('');
   const hasSearchFilterName = Boolean(filterCourseName);
-  const [filterStartDate, setFilterStartDate] = useState<CalendarDate>();
-  const [filterEndDate, setFilterEndDate] = useState<CalendarDate>();
+  // const [filterStartDate, setFilterStartDate] = useState<CalendarDate>();
+  // const [filterEndDate, setFilterEndDate] = useState<CalendarDate>();
   //
 
   const handleDelete = useCallback(
@@ -147,7 +143,7 @@ const ProgramDetail = () => {
         case 'price':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">{cellValue} VND</p>
             </div>
           );
         case 'timePerLesson':
@@ -164,7 +160,7 @@ const ProgramDetail = () => {
               <Tooltip content="Details" className="bg-on-primary" delay={1000}>
                 <span
                   className="cursor-pointer text-lg text-on-primary active:opacity-50"
-                  onClick={() => router.push(`courses/${course.id}`)}
+                  onClick={() => router.replace(`manager/courses/${course.id}`)}
                 >
                   <EyeIcon className="size-5" />
                 </span>
@@ -192,7 +188,7 @@ const ProgramDetail = () => {
   });
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 6;
+  // const rowsPerPage = 6;
 
   // const pages = React.useMemo(() => {
   //   return data?.count ? Math.ceil(data.count / rowsPerPage) : 0;
@@ -233,7 +229,7 @@ const ProgramDetail = () => {
   const topContent: ReactNode = React.useMemo(() => {
     return (
       // Search/Filter
-      <div className="flex w-full flex-row gap-16">
+      <div className="flex w-full flex-row">
         {/* Search Name*/}
         <div className="flex flex-col gap-2">
           <span>Lesson name</span>
@@ -242,13 +238,13 @@ const ProgramDetail = () => {
             variant="bordered"
             size={'md'}
             type=""
-            placeholder="Find your team member"
+            placeholder="Find course"
             value={filterCourseName}
             onChange={(e) => setFilterCourseName(e.target.value)}
           />
         </div>
         {/* Filter Start date */}
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <span>Start date</span>
           <DateInput
             key={'start-date'}
@@ -257,9 +253,9 @@ const ProgramDetail = () => {
             value={filterStartDate}
             onChange={setFilterStartDate}
           />
-        </div>
+        </div> */}
         {/* Filter end date */}
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <span>End date</span>
           <DateInput
             key={'end-date'}
@@ -268,7 +264,7 @@ const ProgramDetail = () => {
             value={filterEndDate}
             onChange={setFilterEndDate}
           />
-        </div>
+        </div> */}
         <Button
           className="my-auto ml-auto h-14 rounded-2xl bg-on-primary text-white shadow-md"
           startContent={<PlusIcon className="size-6 text-white" />}
@@ -490,10 +486,7 @@ const ProgramDetail = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Save Button  */}
-        <div className="flex w-full">
+          {/* Save Button  */}
           <Button
             className="ml-auto h-14 rounded-2xl bg-on-primary text-white"
             startContent={
@@ -510,13 +503,15 @@ const ProgramDetail = () => {
           >
             {isSubmitting ? 'Summitting...' : 'Save'}
           </Button>
+          <Divider />
+          <ListStudent programId={programId as string} />
         </div>
       </div>
       {program && (
         <AddCoursesModal
           isOpen={isOpen}
           onOpen={onOpen}
-          courseType={program?.type}
+          courseType={program.type}
           onOpenChange={onOpenChange}
           courses={courses}
           setCourses={setCourses}

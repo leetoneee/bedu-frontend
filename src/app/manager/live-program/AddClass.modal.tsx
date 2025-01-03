@@ -1,6 +1,6 @@
 'use client';
 
-import button, { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -10,8 +10,6 @@ import {
   ModalContent,
   Divider,
   Checkbox,
-  Textarea,
-  Input,
   SelectItem,
   Select,
   Selection,
@@ -19,7 +17,6 @@ import {
 } from '@nextui-org/react';
 import { InputFile } from '@/components';
 import { toast } from 'react-toastify';
-import { createCourse, CreateCourseDto } from '@/services/courses.service';
 import { InputFileHandle } from '@/types';
 import { createClass, CreateClassDto } from '@/services/classes.service';
 
@@ -31,14 +28,15 @@ type Props = {
   onCreated?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const classTypes = [  { key: 'ielts', label: 'IELTS' },
+const classTypes = [
+  { key: 'ielts', label: 'IELTS' },
   { key: 'toeic', label: 'TOEIC' },
-  { key: 'toefl', label: 'TOEFL' }];
+  { key: 'toefl', label: 'TOEFL' }
+];
 const studyForms = ['Online', 'Offline', 'Blended'];
 
 export default function AddClassModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   onCreated
@@ -50,7 +48,7 @@ export default function AddClassModal({
   const inputFileRef = useRef<InputFileHandle | null>(null);
 
   const [name, setName] = useState<string>('');
-  const [code, setCode] = useState<string>('');
+  // const [code, setCode] = useState<string>('');
   const [timePerLesson, setTimePerLesson] = useState<string>('');
   const [startDate, setStartDate] = useState<string>('');
   const [price, setPrice] = useState<string>('');
@@ -218,7 +216,7 @@ export default function AddClassModal({
 
   const handleClose = () => {
     setName('');
-    setCode('');
+    // setCode('');
     setTimePerLesson('');
     setPrice('');
     setLessonQuantity('');
@@ -247,7 +245,7 @@ export default function AddClassModal({
       </span>
     );
 
-  const size: '2xl' = '2xl';
+  const size = '2xl';
   return (
     <Modal
       size={size}

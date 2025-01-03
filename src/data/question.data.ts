@@ -14,7 +14,7 @@ const dataQuestions: Question[] = [
   {
     id: 1,
     question: "Choose the correct answer: 'She __ to school every day.'",
-    totalPoint: 1,
+    totalPoints: 1,
     pointDivision: "",
     content: "Daily routine vocabulary practice",
     attach: "",
@@ -26,7 +26,7 @@ const dataQuestions: Question[] = [
   {
     id: 2,
     question: "Select the correct answers: 'These are verbs.'",
-    totalPoint: 0.75,
+    totalPoints: 0.75,
     pointDivision: "",
     content: "Grammar focus: Identifying verbs",
     attach: "",
@@ -38,7 +38,7 @@ const dataQuestions: Question[] = [
   {
     id: 3,
     question: "The cat is __ the __.",
-    totalPoint: 0.5,
+    totalPoints: 0.5,
     pointDivision: "0.25/0.25", // Chia đều điểm cho từng chỗ trống
     content: "Prepositions of place exercise",
     attach: "",
@@ -50,7 +50,7 @@ const dataQuestions: Question[] = [
   {
     id: 4,
     question: "Choose the correct answer: 'He __ an apple yesterday.'",
-    totalPoint: 1,
+    totalPoints: 1,
     pointDivision: "",
     content: "Past tense practice: Regular and irregular verbs",
     attach: "",
@@ -62,7 +62,7 @@ const dataQuestions: Question[] = [
   {
     id: 5,
     question: "Select the correct answers: 'These are adjectives.'",
-    totalPoint: 0.75,
+    totalPoints: 0.75,
     pointDivision: "",
     content: "Descriptive words for objects and people",
     attach: "",
@@ -74,7 +74,7 @@ const dataQuestions: Question[] = [
   {
     id: 6,
     question: "The dog is __ the __.",
-    totalPoint: 0.25,
+    totalPoints: 0.25,
     pointDivision: "0.125/0.125", // Chia đều điểm cho từng chỗ trống
     content: "Spatial relations and prepositions",
     attach: "",

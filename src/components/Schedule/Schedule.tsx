@@ -9,7 +9,7 @@ import {
 } from '@schedule-x/calendar';
 import { createEventsServicePlugin } from '@schedule-x/events-service';
 import '@schedule-x/theme-default/dist/index.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { createEventModalPlugin } from '@schedule-x/event-modal';
 import { EventProps } from '@/types';
 
@@ -17,6 +17,7 @@ type Props = {
   events: EventProps[];
 };
 function Schedule({ events }: Props) {
+  console.log("🚀 ~ Schedule ~ events:", events)
   // const eventsService = useState(() => createEventsServicePlugin())[0];
   const plugins = [createEventModalPlugin(), createEventsServicePlugin()];
 

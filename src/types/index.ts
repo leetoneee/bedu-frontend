@@ -23,7 +23,7 @@ export type InputProps = {
   value?: string | number;
   radioValues?: string[];
   readOnly?: boolean;
-  onChange: (e: any) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
   required?: boolean;
   type?: string;
   suport?: string;

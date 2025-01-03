@@ -22,7 +22,7 @@ import React, { useEffect, useState, useCallback, Key, ReactNode } from 'react';
 import { Selection } from '@nextui-org/react';
 import { Question } from '@/types/question-bank.type';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { columns, dataQuestions } from '@/data/question.data';
+import { columns } from '@/data/question.data';
 import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
 import { toast } from 'react-toastify';
@@ -86,7 +86,7 @@ export default function QuestionBank() {
   const [totalQuestions, setTotalQuestions] = useState<number>(0);
   const [filterQuestionName, setFilterQuestionName] = useState<string>('');
   const hasSearchFilter = Boolean(filterQuestionName);
-  const [selectedStatus, setSelectedStatus] = useState<Selection>(
+  const [selectedStatus] = useState<Selection>(
     new Set(['all'])
   );
   const seletecValue = React.useMemo(

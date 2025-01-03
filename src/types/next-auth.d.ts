@@ -8,6 +8,7 @@ declare module 'next-auth' {
       role: string;
       accessToken: string;
     };
+    expires: Date;
   }
   interface User {
     id: number;

@@ -1,6 +1,6 @@
 'use client';
 
-import button, { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -9,17 +9,13 @@ import {
   ModalFooter,
   ModalContent,
   Divider,
-  Checkbox,
-  Textarea,
-  Input,
   SelectItem,
   Select,
   Selection,
   Button
 } from '@nextui-org/react';
-import { InputFile } from '@/components';
 import { toast } from 'react-toastify';
-import { createCourse, CreateCourseDto } from '@/services/courses.service';
+import { createExam, CreateExamDto } from '@/services/exam.service';
 
 type Props = {
   isOpen: boolean;
@@ -29,15 +25,16 @@ type Props = {
   onCreated?: () => void; // Callback báo cho parent biết đã tạo xong
 };
 
-const courseTypes = [
-  { key: 'ielts', label: 'IELTS' },
-  { key: 'toeic', label: 'TOEIC' },
-  { key: 'toefl', label: 'TOEFL' }
+const examTypes = [
+  { key: 'assignments', label: 'Assignments' },
+  { key: 'mid-term', label: 'Mid-Term' },
+  { key: 'final-term', label: 'Final-Term' }
 ];
+
+const scroringTypes = [{ key: 'highest', label: 'Highest score' }];
 
 export default function AddExamModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   onCreated
@@ -48,70 +45,68 @@ export default function AddExamModal({
   // }>();
 
   const [name, setName] = useState<string>('');
-  const [code, setCode] = useState<string>('');
-  const [timePerLesson, setTimePerLesson] = useState<string>('');
-  const [price, setPrice] = useState<string>('');
-  const [lessonQuantity, setLessonQuantity] = useState<string>('');
+  const [duration, setDuration] = useState<string>('');
+  const [maxTries, setMaxTries] = useState<string>('');
+  const [resultTime, setResultTime] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [isPublic, setIsPublic] = useState<boolean>(false);
+  // const [isPublic, setIsPublic] = useState<boolean>(false);
   const [type, setType] = useState<Selection>(new Set([]));
+  const [scoringtype, setScoringType] = useState<Selection>(
+    new Set(['highest'])
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [errors, setErrors] = useState<{
     name: string;
-    // code: string;
     type: string;
-    timePerLesson: string;
-    price: string;
-    lessonQuantity: string;
+    duration: string;
+    maxTries: string;
+    resultTime: string;
     description: string;
   }>({
     name: '',
-    // code: '',
     type: '',
-    timePerLesson: '',
-    price: '',
-    lessonQuantity: '',
+    duration: '',
+    maxTries: '',
+    resultTime: '',
     description: ''
   });
 
   const validateInputs = () => {
     const newErrors = { ...errors };
 
-    newErrors.name = name.trim() === '' ? 'Course name is required' : '';
-    // newErrors.code = code.trim() === '' ? 'Course code is required' : '';
-    newErrors.type =
-      selectedType.trim() === '' ? 'Course type is required' : '';
+    newErrors.name = name.trim() === '' ? 'Exam name is required' : '';
+    newErrors.type = selectedType.trim() === '' ? 'Exam type is required' : '';
 
-    // Validate timePerLesson as a positive integer
-    if (!timePerLesson) {
-      newErrors.timePerLesson = 'Time per lesson is required';
-    } else if (isNaN(Number(timePerLesson)) || Number(timePerLesson) <= 0) {
-      newErrors.timePerLesson = 'Time per lesson must be a positive number';
+    // Validate duration as a positive integer
+    if (!duration) {
+      newErrors.duration = 'Duration is required';
+    } else if (isNaN(Number(duration)) || Number(duration) <= 0) {
+      newErrors.duration = 'Duration must be a positive number';
     } else {
-      newErrors.timePerLesson = '';
+      newErrors.duration = '';
     }
 
     // Validate price as a positive number
-    if (!price) {
-      newErrors.price = 'Price is required';
-    } else if (isNaN(Number(price)) || Number(price) <= 0) {
-      newErrors.price = 'Price must be a positive number';
+    if (!maxTries) {
+      newErrors.maxTries = 'Max tries is required';
+    } else if (isNaN(Number(maxTries)) || Number(maxTries) <= 0) {
+      newErrors.maxTries = 'Max tries must be a positive number';
     } else {
-      newErrors.price = '';
+      newErrors.maxTries = '';
     }
 
-    // Validate lessonQuantity as a positive integer
-    if (!lessonQuantity) {
-      newErrors.lessonQuantity = 'Lesson quantity is required';
+    // Validate resultTime as a positive integer
+    if (!resultTime) {
+      newErrors.resultTime = 'Result time is required';
     } else if (
-      isNaN(Number(lessonQuantity)) ||
-      !Number.isInteger(Number(lessonQuantity)) ||
-      Number(lessonQuantity) <= 0
+      isNaN(Number(resultTime)) ||
+      !Number.isInteger(Number(resultTime)) ||
+      Number(resultTime) <= 0
     ) {
-      newErrors.lessonQuantity = 'Lesson quantity must be a positive integer';
+      newErrors.resultTime = 'Result time must be a positive integer';
     } else {
-      newErrors.lessonQuantity = '';
+      newErrors.resultTime = '';
     }
 
     newErrors.description =
@@ -131,21 +126,19 @@ export default function AddExamModal({
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
-      const data: CreateCourseDto = {
-        courseType: selectedType.toLowerCase(),
+      const data: CreateExamDto = {
         title: name,
-        description: description,
-        image: '',
-        lessonQuantity: Number(lessonQuantity),
-        timePerLesson: Number(timePerLesson),
-        price: Number(price),
-        programId: [],
-        isActive: isPublic
+        examType: selectedType,
+        duration: Number(duration),
+        maxTries: Number(maxTries),
+        resultTime: Number(resultTime),
+        questionId: [],
+        description: description
       };
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
         // Gọi API và đợi kết quả
-        const result = await createCourse(data);
+        const result = await createExam(data);
         if (result) {
           handleClose();
           if (onCreated) {
@@ -156,7 +149,7 @@ export default function AddExamModal({
         console.error('🚫 ~ onSubmit ~ Error:', error);
         toast.error(
           error.response?.data?.message ||
-            'Failed to create course. Please try again.'
+            'Failed to create exam. Please try again.'
         );
       } finally {
         setIsSubmitting(false); // Hoàn tất gửi yêu cầu
@@ -168,20 +161,18 @@ export default function AddExamModal({
 
   const handleClose = () => {
     setName('');
-    setCode('');
-    setTimePerLesson('');
-    setPrice('');
-    setLessonQuantity('');
+    setDuration('');
+    setMaxTries('');
+    setResultTime('');
     setType(new Set([]));
+    setScoringType(new Set(['highest']));
     setDescription('');
-    setIsPublic(false);
     setErrors({
       name: '',
-      // code: '',
       type: '',
-      timePerLesson: '',
-      price: '',
-      lessonQuantity: '',
+      duration: '',
+      maxTries: '',
+      resultTime: '',
       description: ''
     });
     // Đóng modal
@@ -195,7 +186,7 @@ export default function AddExamModal({
       </span>
     );
 
-  const size: '2xl' = '2xl';
+  const size = '2xl';
   return (
     <Modal
       size={size}
@@ -234,76 +225,39 @@ export default function AddExamModal({
             </svg>
           </div>
           <div className="ml-5">
-            <div className="text-lg font-semibold">Add new course</div>
+            <div className="text-lg font-semibold">Add new exam</div>
             <div className="text-wrap text-sm font-normal">
-              Create a new course to structure lessons and assign exercises for
-              students
+              Create a new exam for program, then build an exam by adding
+              questions to form a complete assessment.
             </div>
           </div>
         </ModalHeader>
         <ModalBody>
           <div className="flex flex-col gap-7">
-            {/* Course name */}
+            {/* Exam name */}
             <div className="flex flex-row">
               <div className="basis-[30%]">
                 <span className="text-sm font-medium text-black">
-                  Course name<span className="text-danger">*</span>
+                  Title<span className="text-danger">*</span>
                 </span>
               </div>
               <div className="relative basis-[70%]">
                 <input
                   type="text"
                   className="w-full rounded-lg"
-                  placeholder="Enter course name..."
+                  placeholder="Enter title of exam..."
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
                 {renderError('name')}
               </div>
             </div>
-            {/* Course code */}
-            {/* <div className="flex flex-row">
-              <div className="basis-[30%]">
-                <span className="text-sm font-medium text-black">
-                  Course code<span className="text-danger">*</span>
-                </span>
-              </div>
-              <div className="relative flex basis-[70%] gap-8">
-                <input
-                  type="text"
-                  className="w-1/2 rounded-lg"
-                  placeholder="Enter course code..."
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                />
-                {renderError('code')}
-
-                <div className="relative flex w-1/2 flex-row gap-4">
-                  <span className="text-sm font-medium text-black">
-                    Type<span className="text-danger">*</span>
-                  </span>
-                  <Select
-                    className="max-w-xs"
-                    placeholder="Select type"
-                    disallowEmptySelection
-                    selectedKeys={type}
-                    variant="bordered"
-                    onSelectionChange={setType}
-                  >
-                    {courseTypes.map((type) => (
-                      <SelectItem key={type}>{type}</SelectItem>
-                    ))}
-                  </Select>
-                  {renderError('type')}
-                </div>
-              </div>
-            </div> */}
 
             {/* Type */}
             <div className="flex flex-row">
               <div className="basis-[30%]">
                 <span className="text-sm font-medium text-black">
-                  Type<span className="text-danger">*</span>
+                  Exam type<span className="text-danger">*</span>
                 </span>
               </div>
               <div className="relative flex basis-[70%] gap-8">
@@ -315,7 +269,7 @@ export default function AddExamModal({
                   variant="bordered"
                   onSelectionChange={setType}
                 >
-                  {courseTypes.map((type) => (
+                  {examTypes.map((type) => (
                     <SelectItem key={type.key}>{type.label}</SelectItem>
                   ))}
                 </Select>
@@ -323,80 +277,95 @@ export default function AddExamModal({
               </div>
             </div>
 
-            <Divider />
-
-            {/* Program image  */}
-
             {/* Time per lesson & Price */}
             <div className="relative flex flex-row">
               <div className="basis-[30%]">
                 <span className="text-sm font-medium text-black">
-                  Time per lesson<span className="text-danger">*</span>
+                  Duration<span className="text-danger">*</span>
                 </span>
               </div>
-              {renderError('timePerLesson')}
               <div className="flex basis-[70%] gap-8">
                 <div className="relative w-1/2">
                   <input
                     type="text"
                     className="w-full rounded-lg pr-16"
-                    placeholder="Enter time"
-                    value={timePerLesson}
-                    onChange={(e) => setTimePerLesson(e.target.value)}
+                    placeholder="Enter duration"
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
                   />
                   <div className="absolute right-14 top-1/2 h-full w-px -translate-y-1/2 transform bg-gray-300"></div>
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-500">
                     mins
                   </span>
+                  {renderError('duration')}
                 </div>
-                {/* Price */}
+                {/* Max tries */}
                 <div className="relative flex w-2/3 flex-row gap-4">
                   <span className="text-sm font-medium text-black">
-                    Price<span className="text-danger">*</span>
+                    Max tries<span className="text-danger">*</span>
                   </span>
-                  {renderError('price')}
+                  {renderError('maxTries')}
                   <div className="relative">
                     <input
                       type="text"
                       className="w-full rounded-lg pr-16"
-                      placeholder="Enter price"
-                      value={price}
-                      onChange={(e) => setPrice(e.target.value)}
+                      placeholder=""
+                      value={maxTries}
+                      onChange={(e) => setMaxTries(e.target.value)}
                     />
                     <div className="absolute right-14 top-1/2 h-full w-px -translate-y-1/2 transform bg-gray-300"></div>
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 transform text-gray-500">
-                      VND
+                    <span className="absolute right-2 top-1/2 -translate-y-1/2 transform text-gray-500">
+                      times
                     </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <Divider />
-
-            {/* Lesson quantity & public */}
+            {/* Scoring Type */}
             <div className="flex flex-row">
               <div className="basis-[30%]">
                 <span className="text-sm font-medium text-black">
-                  Lesson quantity<span className="text-danger">*</span>
+                  Scroring type<span className="text-danger">*</span>
                 </span>
               </div>
               <div className="relative flex basis-[70%] gap-8">
-                <input
-                  type="text"
-                  className="w-2/3 rounded-lg"
-                  placeholder="Enter lesson quantity..."
-                  value={lessonQuantity}
-                  onChange={(e) => setLessonQuantity(e.target.value)}
-                />
-                {renderError('lessonQuantity')}
-                <div className="flex w-1/3 flex-row">
-                  <Checkbox isSelected={isPublic} onValueChange={setIsPublic}>
-                    Public
-                  </Checkbox>
-                </div>
+                <Select
+                  className="max-w-xs"
+                  placeholder="Select type"
+                  disallowEmptySelection
+                  selectedKeys={scoringtype}
+                  variant="bordered"
+                  onSelectionChange={setScoringType}
+                >
+                  {scroringTypes.map((type) => (
+                    <SelectItem key={type.key}>{type.label}</SelectItem>
+                  ))}
+                </Select>
+                {/* {renderError('type')} */}
               </div>
             </div>
+
+            {/* Time of result display */}
+            <div className="flex flex-row">
+              <div className="basis-[30%]">
+                <span className="text-sm font-medium text-black">
+                  Time of result display<span className="text-danger">*</span>
+                </span>
+              </div>
+              <div className="relative basis-[70%]">
+                <input
+                  type="text"
+                  className="w-full rounded-lg"
+                  placeholder="Enter result time..."
+                  value={resultTime}
+                  onChange={(e) => setResultTime(e.target.value)}
+                />
+                {renderError('resultTime')}
+              </div>
+            </div>
+
+            <Divider />
 
             {/* Description */}
             <div className="flex flex-row">
@@ -408,7 +377,7 @@ export default function AddExamModal({
               <div className="relative basis-[70%]">
                 <textarea
                   className="w-full rounded-lg bg-white"
-                  placeholder="Enter course description..."
+                  placeholder="Enter exam description..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />

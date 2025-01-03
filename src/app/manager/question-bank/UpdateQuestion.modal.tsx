@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
   Modal,
@@ -36,7 +36,6 @@ export const questionTypes = [
 
 const UpdateQuestion = ({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   onUpdate,
@@ -52,7 +51,7 @@ const UpdateQuestion = ({
   >([]);
   // Danh sách ID của đáp án đúng
   const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
-  const [answer, setAnswer] = useState<string>('');
+  // const [answer, setAnswer] = useState<string>('');
   const [attach, setAttach] = useState<string>('');
   const [questionType, setQuestionType] = useState<Selection>(
     new Set([`${questionUpdate.questionType}`])
@@ -67,8 +66,8 @@ const UpdateQuestion = ({
   };
 
   const parseCorrectAnswers = (correctAnswers: string): number[] => {
-    let ans: number[] = [];
-    let ansArr = correctAnswers.split('/');
+    const ans: number[] = [];
+    const ansArr = correctAnswers.split('/');
     for (let i = 0; i < ansArr.length; i++) {
       if (ansArr[i] !== '@') {
         ans.push(i + 1);
@@ -109,7 +108,7 @@ const UpdateQuestion = ({
     answers: { id: number; answer: string }[],
     correctAnswers: number[]
   ) => {
-    let possibleAnswersAPI = answers.map((answer) => answer.answer).join('/');
+    const possibleAnswersAPI = answers.map((answer) => answer.answer).join('/');
     let answerAPI: string = '';
     if (typeQuestion === 'FillInTheBlankChoice') {
       answerAPI = possibleAnswersAPI;
@@ -148,7 +147,7 @@ const UpdateQuestion = ({
     newErrors.totalPoints =
       totalPoints.trim() === '' ? 'Score is required' : '';
     newErrors.questionType = selectedType ? '' : 'Question type is required';
-    //Single Choice & Multiple Choice
+    //single Choice & multiple Choice
     if (selectedType === 'SingleChoice' || selectedType === 'MultipleChoice') {
       if (answers.length === 0) {
         newErrors.answers = 'List of answers cannot be empty';
@@ -161,6 +160,17 @@ const UpdateQuestion = ({
       }
       newErrors.correctAnswers =
         correctAnswers.length === 0 ? 'Please select a correct answer' : '';
+      // Tổng pointDivision phải bằng totalPoints
+      const totalPointsSum = pointDivision.reduce(
+        (sum, point) =>
+          sum + (correctAnswers.includes(point.id) ? point.point : 0),
+        0
+      );
+      newErrors.totalPoints =
+        isNaN(parseFloat(totalPoints)) ||
+        totalPointsSum !== parseFloat(totalPoints)
+          ? `Total points (${totalPointsSum}) must equal the total point (${totalPoints})`
+          : '';
     }
 
     // Fill in the blank
@@ -288,21 +298,30 @@ const UpdateQuestion = ({
   };
 
   const handleSubmit = async () => {
-    if (!validateInputsSpec()) {
-      if (selectedType === 'FillInTheBlankChoice') {
-        renderError('pointDivision');
+    // TH đặc biệt của error
+    // Lỗi là khi bỏ chọn đáp án đúng, phải ấn submit 2 lần thì mới ra toast
+    // Tương tự khi chọn đáp án đúng lần đầu (tức là chưa chọn đáp án nào là đúng), sẽ hiện toast lỗi
+    if (selectedType === 'SingleChoice' || selectedType === 'MultipleChoice') {
+      if (answers.length === 0) {
+        errors.answers = 'List of answers cannot be empty';
+      } else {
+        const emptyAnswers = answers.filter(
+          (answer) => answer.answer.trim() === ''
+        );
+        errors.answers =
+          emptyAnswers.length > 0 ? 'Answer choices cannot be empty' : '';
       }
-      renderError('answers');
-      renderError('correctAnswers'); // Kiểm tra correctAnswers là bước cuối cùng
+      errors.correctAnswers =
+        correctAnswers.length === 0 ? 'Please select a correct answer' : '';
     }
 
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
-      let pointDivisionAPI = pointDivision
+      const pointDivisionAPI = pointDivision
         .map((division) => division.point)
         .join('/');
-      let { answerAPI, possibleAnswersAPI } = makeAnswer(
+      const { answerAPI, possibleAnswersAPI } = makeAnswer(
         selectedType,
         answers,
         correctAnswers
@@ -338,6 +357,9 @@ const UpdateQuestion = ({
         setIsSubmitting(false); // Hoàn tất gửi yêu cầu
       }
     } else {
+      renderError('pointDivision');
+      renderError('answers');
+      renderError('correctAnswers');
       console.log('Form has errors. Fix them to proceed.');
     }
   };
@@ -356,32 +378,12 @@ const UpdateQuestion = ({
     setQuestion('');
     settotalPoints('');
     setPointDivision([]);
-    setAnswer('');
+    // setAnswer('');
     setAnswers([]);
     setCorrectAnswers([]);
     validateInputsSpec();
     setQuestionType(selectedKey);
   };
-
-  // useEffect(() => {
-  //   setErrors({
-  //     content: '',
-  //     question: '',
-  //     totalPoints: '',
-  //     pointDivision: '',
-  //     answers: '',
-  //     correctAnswers: '',
-  //     questionType: ''
-  //   });
-  //   setContent('');
-  //   setQuestion('');
-  //   settotalPoints('');
-  //   setPointDivision([]);
-  //   setAnswer('');
-  //   setAnswers([]);
-  //   setCorrectAnswers([]);
-  //   validateInputsSpec();
-  // }, [selectedType]);
 
   const handleClose = () => {
     onClose();
@@ -468,7 +470,6 @@ const UpdateQuestion = ({
     }
   };
 
-  // Dành riêng cho fillin
   const updatePointDivision = (id: number, newPoint: number) => {
     setPointDivision((prevPointDivision) => {
       // Nếu pointDivision rỗng, thêm đối tượng mới
@@ -489,7 +490,7 @@ const UpdateQuestion = ({
     });
   };
 
-  const size: '2xl' = '2xl';
+  const size = '2xl';
   return (
     <Modal
       size={size}
@@ -541,9 +542,8 @@ const UpdateQuestion = ({
                 <span className="text-sm font-medium text-black">
                   Question type <span className="text-danger">*</span>
                 </span>
-                {renderError('questionType')}
               </div>
-              <div className="basis-[70%]">
+              <div className="relative flex basis-[70%] gap-8">
                 <Select
                   className="max-w-xs text-black"
                   placeholder="Select an question type"
@@ -557,6 +557,7 @@ const UpdateQuestion = ({
                     </SelectItem>
                   ))}
                 </Select>
+                {renderError('questionType')}
               </div>
             </div>
             {/**Score */}
@@ -648,6 +649,36 @@ const UpdateQuestion = ({
                             }}
                             onFocus={(e) => e.target.select()}
                           />
+                          <div className="flex flex-row gap-2">
+                            <div className="flex flex-row">
+                              <div className="basis-[30%]">
+                                <span className="text-sm font-medium text-black">
+                                  Point
+                                  <span className="text-danger">*</span>
+                                </span>
+                              </div>
+                              <div className="relative basis-[70%]">
+                                <input
+                                  type="number"
+                                  className="w-full rounded-lg"
+                                  placeholder="Enter point..."
+                                  value={
+                                    pointDivision.find(
+                                      (point) => point.id === answer.id
+                                    )?.point
+                                  }
+                                  onChange={(e) => {
+                                    updatePointDivision(
+                                      answer.id,
+                                      e.target.value === ''
+                                        ? 0
+                                        : parseFloat(e.target.value)
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
 
                           {/* Nút xóa */}
                           <Tooltip color="danger" content="Delete" delay={200}>
@@ -699,6 +730,37 @@ const UpdateQuestion = ({
                             }}
                             onFocus={(e) => e.target.select()}
                           />
+
+                          <div className="flex flex-row gap-2">
+                            <div className="flex flex-row">
+                              <div className="basis-[30%]">
+                                <span className="text-sm font-medium text-black">
+                                  Point
+                                  <span className="text-danger">*</span>
+                                </span>
+                              </div>
+                              <div className="relative basis-[70%]">
+                                <input
+                                  type="number"
+                                  className="w-full rounded-lg"
+                                  placeholder="Enter point..."
+                                  value={
+                                    pointDivision.find(
+                                      (point) => point.id === answer.id
+                                    )?.point
+                                  }
+                                  onChange={(e) => {
+                                    updatePointDivision(
+                                      answer.id,
+                                      e.target.value === ''
+                                        ? 0
+                                        : parseFloat(e.target.value)
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
 
                           {/* Nút xóa */}
                           <Tooltip color="danger" content="Delete" delay={200}>

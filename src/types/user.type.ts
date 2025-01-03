@@ -5,9 +5,13 @@ export type User = {
   birthday: string;
   address: string;
   cid: string;
-  email: number;
-  phone: number;
+  email: string;
+  phone: string;
   currentLevel: string;
   username: string;
   password: string;
+  role?: {
+    id: number;
+    name: string;
+  }
 };

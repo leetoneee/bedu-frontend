@@ -1,13 +1,7 @@
 'use client';
 
 import { columns } from '@/data/program-course.data';
-import {
-  EyeIcon,
-  MagnifyingGlassIcon,
-  PencilIcon,
-  TrashIcon,
-  XMarkIcon
-} from '@heroicons/react/24/outline';
+import { EyeIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import {
   Selection,
   Button,
@@ -18,8 +12,6 @@ import {
   ModalFooter,
   SortDescriptor,
   Input,
-  Select,
-  SelectItem,
   Pagination,
   Table,
   TableBody,
@@ -37,13 +29,11 @@ import React, {
   SetStateAction,
   useCallback,
   useEffect,
-  useMemo,
   useState
 } from 'react';
 import { Course, statusColorMap } from '@/types/course.type';
 import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
-import { UpdateProgramDto } from '@/services/programs.service';
 
 type Props = {
   isOpen: boolean;
@@ -58,7 +48,6 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const AddCoursesModal = ({
   isOpen,
-  onOpen,
   onOpenChange,
   courseType,
   courses,
@@ -110,8 +99,8 @@ const AddCoursesModal = ({
 
   const {
     data: coursesData,
-    error,
-    isLoading
+    error
+    // isLoading
   } = useSWR(endpoint, fetcher, {
     keepPreviousData: true
   });
@@ -193,16 +182,25 @@ const AddCoursesModal = ({
         case 'actions':
           return (
             <div className="relative flex items-center justify-center gap-2">
-              <Tooltip content="Details" className="bg-on-primary" delay={1000}>
+              {/* <Tooltip content="Details" className="bg-on-primary" delay={1000}>
                 <span
                   className="cursor-pointer text-lg text-on-primary active:opacity-50"
                   // onClick={() => router.push(`courses/${course.id}`)}
                 >
                   <EyeIcon className="size-5" />
                 </span>
-              </Tooltip>
+              </Tooltip> */}
               <Tooltip color="danger" content="Delete" delay={1000}>
-                <span className="cursor-pointer text-lg text-danger active:opacity-50">
+                <span
+                  className="cursor-pointer text-lg text-danger active:opacity-50"
+                  onClick={() => {
+                    setCourses((prevCourses) =>
+                      prevCourses.filter(
+                        (prevCourse) => prevCourse.id !== course.id
+                      )
+                    );
+                  }}
+                >
                   <TrashIcon className="size-5" />
                 </span>
               </Tooltip>

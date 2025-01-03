@@ -1,5 +1,7 @@
+import { Question } from "./question-bank.type";
+
 export type Exam = {
-  id: string;
+  id: number;
   title: string;
   examType: string;
   duration: number;
@@ -7,5 +9,5 @@ export type Exam = {
   resultTime: number;
   description: string;
   isActive: boolean;
-  // questions: Question[];
+  questions: Question[];
 }

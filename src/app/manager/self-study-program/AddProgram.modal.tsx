@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import * as React from 'react';
 import {
   Modal,
@@ -10,8 +10,6 @@ import {
   ModalContent,
   Divider,
   Checkbox,
-  Textarea,
-  Input,
   SelectItem,
   Select,
   Selection,
@@ -38,7 +36,6 @@ const programTypes = [
 
 export default function AddProgramModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onClose,
   onCreated
@@ -181,7 +178,7 @@ export default function AddProgramModal({
       </span>
     );
 
-  const size: '2xl' = '2xl';
+  const size = '2xl';
   return (
     <Modal
       size={size}
