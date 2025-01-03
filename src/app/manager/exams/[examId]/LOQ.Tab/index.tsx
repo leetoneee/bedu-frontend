@@ -1,5 +1,5 @@
 import { Exam } from '@/types/exam.type';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
 import { StaticQuestion } from '@/components';
@@ -14,7 +14,7 @@ import {
   DropdownTrigger,
   useDisclosure
 } from '@nextui-org/react';
-import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { EyeIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import AddQuestionsModal from './add-question.modal';
 import { editExam, UpdateExamDto } from '@/services/exam.service';
 import { toast } from 'react-toastify';
@@ -69,6 +69,8 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 // ];
 
 const LOQ = ({ id }: Props) => {
+  const questionRefs = useRef<(HTMLDivElement | null)[]>([]); // Create refs for each question
+
   const [exam, setExam] = useState<Exam | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -117,6 +119,15 @@ const LOQ = ({ id }: Props) => {
     }
   };
 
+  const handleViewClick = (index: number) => {
+    if (questionRefs.current[index]) {
+      questionRefs.current[index]?.scrollIntoView({
+        behavior: 'smooth', // Smooth scrolling
+        block: 'center' // Center the question in the view
+      });
+    }
+  };
+
   return (
     <div className="flex h-full w-full flex-col gap-2 rounded rounded-t-none border-on-surface/20 bg-white p-5 shadow-sm">
       {/* Code ở đây */}
@@ -127,11 +138,14 @@ const LOQ = ({ id }: Props) => {
           </span>
           <div className="flex h-full flex-col gap-4 overflow-y-auto shadow-md">
             {questions.map((question, index) => (
-              <StaticQuestion
+              <div
                 key={question.id}
-                question={question}
-                index={index + 1}
-              />
+                ref={(el) => {
+                  questionRefs.current[index] = el;
+                }} // Assign ref to each question
+              >
+                <StaticQuestion question={question} index={index + 1} />
+              </div>
             ))}
           </div>
         </div>
@@ -194,7 +208,18 @@ const LOQ = ({ id }: Props) => {
                       aria-label="Dropdown menu with icons"
                     >
                       <DropdownItem
-                        key="copy"
+                        key="view"
+                        startContent={
+                          <EyeIcon className={'size-6 text-danger'} />
+                        }
+                        onClick={() => {
+                          handleViewClick(index);
+                        }}
+                      >
+                        View
+                      </DropdownItem>
+                      <DropdownItem
+                        key="delete"
                         startContent={
                           <TrashIcon className={'size-6 text-danger'} />
                         }
