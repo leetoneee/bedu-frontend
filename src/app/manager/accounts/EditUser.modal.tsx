@@ -161,9 +161,9 @@ const EditUserModal = ({
         // password: password,
         // address: 'None',
         birthday: birthDate,
-        gender: selectedGender,
-        roleId: Number(selectedRole)
+        gender: selectedGender
       };
+      console.log('🚀 ~ handleSubmit ~ data:', data);
       try {
         setIsSubmitting(true);
         // Gọi API và đợi kết quả
@@ -429,7 +429,7 @@ const EditUserModal = ({
                   disallowEmptySelection
                   selectedKeys={role}
                   variant="bordered"
-                  onSelectionChange={setRole}
+                  // onSelectionChange={setRole}
                 >
                   {roleOptions.map((role) => (
                     <SelectItem key={role.key} value={role.label}>
