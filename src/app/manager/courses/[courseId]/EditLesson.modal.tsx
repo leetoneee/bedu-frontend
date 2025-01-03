@@ -30,9 +30,8 @@ type Props = {
 };
 
 const courseTypes = [
-  { key: 'ielts', label: 'IELTS' },
-  { key: 'toeic', label: 'TOEIC' },
-  { key: 'toefl', label: 'TOEFL' }
+  { key: 'live', label: 'LIVE' },
+  { key: 'online', label: 'ONLINE' }
 ];
 
 export default function EditLessonModal({
@@ -66,7 +65,7 @@ export default function EditLessonModal({
 
   useEffect(() => {
     if (lesson) {
-      // setName(lesson.title);
+      setName(lesson.title);
       setIsPublic(lesson.isActive);
       setUrl(lesson.videoUrl);
       setType(new Set([`${lesson.type}`]));
@@ -106,7 +105,7 @@ export default function EditLessonModal({
       // const today = new Date();
 
       const data: UpdateLessonDto = {
-        // title: name,
+        title: name,
         videoUrl: url,
         isActive: isPublic
       };
@@ -136,8 +135,8 @@ export default function EditLessonModal({
 
   const handleClose = () => {
     setName('');
-    setType(new Set([]));
     setUrl('');
+    setType(new Set([lesson.type]));
     // setIsPublic(false);
     setErrors({
       name: '',

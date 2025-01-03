@@ -1,10 +1,19 @@
 'use client';
 
-import { lessonAccordionProps } from '@/types/accordion.type';
+import { MyProgramContext } from '@/contexts';
+import { MyProgramContextType } from '@/types';
+import { Lesson } from '@/types/lesson.type';
+import { useRouter } from 'next/navigation';
+import { useContext } from 'react';
 import { FaArrowRight } from 'react-icons/fa6';
 
-const LessonAccordion = ({ lessons }: lessonAccordionProps) => {
-  // Chưa làm vấn đề Program đã thuộc sở hữu thì mới được vào bài học, dưới chỉ là demo cho roadmap
+type Props = {
+  lessons: Lesson[];
+};
+const LessonAccordion = ({ lessons }: Props) => {
+  const { programId } = useContext(MyProgramContext) as MyProgramContextType;
+
+  const router = useRouter();
   if (!lessons) {
     return <div></div>;
   }
@@ -20,10 +29,13 @@ const LessonAccordion = ({ lessons }: lessonAccordionProps) => {
             <div className="flex h-[80px] max-w-[90%] items-center">
               <div className="h-[80px] border-l-8 border-outline-focus"></div>
               <div className="ml-4 mr-4 flex-1 overflow-hidden text-ellipsis whitespace-nowrap md:text-2xl">
-                <span className="sm:text-xl">{lesson.name}</span>
+                <span className="sm:text-xl">{lesson.title}</span>
               </div>
             </div>
-            <div className="flex items-center justify-center rounded-full border-2 border-outline-focus p-2">
+            <div
+              className="flex items-center justify-center rounded-full border-2 border-outline-focus p-2"
+              onClick={() => router.replace(`/my/courses/lesson/${lesson.id}?programId=${programId}`)}
+            >
               <FaArrowRight size={15} />
             </div>
           </div>

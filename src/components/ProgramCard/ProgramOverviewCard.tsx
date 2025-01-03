@@ -3,12 +3,13 @@ import Image from 'next/image';
 import { LuBookMinus } from 'react-icons/lu';
 import { Program } from '@/types/program.type';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import { useRouter } from 'next/navigation';
 
 // const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const ProgramOverviewCard = ({ program }: { program: Program }) => {
   const {
-    // id,
+    id,
     code,
     type,
     // description,
@@ -18,7 +19,7 @@ const ProgramOverviewCard = ({ program }: { program: Program }) => {
     title,
     // course
   } = program;
-
+  const router = useRouter();
   // const [lessonQuantity, setLessonQuantity] = useState<number>(0);
   // const [totalTime, setTotalTime] = useState<number>(0);
   // const [studentQuantity, setStudentQuantity] = useState<number>(0);
@@ -68,14 +69,15 @@ const ProgramOverviewCard = ({ program }: { program: Program }) => {
   };
 
   return (
-    <div className="w-[400px] cursor-pointer rounded-xl border-[1px] border-outline text-xs transition-shadow duration-200 hover:shadow-lg">
+    <div className="w-[400px] rounded-xl border-[1px] border-outline text-xs transition-shadow duration-200 hover:shadow-lg">
       <div>
         <Image
           src={avatar || '/icons/course_img.svg'}
           alt="Course image"
           width={400}
           height={200}
-          className="rounded-t-xl object-cover p-2"
+          className="rounded-t-xl object-cover p-2 hover:opacity-80 hover:cursor-pointer"
+          onClick={() => router.push(`courses/${id}`)}
         />
       </div>
       <div className="p-4">

@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  Accordion,
-  Breadcrumb,
-  OrderCard,
-  Rating,
-} from '@/components';
+import { Accordion, Breadcrumb, OrderCard, Rating } from '@/components';
 import Image from 'next/image';
 import { Crumb } from '@/types';
 import { useParams } from 'next/navigation';
@@ -36,7 +31,7 @@ export default function DetailProgramPage() {
     return [
       {
         label: 'Self-study Program',
-        href: '/manager/self-study-program'
+        href: '/self-study-program'
       },
       {
         label: program?.title || 'Loading...',
@@ -196,7 +191,7 @@ export default function DetailProgramPage() {
                 Program detail
               </div>
               <div className="h-full xsm:px-4 sm:px-10 md:px-24 lg:px-36">
-                <Accordion programId={Number(programId)} />
+                {courses && <Accordion courses={courses} />}
               </div>
             </div>
           </div>

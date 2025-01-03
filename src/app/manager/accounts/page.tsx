@@ -15,8 +15,8 @@ export default function Accountspage() {
       href: '/manager/accounts'
     }
   ];
-    const [activeTab, setActiveTab] = useState<string>('Students');
-  
+  const [activeTab, setActiveTab] = useState<string>('Students');
+
   return (
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
       <Breadcrumb crumbs={crumbs} />

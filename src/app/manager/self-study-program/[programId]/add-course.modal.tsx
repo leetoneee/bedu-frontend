@@ -1,7 +1,7 @@
 'use client';
 
 import { columns } from '@/data/program-course.data';
-import { EyeIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import {
   Selection,
   Button,
@@ -125,19 +125,19 @@ const AddCoursesModal = ({
         case 'id':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">{cellValue.toString()}</p>
             </div>
           );
         case 'code':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">{cellValue.toString()}</p>
             </div>
           );
         case 'title':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">{cellValue.toString()}</p>
             </div>
           );
         case 'isPublish':
@@ -161,21 +161,21 @@ const AddCoursesModal = ({
           return (
             <div className="flex flex-col">
               <p className="text-bold text-wraps text-sm capitalize">
-                {cellValue}
+                {cellValue.toString()}
               </p>
             </div>
           );
         case 'price':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">{cellValue.toString()}</p>
             </div>
           );
         case 'timePerLesson':
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue} minutes
+                {cellValue.toString()} minutes
               </p>
             </div>
           );
@@ -207,7 +207,7 @@ const AddCoursesModal = ({
             </div>
           );
         default:
-          return cellValue;
+          return cellValue.toString();
       }
     },
     []

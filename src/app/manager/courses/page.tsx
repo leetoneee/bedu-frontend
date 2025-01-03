@@ -155,19 +155,19 @@ export default function CoursesPage() {
         case 'id':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">{cellValue.toString()}</p>
             </div>
           );
         case 'code':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">{cellValue.toString()}</p>
             </div>
           );
         case 'title':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-sm capitalize">{cellValue}</p>
+              <p className="text-bold text-sm capitalize">{cellValue.toString()}</p>
             </div>
           );
         case 'courseType':
@@ -199,7 +199,7 @@ export default function CoursesPage() {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-wraps text-sm capitalize">
-                {cellValue}
+                {cellValue.toString()}
               </p>
             </div>
           );
@@ -215,7 +215,7 @@ export default function CoursesPage() {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue} minutes
+                {cellValue.toString()} minutes
               </p>
             </div>
           );
@@ -249,7 +249,7 @@ export default function CoursesPage() {
             </div>
           );
         default:
-          return cellValue;
+          return cellValue.toString();
       }
     },
     []

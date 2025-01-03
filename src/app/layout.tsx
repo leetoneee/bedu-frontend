@@ -6,7 +6,8 @@ import {
   NUIProviders,
   SProviders,
   ToastProvider,
-  EdgeStoreProvider
+  EdgeStoreProvider,
+  AppProvider
 } from '@/providers';
 
 const montserrat = Montserrat({
@@ -31,7 +32,9 @@ export default function RootLayout({
         <SProviders>
           <EdgeStoreProvider basePath="/api/edgestore">
             <ToastProvider>
-              <NUIProviders>{children}</NUIProviders>
+              <NUIProviders>
+                <AppProvider>{children}</AppProvider>
+              </NUIProviders>
             </ToastProvider>
           </EdgeStoreProvider>
         </SProviders>

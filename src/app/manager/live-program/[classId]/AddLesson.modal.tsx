@@ -111,10 +111,10 @@ export default function AddLessonModal({
     cycle: ''
   });
 
-  const selectedType = React.useMemo(
-    () => Array.from(type).join(', ').replaceAll('_', ' '),
-    [type]
-  );
+  // const selectedType = React.useMemo(
+  //   () => Array.from(type).join(', ').replaceAll('_', ' '),
+  //   [type]
+  // );
 
   const selectedTeacher = React.useMemo(
     () => Array.from(teacher).join(', '),

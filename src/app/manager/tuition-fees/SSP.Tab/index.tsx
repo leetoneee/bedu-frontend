@@ -3,7 +3,6 @@ import { Payment } from '@/types/payment.type';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import {
   Input,
-  Chip,
   Table,
   TableHeader,
   TableColumn,

@@ -1,3 +1,5 @@
+import { Lesson } from "./lesson.type";
+
 export type Course = {
   id: number;
   code: string;
@@ -9,6 +11,7 @@ export type Course = {
   timePerLesson: number;
   price: number;
   isActive: boolean;
+  lesson: Lesson[];
 };
 
 export const statusColorMap: Record<
