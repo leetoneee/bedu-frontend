@@ -46,3 +46,13 @@ export const deleteProgram = async (id: number) => {
     throw error;
   }
 };
+
+export const findProgramByCode = async (code: string) => {
+  try {
+    const res = await axios.get(`/programs/code/${code}`);
+    return res.data;
+  } catch (error) {
+    console.log('🚫 ~ findProgramByCode ~ error:', error);
+    throw error;
+  }
+};

@@ -213,7 +213,7 @@ export default function SSP() {
           return (
             <div className="flex basis-[10%] flex-col">
               <p className="text-bold text-sm capitalize">
-                {formatNumberWithCommas(cellValue.toString())}
+                {formatNumberWithCommas(cellValue.toString())} VND
               </p>
             </div>
           );

@@ -42,7 +42,7 @@ const ListStudent = ({ programId }: Props) => {
     onClose: onCloseD
   } = useDisclosure();
   const handleDeleteClick = (user: User) => {
-    const userProgram = enrollments.find(
+    const userProgram = data.metadata.enrollments.find(
       (enrollment: Enrollment) => enrollment.user.id === user.id
     );
     if (userProgram) {
@@ -66,14 +66,19 @@ const ListStudent = ({ programId }: Props) => {
     direction: 'ascending'
   });
 
-  const { data, mutate: refreshEndpoint } = useSWR(
+  const {
+    data,
+    error,
+    mutate: refreshEndpoint
+  } = useSWR(
     `/users_programs/all/program/${programId}?page=${page}&limit=${rowsPerPage}`,
     fetcher
   );
 
   useEffect(() => {
-    if (data && data.metadata && data.metadata.enrollments) {
-      setEnrollments(data.metadata.enrollments);
+    if (error) {
+      setUsers([]);
+    } else if (data && data.metadata && data.metadata.enrollments) {
       const listUsers = data.metadata.enrollments.map(
         (enrollment: Enrollment) => ({
           id: enrollment.user.id,
@@ -254,7 +259,7 @@ const ListStudent = ({ programId }: Props) => {
   const handleDelete = () => {
     toast.success('Student has been removed from the program');
     refreshEndpoint();
-  }
+  };
 
   return (
     <div className="flex w-full flex-col">

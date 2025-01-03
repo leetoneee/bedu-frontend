@@ -387,7 +387,7 @@ const SSPTab = () => {
           isOpen={isOpenE}
           onOpen={onOpenE}
           onOpenChange={onOpenChangeE}
-          onClose={onCloseE}
+          onClose={handleCloseEditModal}
           payment={selectedPayment}
           onEdited={handleEdited}
         />
@@ -397,7 +397,7 @@ const SSPTab = () => {
           isOpen={isOpenD}
           onOpen={onOpenD}
           onOpenChange={onOpenChangeD}
-          onClose={onCloseD}
+          onClose={handleCloseDeleteModal}
           paymentId={selectedPayment.id}
           transactionId={selectedPayment.transactionId}
           onDeleted={handleDeleted}
