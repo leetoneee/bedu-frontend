@@ -33,7 +33,7 @@ const LessonPage = () => {
         href: `/manager/courses/${lesson?.course?.id}`
       },
       {
-        label: lesson?.title || 'Loading...',
+        label: `Lesson ${lesson?.title}` || 'Loading...',
         href: `/manager/courses/${lessonId}`
       }
     ];

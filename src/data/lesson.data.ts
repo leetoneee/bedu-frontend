@@ -1,7 +1,7 @@
 export const columns = [
   { name: '#', uid: 'id', sortable: true },
   { name: 'TYPE', uid: 'type' },
-  { name: 'TITLE', uid: 'name' },
+  { name: 'TITLE', uid: 'title' },
   { name: 'START DATE', uid: 'startDate', sortable: true },
   { name: 'END DATE', uid: 'endDate', sortable: true },
   { name: 'ACTIONS', uid: 'actions' }

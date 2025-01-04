@@ -40,8 +40,8 @@ const ListStudent = ({ classId }: Props) => {
     onOpenChange: onOpenChangeD,
     onClose: onCloseD
   } = useDisclosure();
-  const handleDeleteClick = (user: User) => {
-    const userClass = data.metadata.userClasses.find(
+  const handleDeleteClick = (user: User, enrollments: EnrollmentClass[]) => {
+    const userClass = enrollments.find(
       (enrollment: EnrollmentClass) => enrollment.user.id === user.id
     );
     if (userClass) {
@@ -56,6 +56,7 @@ const ListStudent = ({ classId }: Props) => {
 
   //! STUDENT LIST
   const [users, setUsers] = useState<User[]>([]);
+  const [enrollments, setEnrollments] = useState<EnrollmentClass[]>([]);
   const [filterUserName, setFilterUserName] = useState<string>('');
   const hasSearchFilterUserName = Boolean(filterUserName);
   const [page, setPage] = useState(1);
@@ -86,6 +87,7 @@ const ListStudent = ({ classId }: Props) => {
           time: enrollment.time
         })
       );
+      setEnrollments(data.metadata.userClasses);
       setUsers(listUsers);
     }
   }, [data]);
@@ -162,7 +164,7 @@ const ListStudent = ({ classId }: Props) => {
             <Tooltip color="danger" content="Delete from program" delay={1000}>
               <span
                 className="cursor-pointer text-lg text-danger active:opacity-50"
-                onClick={() => handleDeleteClick(user)}
+                onClick={() => handleDeleteClick(user, enrollments)}
               >
                 <TrashIcon className="size-5" />
               </span>
@@ -172,7 +174,7 @@ const ListStudent = ({ classId }: Props) => {
       default:
         return cellValue?.toString();
     }
-  }, []);
+  }, [enrollments]);
 
   const topContent: ReactNode = React.useMemo(() => {
     return (

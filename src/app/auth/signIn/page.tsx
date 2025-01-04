@@ -24,7 +24,7 @@ const LoginPage = () => {
     const result = await signIn('credentials', {
       username: username,
       password: password,
-      redirect: false
+      // redirect: true,
     });
     // router.replace('/manager/self-study-program');
     console.log('🚀 ~ onSubmit ~ result:', result);

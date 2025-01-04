@@ -11,7 +11,7 @@ import useSWR from 'swr';
 import LessonHeader from './LessonHeader';
 import CommentTab from './Comment.Tab';
 import DocumentTab from './Document.Tab';
-import ExamsTab from './Exams.Tab';
+import ExercisesTab from './Exercises.Tab';
 import InformationTab from './Infomation.Tab';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -25,16 +25,16 @@ const LessonPage = () => {
   const crumbs: Crumb[] = useMemo(() => {
     return [
       {
-        label: 'Courses',
-        href: '/manager/courses'
+        label: 'Live Program',
+        href: '/manager/live-program'
       },
       {
-        label: lesson?.course?.title || 'Loading...',
-        href: `/manager/courses/${lesson?.course?.id}`
+        label: lesson?.class?.name || 'Loading...',
+        href: `/manager/live-program/${lesson?.class?.id}`
       },
       {
-        label: lesson?.title || 'Loading...',
-        href: `/manager/courses/${lessonId}`
+        label: `Lesson ${lesson?.title}` || 'Loading...',
+        href: `/manager/live-program/${lessonId}`
       }
     ];
   }, [lessonId, lesson]);
@@ -67,7 +67,7 @@ const LessonPage = () => {
         {activeTab === 'Documents' && (
           <DocumentTab lessonId={lessonId as string} />
         )}
-        {activeTab === 'Exams' && <ExamsTab lessonId={lessonId as string} />}
+        {activeTab === 'Exercises' && <ExercisesTab lessonId={lessonId as string} />}
       </div>
     </main>
   );

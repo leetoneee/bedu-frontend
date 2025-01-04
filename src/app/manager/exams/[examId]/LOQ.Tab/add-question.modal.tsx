@@ -79,7 +79,7 @@ const AddQuestionsModal = ({
   //
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 4;
+  const rowsPerPage = 6;
 
   // const pages = React.useMemo(() => {
   //   return data?.count ? Math.ceil(data.count / rowsPerPage) : 0;

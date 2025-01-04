@@ -42,7 +42,11 @@ const InformationTab = ({ lessonId }: Props) => {
     videoUrl: ''
   });
 
-  const { data, error } = useSWR(`/lessons/item/${lessonId}`, fetcher);
+  const {
+    data,
+    error,
+    mutate: refreshEndpoint
+  } = useSWR(`/lessons/item/${lessonId}`, fetcher);
 
   useEffect(() => {
     if (data && data.metadata) {
@@ -103,6 +107,7 @@ const InformationTab = ({ lessonId }: Props) => {
         const result = await editLesson(lesson.id, data);
         if (result) {
           toast.success('Lesson updated successfully');
+          refreshEndpoint();
         }
       } catch (error: any) {
         console.error('🚫 ~ onSubmit ~ Error:', error);
@@ -124,6 +129,10 @@ const InformationTab = ({ lessonId }: Props) => {
         {errors[field]}
       </span>
     );
+
+  if (error) {
+    return <div>Failed to load lesson</div>;
+  }
 
   return (
     <div className="flex h-full w-full flex-col gap-2 rounded rounded-t-none border-on-surface/20 bg-white p-5 shadow-sm">
