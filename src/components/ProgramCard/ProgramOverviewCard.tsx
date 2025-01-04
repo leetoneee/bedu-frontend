@@ -16,7 +16,7 @@ const ProgramOverviewCard = ({ program }: { program: Program }) => {
     avatar,
     sessionQuantity,
     price,
-    title,
+    title
     // course
   } = program;
   const router = useRouter();
@@ -69,18 +69,20 @@ const ProgramOverviewCard = ({ program }: { program: Program }) => {
   };
 
   return (
-    <div className="w-[400px] rounded-xl border-[1px] border-outline text-xs transition-shadow duration-200 hover:shadow-lg">
-      <div>
+    <div className="flex w-[400px] rounded-xl border-[1px] border-outline text-xs transition-shadow duration-200 hover:shadow-lg">
+      <div
+        className="h-full w-full place-content-center"
+        onClick={() => router.push(`courses/${id}`)}
+      >
         <Image
           src={avatar || '/icons/course_img.svg'}
           alt="Course image"
           width={400}
           height={200}
-          className="rounded-t-xl object-cover p-2 hover:opacity-80 hover:cursor-pointer"
-          onClick={() => router.push(`courses/${id}`)}
+          className="rounded-t-xl object-cover p-2 hover:cursor-pointer hover:opacity-80"
         />
       </div>
-      <div className="p-4">
+      <div className="mt-auto p-4">
         {/*Name course*/}
         <h3 className="truncate text-xl font-bold text-outline-focus">
           {title} - {code}
@@ -95,7 +97,7 @@ const ProgramOverviewCard = ({ program }: { program: Program }) => {
               </p>
             </div>
             <div className="flex items-center gap-2 text-sm text-on-surface">
-              <InformationCircleIcon className='size-5'/>
+              <InformationCircleIcon className="size-5" />
               <p>{type.toUpperCase()}</p>
             </div>
             {/* <div className="flex items-center gap-2 text-sm text-on-surface">

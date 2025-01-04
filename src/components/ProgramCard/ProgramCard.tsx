@@ -63,8 +63,11 @@ const ProgramCard = ({ program }: { program: Program }) => {
   };
 
   return (
-    <div className="w-[400px] cursor-pointer rounded-xl border-[1px] border-outline text-xs transition-shadow duration-200 hover:shadow-lg">
-      <div onClick={() => router.push(`/self-study-program/${id}`)}>
+    <div className="flex w-[400px] cursor-pointer rounded-xl border-[1px] border-outline text-xs transition-shadow duration-200 hover:shadow-lg">
+      <div
+        className="h-full w-full place-content-center"
+        onClick={() => router.push(`/self-study-program/${id}`)}
+      >
         <Image
           src={avatar || '/icons/course_img.svg'}
           alt="Course image"
@@ -73,7 +76,7 @@ const ProgramCard = ({ program }: { program: Program }) => {
           className="rounded-t-xl object-cover p-2"
         />
       </div>
-      <div className="p-4">
+      <div className="mt-auto p-4">
         {/*Name course*/}
         <h3 className="truncate text-xl font-bold text-outline-focus">
           {title} - {code}

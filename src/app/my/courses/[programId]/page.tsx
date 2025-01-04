@@ -94,7 +94,7 @@ const ProgramDetail = () => {
             />
 
             <div className="absolute left-0 top-0 flex h-full w-full flex-col justify-center gap-4 p-16 text-surface xsm:px-4 sm:px-10 md:px-24 lg:px-36">
-              <div className="text-3xl font-bold">{program?.title}</div>
+              <div className="text-3xl font-bold">{program?.title} - {program?.code}</div>
               <div className="text-2xl font-semibold">
                 {program?.description}
               </div>
