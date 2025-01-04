@@ -44,7 +44,7 @@ const Profile = () => {
         {/* Gender */}
         <div className="flex flex-row items-center justify-between">
           <span>Gender</span>
-          <span>{user?.gender}</span>
+          <span className="capitalize">{user?.gender}</span>
         </div>
         <Divider />
         {/* Birthday */}
@@ -58,6 +58,12 @@ const Profile = () => {
                 year: 'numeric'
               })}
           </span>
+        </div>
+        <Divider />
+        {/* Address */}
+        <div className="flex flex-row items-center justify-between">
+          <span>Address</span>
+          <span>{user?.address}</span>
         </div>
         <Divider />
         {/* Email */}

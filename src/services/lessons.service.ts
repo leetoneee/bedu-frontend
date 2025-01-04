@@ -21,7 +21,7 @@ export type CreateRecurringLessonDto = {
   endTime: string; // Giờ kết thúc (HH:mm)
   selectedDays: string[]; // ['Mon', 'Wed', 'Fri']
   lessonQuantity: number; // Số tuần lặp lại
-}
+};
 
 export const createRecurringLesson = async (data: CreateRecurringLessonDto) => {
   try {
@@ -61,6 +61,21 @@ export const deleteLesson = async (id: number) => {
     return res.data;
   } catch (error) {
     console.log('🚫 ~ deleteLesson ~ error:', error);
+    throw error;
+  }
+};
+
+export type CreateRecordDto = {
+  lessonId: number;
+  classId: number;
+};
+
+export const creatRecord = async (data: CreateRecordDto) => {
+  try {
+    const res = await axios.post(`/lessons/create-record`, data);
+    return res.data;
+  } catch (error) {
+    console.log('🚫 ~ createRecord ~ error:', error);
     throw error;
   }
 };

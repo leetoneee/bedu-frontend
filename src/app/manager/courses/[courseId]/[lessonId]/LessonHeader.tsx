@@ -22,12 +22,12 @@ const LessonHeader = ({ activeTab, setActiveTab }: Props) => {
             setActiveTab={setActiveTab}
             activeTab={activeTab}
           />
-                    <TabButton
+          <TabButton
             name="Documents"
             setActiveTab={setActiveTab}
             activeTab={activeTab}
           />
-                    <TabButton
+          <TabButton
             name="Exercises"
             setActiveTab={setActiveTab}
             activeTab={activeTab}

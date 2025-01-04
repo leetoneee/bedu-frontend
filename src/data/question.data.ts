@@ -6,7 +6,7 @@ const columns = [
   { name: 'QUESTION', uid: 'question' },
   { name: 'QUESTION TYPE', uid: 'questionType' },
   { name: 'SCORE', uid: 'totalPoints', sortable: true },
-  { name: 'RELATED EXAMS', uid: 'examId' },
+  // { name: 'RELATED EXAMS', uid: 'examId' },
   { name: 'ACTIONS', uid: 'actions' }
 ];
 

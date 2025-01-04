@@ -143,21 +143,21 @@ export default function EditClassModal({
       description.trim() === '' ? 'Description is required' : '';
 
     // Validate startDate
-    if (!startDate) {
-      newErrors.startDate = 'Start date is required';
-    } else {
-      const selectedDate = new Date(startDate);
-      const today = new Date();
+    // if (!startDate) {
+    //   newErrors.startDate = 'Start date is required';
+    // } else {
+    //   const selectedDate = new Date(startDate);
+    //   const today = new Date();
 
-      // Remove the time part of the date for comparison
-      today.setHours(0, 0, 0, 0);
+    //   // Remove the time part of the date for comparison
+    //   today.setHours(0, 0, 0, 0);
 
-      if (selectedDate < today) {
-        newErrors.startDate = 'Start date must be today or later';
-      } else {
-        newErrors.startDate = '';
-      }
-    }
+    //   if (selectedDate < today) {
+    //     newErrors.startDate = 'Start date must be today or later';
+    //   } else {
+    //     newErrors.startDate = '';
+    //   }
+    // }
 
     setErrors(newErrors);
 

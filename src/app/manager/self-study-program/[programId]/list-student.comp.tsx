@@ -40,8 +40,8 @@ const ListStudent = ({ programId }: Props) => {
     onOpenChange: onOpenChangeD,
     onClose: onCloseD
   } = useDisclosure();
-  const handleDeleteClick = (user: User) => {
-    const userProgram = data.metadata.enrollments.find(
+  const handleDeleteClick = (user: User, enrollments: Enrollment[]) => {
+    const userProgram = enrollments.find(
       (enrollment: Enrollment) => enrollment.user.id === user.id
     );
     if (userProgram) {
@@ -51,7 +51,7 @@ const ListStudent = ({ programId }: Props) => {
     }
     onOpenD();
   };
-
+  
   const rowsPerPage = 6;
 
   //! STUDENT LIST
@@ -77,7 +77,7 @@ const ListStudent = ({ programId }: Props) => {
   useEffect(() => {
     if (error) {
       setUsers([]);
-    } else if (data && data.metadata && data.metadata.enrollments) {
+    } else if (data && data.metadata) {
       const listUsers = data.metadata.enrollments.map(
         (enrollment: Enrollment) => ({
           id: enrollment.user.id,
@@ -87,6 +87,7 @@ const ListStudent = ({ programId }: Props) => {
           time: enrollment.time
         })
       );
+      setEnrollments(data.metadata.enrollments);
       setUsers(listUsers);
     }
   }, [data]);
@@ -163,7 +164,7 @@ const ListStudent = ({ programId }: Props) => {
             <Tooltip color="danger" content="Delete from program" delay={1000}>
               <span
                 className="cursor-pointer text-lg text-danger active:opacity-50"
-                onClick={() => handleDeleteClick(user)}
+                onClick={() => handleDeleteClick(user, enrollments)}
               >
                 <TrashIcon className="size-5" />
               </span>
@@ -173,7 +174,7 @@ const ListStudent = ({ programId }: Props) => {
       default:
         return cellValue?.toString();
     }
-  }, []);
+  }, [enrollments]);
 
   const topContent: ReactNode = React.useMemo(() => {
     return (

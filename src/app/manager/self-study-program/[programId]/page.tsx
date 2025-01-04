@@ -391,11 +391,11 @@ const ProgramDetail = () => {
               <span className="text-xl font-semibold text-on-surface">
                 Description
               </span>
-              <Textarea
-                variant={'bordered'}
-                size="lg"
+              <textarea
+                // variant={'bordered'}
+                // size="lg"
                 placeholder="Enter your description"
-                className="col-span-12 mb-6 md:col-span-6 md:mb-0"
+                className="col-span-12 mb-6 h-40 w-full rounded-2xl border border-on-surface/20 p-3 md:col-span-6 md:mb-0"
                 readOnly
                 value={program?.description}
                 // onChange={(e) => setDescription(e.target.value)}

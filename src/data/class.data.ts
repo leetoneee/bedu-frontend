@@ -2,7 +2,7 @@
 const columns = [
   { name: '#', uid: 'id', sortable: true },
   { name: 'CODE', uid: 'code' },
-  { name: 'TITLE', uid: 'name'},
+  { name: 'TITLE', uid: 'title'},
   { name: 'STATUS', uid: 'isPublish' },
   { name: 'START DATE', uid: 'startDate' },
   { name: 'LESSON QUANTITY', uid: 'lessonQuantity', sortable: true },

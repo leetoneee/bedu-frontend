@@ -290,7 +290,7 @@ const AddUserClass = ({
               onPress={handleSubmit}
               className="w-1/2 rounded-lg border border-outline bg-on-primary py-2 text-[16px] font-medium text-white"
             >
-              {isSubmitting ? 'Submitting...' : 'Create'}
+              {isSubmitting ? 'Submitting...' : 'Add'}
             </Button>
           </div>
         </ModalFooter>
