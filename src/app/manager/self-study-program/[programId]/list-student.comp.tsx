@@ -56,7 +56,7 @@ const ListStudent = ({ programId }: Props) => {
 
   //! STUDENT LIST
   const [users, setUsers] = useState<User[]>([]);
-  // const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [filterUserName, setFilterUserName] = useState<string>('');
   const hasSearchFilterUserName = Boolean(filterUserName);
   const [page, setPage] = useState(1);
