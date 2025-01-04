@@ -1,6 +1,5 @@
 'use client';
 
-import { cookies } from 'next/headers';
 import React, { useContext } from 'react';
 import Image from 'next/image';
 import SignInButton from '../Button/SignInButton';

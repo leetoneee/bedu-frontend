@@ -42,7 +42,11 @@ const InformationTab = ({ lessonId }: Props) => {
     videoUrl: ''
   });
 
-  const { data, error, mutate: refreshEndpoint } = useSWR(`/lessons/item/${lessonId}`, fetcher);
+  const {
+    data,
+    error,
+    mutate: refreshEndpoint
+  } = useSWR(`/lessons/item/${lessonId}`, fetcher);
 
   useEffect(() => {
     if (data && data.metadata) {
@@ -126,6 +130,10 @@ const InformationTab = ({ lessonId }: Props) => {
       </span>
     );
 
+  if (error) {
+    return <div>Failed to load lesson</div>;
+  }
+  
   return (
     <div className="flex h-full w-full flex-col gap-2 rounded rounded-t-none border-on-surface/20 bg-white p-5 shadow-sm">
       {/* Code ở đây */}
