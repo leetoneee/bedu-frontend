@@ -42,7 +42,7 @@ const InformationTab = ({ lessonId }: Props) => {
     videoUrl: ''
   });
 
-  const { data, error } = useSWR(`/lessons/item/${lessonId}`, fetcher);
+  const { data, error, mutate: refreshEndpoint } = useSWR(`/lessons/item/${lessonId}`, fetcher);
 
   useEffect(() => {
     if (data && data.metadata) {
@@ -103,6 +103,7 @@ const InformationTab = ({ lessonId }: Props) => {
         const result = await editLesson(lesson.id, data);
         if (result) {
           toast.success('Lesson updated successfully');
+          refreshEndpoint();
         }
       } catch (error: any) {
         console.error('🚫 ~ onSubmit ~ Error:', error);
