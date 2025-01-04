@@ -81,7 +81,7 @@ const ChangePass = () => {
         </div>
         <div className="flex w-full flex-col gap-2">
           <span className="text-xl font-normal text-black">
-            Password<span className="text-danger">*</span>
+            New password<span className="text-danger">*</span>
           </span>
           <div className="relative">
             <div className="relative">
@@ -106,7 +106,7 @@ const ChangePass = () => {
         </div>
         <div className="flex w-full flex-col gap-2">
           <span className="text-xl font-normal text-black">
-            Confirm password
+            Confirm new password
           </span>
           <div className="relative">
             <div className="relative">

@@ -1,19 +1,71 @@
 'use client';
 
 import { classNames } from '@/components';
+import { AppContext } from '@/contexts';
+import { AuthType } from '@/types';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { Select, Selection, SelectItem } from '@nextui-org/react';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import useSWR from 'swr';
+import axios from '@/libs/axiosInstance';
+import { User } from '@/types/user.type';
+import { editUser, UpdateUserDto } from '@/services/users.service';
+import { toast } from 'react-toastify';
 
-const genderItems = [{ label: 'None' }, { label: 'Male' }, { label: 'Female' }];
+const genderItems = [
+  { key: 'none', label: 'None' },
+  { key: 'male', label: 'Male' },
+  { key: 'female', label: 'Female' }
+];
+
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
 const EditInfo = () => {
+  const { auth } = useContext(AppContext) as AuthType;
+  const [user, setUser] = useState<User>();
+  const {
+    data,
+    // isLoading,
+    // error: courseError,
+    mutate: refreshEndpoint
+  } = useSWR(`/users/item/${auth?.id}`, fetcher);
+
+  useEffect(() => {
+    if (data) {
+      setUser(data.metadata);
+    }
+  }, [data]);
+
   const [name, setName] = useState<string>('');
   const [birthday, setBirthday] = useState<string>('');
-  const [gender, setGender] = useState<Selection>(new Set(['None']));
+  const [gender, setGender] = useState<Selection>(new Set([]));
+  const [address, setAddress] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const selectedGender = React.useMemo(
+    () => Array.from(gender).join(', ').replaceAll('_', ' '),
+    [gender]
+  );
+
+  useEffect(() => {
+    if (user) {
+      console.log('🚀 ~ useEffect ~ user:', user);
+      setName(user.name);
+      const date = new Date(user.birthday);
+      setBirthday(date.toISOString().split('T')[0]);
+      setGender(new Set([user.gender]));
+      setAddress(user.address);
+      setEmail(user.email);
+      setPhone(user.phone);
+    }
+  }, [user]);
 
   const [errors, setErrors] = useState({
     name: '',
-    birthday: ''
+    birthday: '',
+    address: ''
   });
 
   const validateInputs = () => {
@@ -36,7 +88,8 @@ const EditInfo = () => {
           ? 'Birthday is required'
           : !isValidAge
             ? 'Birthday must be at least 5 years ago'
-            : ''
+            : '',
+      address: address.trim() === '' ? 'Address is required' : ''
     };
 
     setErrors(newErrors);
@@ -45,10 +98,41 @@ const EditInfo = () => {
     return Object.values(newErrors).every((error) => error === '');
   };
 
-  const onSubmit = async () => {
+  const handleSubmit = async () => {
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
+      const birthDate = new Date(birthday);
+      const data: UpdateUserDto = {
+        name: name,
+        email: email,
+        phone: phone,
+        address: address,
+        birthday: birthDate,
+        gender: selectedGender
+      };
+      console.log('🚀 ~ handleSubmit ~ data:', data);
+      try {
+        setIsSubmitting(true);
+        // Gọi API và đợi kết quả
+        if (!user) return;
+        const result = await editUser(user?.id, data);
+        if (result) {
+          // Reset form fields
+          toast.success('User edited successfully');
+          refreshEndpoint();
+        } else {
+          toast.error('Failed to edit user. Please try again.');
+        }
+      } catch (error: any) {
+        console.error('🚫 ~ onSubmit ~ Error:', error);
+        toast.error(
+          error.response?.data?.message ||
+            'Failed to edit user. Please try again.'
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
     } else {
       console.log('Form has errors. Fix them to proceed.');
     }
@@ -124,19 +208,44 @@ const EditInfo = () => {
                 onSelectionChange={setGender}
                 size="lg"
               >
-                {genderItems.map((position) => (
-                  <SelectItem key={position.label}>{position.label}</SelectItem>
+                {genderItems.map((option) => (
+                  <SelectItem key={option.key}>{option.label}</SelectItem>
                 ))}
               </Select>
             </div>
             {/* {renderError('name')} */}
           </div>
         </div>
+        {/* Address */}
+        <div className="flex w-full flex-col gap-2">
+          <span className="text-xl font-normal text-black">Address</span>
+          <div className="relative">
+            <div className="relative">
+              <input
+                type="text"
+                className={classNames(
+                  'h-16 w-full rounded-[10px] border border-outline bg-b-primary p-5 text-2xl sm:h-12 sm:text-xl',
+                  !address ? 'pl-14' : ''
+                )}
+                placeholder="Le Toan"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+              {!address && (
+                <span className="absolute left-5 top-1/2 -translate-y-1/2 transform text-2xl text-outline sm:text-xl">
+                  <UserIcon className="size-6 text-black/35" />
+                </span>
+              )}
+            </div>
+            {renderError('address')}
+          </div>
+        </div>
+
         {/* Email */}
         <div className="flex w-full flex-col gap-2">
           <span className="text-xl font-normal text-black">Email</span>
           <div className="flex w-full flex-row items-center justify-between">
-            buoitiu@email.com{' '}
+            {email}{' '}
             <span className="text-danger hover:cursor-pointer hover:underline">
               (Update)
             </span>
@@ -146,7 +255,7 @@ const EditInfo = () => {
         <div className="flex w-full flex-col gap-2">
           <span className="text-xl font-normal text-black">Phone number</span>
           <div className="flex w-full flex-row items-center justify-between">
-            0123456789{' '}
+            {phone}{' '}
             <span className="text-danger hover:cursor-pointer hover:underline">
               (Update)
             </span>
@@ -154,10 +263,12 @@ const EditInfo = () => {
         </div>
       </div>
       <button
-        className="mt-4 h-16 w-96 rounded-md bg-button-si sm:h-12 hover:brightness-110"
-        onClick={onSubmit}
+        className="mt-4 h-16 w-96 rounded-md bg-button-si hover:brightness-110 sm:h-12"
+        onClick={handleSubmit}
       >
-        <span className="text-2xl font-medium text-outline-focus">Update</span>
+        <span className="text-2xl font-medium text-outline-focus">
+          {isSubmitting ? 'Summitting ...' : 'Update'}
+        </span>
       </button>
     </div>
   );

@@ -1,5 +1,6 @@
 'use client';
 
+import { cookies } from 'next/headers';
 import React, { useContext } from 'react';
 import Image from 'next/image';
 import SignInButton from '../Button/SignInButton';
@@ -18,6 +19,17 @@ import { AuthType } from '@/types';
 const Header = () => {
   const { auth, setAuth } = useContext(AppContext) as AuthType;
   const router = useRouter();
+
+  const handleSignOut = () => {
+    setAuth(undefined);
+
+    // Delete the JWT cookie
+    document.cookie = "jwt=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+    // Redirect after signing out
+    signOut({ callbackUrl: '/' });
+  };
+
   return (
     <header className="flex h-16 shrink-0 items-center justify-between bg-b-primary px-4 drop-shadow md:px-6">
       <div className="flex min-w-max flex-row items-center">
@@ -30,8 +42,8 @@ const Header = () => {
       {auth ? (
         <div className="flex flex-row items-center gap-4">
           <div className="flex flex-col items-end">
-            <span className="font-semibold">{auth.name}</span>
-            <span className="capitalize">{auth.role}</span>
+            <span className="font-semibold">{auth?.name}</span>
+            <span className="capitalize">{auth?.role}</span>
           </div>
           <Dropdown>
             <DropdownTrigger>
@@ -52,10 +64,7 @@ const Header = () => {
               </DropdownItem>
               <DropdownItem
                 key="signout"
-                onClick={() => {
-                  setAuth(undefined);
-                  signOut({ callbackUrl: '/' });
-                }}
+                onClick={handleSignOut}
               >
                 Sign out
               </DropdownItem>

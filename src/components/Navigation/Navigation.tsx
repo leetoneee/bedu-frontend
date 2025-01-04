@@ -1,10 +1,13 @@
 'use client';
 
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { NavItems } from './NavItems';
 import NavigationItem from './NavigationItem';
+import { AppContext } from '@/contexts';
+import { AuthType } from '@/types';
 const Navigation = () => {
   const navItems = NavItems();
+  const { auth } = useContext(AppContext) as AuthType;
 
   return (
     <div className="flex w-72 flex-col rounded-[4px] border border-outline bg-highlight px-4 py-9">
@@ -15,7 +18,7 @@ const Navigation = () => {
             backgroundImage: 'url("https://avatar.iran.liara.run/public/50")'
           }}
         ></div>
-        <span className="text-xl font-semibold text-on-surface">Leetone</span>
+        <span className="text-xl font-semibold text-on-surface">{auth?.name}</span>
       </div>
       <span className="my-3 text-2xl font-semibold text-on-surface">
         Navigation

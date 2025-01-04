@@ -97,9 +97,9 @@ export default function DeleteUserClassModal({
               <div className="space-y-2">
                 <div className="text-lg font-semibold">Remove program</div>
                 <div className="text-sm font-normal">
-                  Are you sure you want to remove user
-                  <strong>{userClassTitle}</strong> from the program <strong>{className}</strong> ? This action
-                  cannot be undone.
+                  Are you sure you want to remove user{' '}
+                  <strong>{userClassTitle}</strong> from the program{' '}
+                  <strong>{className}</strong> ? This action cannot be undone.
                 </div>
               </div>
             </ModalBody>

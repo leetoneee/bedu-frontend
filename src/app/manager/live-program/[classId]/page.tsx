@@ -128,7 +128,9 @@ const EClassDetail = () => {
                   new Date(cellValue.toString()).toLocaleDateString('vi-VE', {
                     day: '2-digit',
                     month: '2-digit',
-                    year: 'numeric'
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
                   })}
               </p>
             </div>
@@ -141,7 +143,9 @@ const EClassDetail = () => {
                   new Date(cellValue.toString()).toLocaleDateString('vi-VE', {
                     day: '2-digit',
                     month: '2-digit',
-                    year: 'numeric'
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
                   })}
               </p>
             </div>
@@ -176,7 +180,7 @@ const EClassDetail = () => {
               <Tooltip content="Details" className="bg-on-primary" delay={1000}>
                 <span
                   className="cursor-pointer text-lg text-on-primary active:opacity-50"
-                  onClick={() => router.push(`lessons/${lesson.id}`)}
+                  onClick={() => router.push(`lessons/${lesson?.id}`)}
                 >
                   <EyeIcon className="size-5" />
                 </span>
@@ -212,6 +216,7 @@ const EClassDetail = () => {
 
   const filteredItems = React.useMemo(() => {
     let filteredLessons = [...lessons];
+    console.log('🚀 ~ filteredItems ~ filteredLessons:', filteredLessons);
     setPage(1);
 
     if (hasSearchFilterName) {
@@ -222,19 +227,16 @@ const EClassDetail = () => {
 
     if (filterStartDate) {
       const startDate = new Date(
-        filterStartDate.year,
-        filterStartDate.month,
-        filterStartDate.day
+        `${filterStartDate.year}-${filterStartDate.month}-${filterStartDate.day}`
       );
+
       filteredLessons = filteredLessons.filter(
         (lesson) => new Date(lesson.startDate) >= startDate
       );
     }
     if (filterEndDate) {
       const endDate = new Date(
-        filterEndDate.year,
-        filterEndDate.month,
-        filterEndDate.day
+        `${filterEndDate.year}-${filterEndDate.month}-${filterEndDate.day}`
       );
       filteredLessons = filteredLessons.filter(
         (lesson) => new Date(lesson.endDate) <= endDate
@@ -407,11 +409,11 @@ const EClassDetail = () => {
               <span className="text-xl font-semibold text-on-surface">
                 Description
               </span>
-              <Textarea
-                variant={'bordered'}
-                size="lg"
+              <textarea
+                // variant={'bordered'}
+                // size="lg"
                 placeholder="Enter your description"
-                className="col-span-12 mb-6 md:col-span-6 md:mb-0"
+                className="col-span-12 mb-6 h-40 w-full rounded-2xl border border-on-surface/20 p-3 md:col-span-6 md:mb-0"
                 readOnly
                 value={eclass?.description}
                 // onChange={(e) => setDescription(e.target.value)}
