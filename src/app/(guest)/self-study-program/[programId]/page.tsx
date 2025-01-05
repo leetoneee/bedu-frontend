@@ -167,7 +167,7 @@ export default function DetailProgramPage() {
                 <div className="flex h-[106px] w-[450px] justify-between rounded-[20px] border-2 border-outline xsm:w-[300px] sm:w-[400px] md:w-[400px]">
                   <div className="flex w-full flex-col justify-center truncate px-6">
                     <div className="truncate font-semibold text-on-primary sm:text-lg md:text-2xl lg:text-3xl">
-                      Toeic 700+ {/**Chỗ cần sửa */}
+                      {program?.type.toUpperCase()}
                     </div>
                     <div className="truncate text-on-surface sm:text-sm md:text-base lg:text-lg">
                       Commitment to output

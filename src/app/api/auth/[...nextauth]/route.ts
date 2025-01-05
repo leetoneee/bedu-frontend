@@ -66,7 +66,7 @@ const handler = NextAuth({
     },
     async session({ session, token }) {
       session.user = token as any;
-      // session.expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000); // 1 days
+      session.expires = new Date(Date.now() + 1 * 25 * 60 * 1000); // 1 days
       return session;
     }
   },
