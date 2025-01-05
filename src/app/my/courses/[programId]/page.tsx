@@ -24,7 +24,7 @@ const ProgramDetail = () => {
   useEffect(() => {
     setProgramId(programId as string);
   }, [programId]);
-  
+
   const { data, error, isLoading } = useSWR(
     `/programs/item/${programId}`,
     fetcher
@@ -94,7 +94,9 @@ const ProgramDetail = () => {
             />
 
             <div className="absolute left-0 top-0 flex h-full w-full flex-col justify-center gap-4 p-16 text-surface xsm:px-4 sm:px-10 md:px-24 lg:px-36">
-              <div className="text-3xl font-bold">{program?.title}</div>
+              <div className="text-3xl font-bold">
+                {program?.title} - {program?.code}
+              </div>
               <div className="text-2xl font-semibold">
                 {program?.description}
               </div>
@@ -179,7 +181,7 @@ const ProgramDetail = () => {
                 <div className="flex h-[106px] w-[450px] justify-between rounded-[20px] border-2 border-outline xsm:w-[300px] sm:w-[400px] md:w-[400px]">
                   <div className="flex w-full flex-col justify-center truncate px-6">
                     <div className="truncate font-semibold text-on-primary sm:text-lg md:text-2xl lg:text-3xl">
-                      Toeic 700+ {/**Chỗ cần sửa */}
+                      {program?.type.toUpperCase()}
                     </div>
                     <div className="truncate text-on-surface sm:text-sm md:text-base lg:text-lg">
                       Commitment to output
@@ -203,7 +205,13 @@ const ProgramDetail = () => {
             </div>
             <div className="flex h-full w-full flex-col justify-center xsm:px-4 sm:px-10 md:px-24 lg:px-36">
               {isLoading && <Spinner />}
-              {courses && <NavAccordion courses={courses} />}
+              {courses && courses.length > 0 && (
+                <div className="flex justify-center">
+                  <div className="w-2/3">
+                    <NavAccordion courses={courses} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

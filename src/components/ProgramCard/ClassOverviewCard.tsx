@@ -4,10 +4,11 @@ import { Rating } from '@/components';
 import { LuBookMinus, LuClock3 } from 'react-icons/lu';
 import { MdOutlineDateRange } from 'react-icons/md';
 import { EClass } from '@/types/class.type';
+import { useRouter } from 'next/navigation';
 
 const ClassOverviewCard = ({ eclass }: { eclass: EClass }) => {
   const {
-    // id,
+    id,
     code,
     // type,
     // description,
@@ -19,7 +20,7 @@ const ClassOverviewCard = ({ eclass }: { eclass: EClass }) => {
     // studyForm,
     timePerLesson
   } = eclass;
-
+  const router = useRouter();
   const rating: number = 4.5;
   const feedbacks: number = 100;
   const formattedNumber = (number: number): string => {
@@ -45,9 +46,12 @@ const ClassOverviewCard = ({ eclass }: { eclass: EClass }) => {
   return (
     <div
       // onClick={handleNavigate}
-      className="w-[400px] cursor-pointer rounded-xl border-[1px] border-outline text-xs transition-shadow duration-200 hover:shadow-lg"
+      className="flex flex-col w-[400px] cursor-pointer rounded-xl border-[1px] border-outline text-xs transition-shadow duration-200 hover:shadow-lg"
     >
-      <div>
+      <div
+        className="h-full w-full place-content-center"
+        onClick={() => router.push(`eclasses/${id}`)}
+      >
         <Image
           src={avatar || '/icons/course_img.svg'}
           alt="Course image"
@@ -57,7 +61,7 @@ const ClassOverviewCard = ({ eclass }: { eclass: EClass }) => {
         />
       </div>
       {/* Nội dung chi tiết */}
-      <div className="p-4">
+      <div className="mt-auto p-4">
         {/* Rating và Feedback */}
         <div className="flex items-center gap-2">
           <Rating rating={rating} maxStar={5} />
