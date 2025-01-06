@@ -47,7 +47,7 @@ const AddQuestionModal = ({
   // Danh sách các câu trả lời
   const [answers, setAnswers] = useState<{ id: number; answer: string }[]>([]);
   const [pointDivision, setPointDivision] = useState<
-    { id: number; point: number }[]
+    { id: number; point: string }[]
   >([]);
   // Danh sách ID của đáp án đúng
   const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
@@ -69,7 +69,11 @@ const AddQuestionModal = ({
     let answerAPI: string = '';
     if (typeQuestion === 'FillInTheBlankChoice') {
       answerAPI = possibleAnswersAPI;
+    } else if (typeQuestion === 'SingleChoice') {
+      answerAPI = answers
+        .filter((answer) => correctAnswers.includes(answer.id))[0].answer;
     } else {
+      // MultipleChoice
       answerAPI = answers
         .map((answer) =>
           correctAnswers.includes(answer.id) ? answer.answer : '@'
@@ -120,14 +124,16 @@ const AddQuestionModal = ({
       // Tổng pointDivision phải bằng totalPoints
       const totalPointsSum = pointDivision.reduce(
         (sum, point) =>
-          sum + (correctAnswers.includes(point.id) ? point.point : 0),
+          sum + Number(correctAnswers.includes(point.id) ? point.point : 0),
         0
       );
-      newErrors.totalPoints =
-        isNaN(parseFloat(totalPoints)) ||
-        totalPointsSum !== parseFloat(totalPoints)
-          ? `Total points (${totalPointsSum}) must equal the total point (${totalPoints})`
-          : '';
+      if (selectedType !== 'SingleChoice') {
+        newErrors.totalPoints =
+          isNaN(parseFloat(totalPoints)) ||
+          totalPointsSum !== parseFloat(totalPoints)
+            ? `Total points (${totalPointsSum}) must equal the total point (${totalPoints})`
+            : '';
+      }
     }
 
     // Fill in the blank
@@ -151,7 +157,7 @@ const AddQuestionModal = ({
           : '';
       // Tổng pointDivision phải bằng totalPoints
       const totalPointssSum = pointDivision.reduce(
-        (sum, point) => sum + point.point,
+        (sum, point) => sum + Number(point.point),
         0
       );
       newErrors.totalPoints =
@@ -191,7 +197,7 @@ const AddQuestionModal = ({
         correctAnswers.length === 0 ? 'Please select a correct answer' : '';
       const totalPointsSum = pointDivision.reduce(
         (sum, point) =>
-          sum + (correctAnswers.includes(point.id) ? point.point : 0),
+          Number(correctAnswers.includes(point.id) ? point.point : 0),
         0
       );
       if (pointDivision.length !== 0) {
@@ -226,7 +232,7 @@ const AddQuestionModal = ({
 
       // Tổng pointDivision phải bằng totalPoints
       const totalPointssSum = pointDivision.reduce(
-        (sum, point) => sum + point.point,
+        (sum, point) => sum + Number(point.point),
         0
       );
       if (pointDivision.length !== 0) {
@@ -286,18 +292,26 @@ const AddQuestionModal = ({
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
-      const pointDivisionAPI = pointDivision
-        .map((division) => division.point)
-        .join('/');
+      const pointDivisionAPI = () => {
+        let arrtemp:string[] = [];
+        for(let i = 0; i < pointDivision.length; i++) {
+          if(pointDivision[i].point !== '0') {
+            arrtemp.push(pointDivision[i].point);
+          }
+        }
+        return arrtemp.join('/');
+      }
       const { answerAPI, possibleAnswersAPI } = makeAnswer(
         selectedType,
         answers,
         correctAnswers
       );
+      console.log('AnswerAPI: ', answerAPI);
       const data: CreateQuestionDto = {
         question: question,
         totalPoints: Number(totalPoints),
-        pointDivision: pointDivisionAPI,
+        pointDivision:
+          selectedType !== 'SingleChoice' ? pointDivisionAPI() : totalPoints,
         content: content,
         attach: attach,
         questionType: selectedType,
@@ -454,7 +468,7 @@ const AddQuestionModal = ({
     }
   };
 
-  const updatePointDivision = (id: number, newPoint: number) => {
+  const updatePointDivision = (id: number, newPoint: string) => {
     setPointDivision((prevPointDivision) => {
       // Nếu pointDivision rỗng, thêm đối tượng mới
       if (prevPointDivision.length === 0) {
@@ -633,37 +647,6 @@ const AddQuestionModal = ({
                             }}
                             onFocus={(e) => e.target.select()}
                           />
-                          <div className="flex flex-row gap-2">
-                            <div className="flex flex-row">
-                              <div className="basis-[30%]">
-                                <span className="text-sm font-medium text-black">
-                                  Point
-                                  <span className="text-danger">*</span>
-                                </span>
-                              </div>
-                              <div className="relative basis-[70%]">
-                                <input
-                                  type="number"
-                                  className="w-full rounded-lg"
-                                  placeholder="Enter point..."
-                                  value={
-                                    pointDivision.find(
-                                      (point) => point.id === answer.id
-                                    )?.point
-                                  }
-                                  onChange={(e) => {
-                                    updatePointDivision(
-                                      answer.id,
-                                      e.target.value === ''
-                                        ? 0
-                                        : parseFloat(e.target.value)
-                                    );
-                                  }}
-                                />
-                              </div>
-                            </div>
-                          </div>
-
                           {/* Nút xóa */}
                           <Tooltip color="danger" content="Delete" delay={200}>
                             <span
@@ -737,8 +720,8 @@ const AddQuestionModal = ({
                                     updatePointDivision(
                                       answer.id,
                                       e.target.value === ''
-                                        ? 0
-                                        : parseFloat(e.target.value)
+                                        ? '0'
+                                        : e.target.value
                                     );
                                   }}
                                 />
@@ -809,8 +792,8 @@ const AddQuestionModal = ({
                                     updatePointDivision(
                                       answer.id,
                                       e.target.value === ''
-                                        ? 0
-                                        : parseFloat(e.target.value)
+                                        ? '0'
+                                        : e.target.value
                                     );
                                   }}
                                 />
