@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="flex w-full flex-col">
       <Divider />
-      <div className="flex h-44 flex-row bg-white">
+      <div className="flex h-44 flex-row bg-surface">
         <div className="ml-12 mt-5 grid grid-cols-4 gap-12">
           {/* BEDU  */}
           <div className="col-span-1">
