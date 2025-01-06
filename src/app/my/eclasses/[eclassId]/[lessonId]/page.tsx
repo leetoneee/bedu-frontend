@@ -12,7 +12,6 @@ import LessonHeader from './LessonHeader';
 import CommentTab from './Comment.Tab';
 import DocumentTab from './Document.Tab';
 import ExercisesTab from './Exercises.Tab';
-import { EClass } from '@/types/class.type';
 import { Crumb } from '@/types';
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
