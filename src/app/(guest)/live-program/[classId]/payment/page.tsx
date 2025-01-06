@@ -15,7 +15,7 @@ import { EClass } from '@/types/class.type';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-const page = () => {
+const PaymentPage = () => {
   const { auth } = useContext(AppContext) as AuthType;
   const { classId } = useParams();
   const { data: dataUser } = useSWR(`/users/item/${auth?.id}`, fetcher);
@@ -78,8 +78,8 @@ const page = () => {
             </RadioGroup>
           </div>
           <span className="text-on-surface">
-            <strong className="text-error">*</strong> Note: If using "Bank
-            transfer," students need to inform the center and provide the
+            <strong className="text-error">*</strong> Note: If using &quot;Bank
+            transfer,&quot; students need to inform the center and provide the
             transaction code for confirmation.
           </span>
         </div>
@@ -131,4 +131,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default PaymentPage;
