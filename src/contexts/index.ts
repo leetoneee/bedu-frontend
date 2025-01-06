@@ -2,4 +2,5 @@
 
 import AppContext from './AppContext';
 import MyProgramContext from './MyProgramContext';
-export { AppContext, MyProgramContext };
+import ExamContext from './ExamContext';
+export { AppContext, MyProgramContext, ExamContext };
