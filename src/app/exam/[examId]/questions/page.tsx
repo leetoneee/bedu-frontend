@@ -9,13 +9,11 @@ import { useDisclosure } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import SubmitAnswerModal from './SubmitAnswer.modal';
 
 const DoExam = () => {
   const router = useRouter();
-  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
-  const { questions, duration, setAnswers } = useContext(
+  const { questions } = useContext(
     ExamContext
   ) as ExamContextType;
   const { remainingTime, startTimer, stopTimer } = useContext(
@@ -29,6 +27,7 @@ const DoExam = () => {
   const [markedQuestions, setMarkedQuestions] = useState<Set<number>>(
     new Set()
   );
+  
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | string[];
   }>({});
@@ -38,12 +37,12 @@ const DoExam = () => {
     return;
   }
 
-  useEffect(() => {
-    // Giả sử thời gian làm bài là 1800 giây (30 phút)
-    startTimer(duration * 60);
+  // useEffect(() => {
+  //   // Giả sử thời gian làm bài là 1800 giây (30 phút)
+  //   startTimer(duration * 60);
 
-    return () => stopTimer(); // Dừng timer khi rời trang
-  }, []);
+  //   return () => stopTimer(); // Dừng timer khi rời trang
+  // }, []);
 
   useEffect(() => {
     if (remainingTime === 0) {
@@ -51,24 +50,24 @@ const DoExam = () => {
     }
   }, [remainingTime]);
 
-  const handleSubmit = () => {
-    onOpen();
-  };
+  // const handleSubmit = () => {
+  //   onOpen();
+  // };
 
-  useEffect(() => {
-    setAnswers((prevAnswers) => {
-      const updatedAnswers = formatAnswer(
-        selectedAnswers[selectedQuestion.id],
-        selectedQuestion.possibleAnswer.split('/'),
-        selectedQuestion.questionType
-      );
+  // useEffect(() => {
+  //   setAnswers((prevAnswers) => {
+  //     const updatedAnswers = formatAnswer(
+  //       selectedAnswers[selectedQuestion.id],
+  //       selectedQuestion.possibleAnswer.split('/'),
+  //       selectedQuestion.questionType
+  //     );
 
-      return {
-        ...prevAnswers,
-        [selectedQuestion.id]: updatedAnswers
-      };
-    });
-  }, [selectedAnswers]);
+  //     return {
+  //       ...prevAnswers,
+  //       [selectedQuestion.id]: updatedAnswers
+  //     };
+  //   });
+  // }, [selectedAnswers]);
 
   // Hàm xử lý khi thời gian hết
   const handleTimeUp = () => {
@@ -147,12 +146,12 @@ const DoExam = () => {
           <div className="text-gray-600">
             Remaining time: <span className="font-bold">{formattedTime}</span>
           </div>
-          <button
+          {/* <button
             className="rounded bg-green-500 px-4 py-2 text-white hover:brightness-110"
             onClick={handleSubmit}
           >
             SUBMIT
-          </button>
+          </button> */}
         </div>
       </header>
       <main className="rounded bg-white p-4 shadow">
@@ -259,13 +258,6 @@ const DoExam = () => {
           </div>
         </div>
       </aside>
-      <SubmitAnswerModal
-        isOpen={isOpen}
-        onClose={onClose}
-        onOpen={onOpen}
-        onOpenChange={onOpenChange}
-        stats={stats}
-      />
     </div>
   );
 };

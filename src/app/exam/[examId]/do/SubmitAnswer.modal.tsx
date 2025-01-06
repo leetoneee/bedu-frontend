@@ -48,6 +48,11 @@ const SubmitAnswerModal = ({
   const examId = Number(params.examId);
 
   const handleSubmit = async () => {
+    // if (!auth) {
+    //   toast.error('please sign in to continue');
+    //   return;
+    // }
+
     const data: CreateAnswerDto[] = questions.map((question) => ({
       userId: 10,
       examId: examId,
