@@ -5,17 +5,20 @@ import Image from 'next/image';
 import { Crumb } from '@/types';
 import { useParams } from 'next/navigation';
 import { Divider } from '@nextui-org/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { Course } from '@/types/course.type';
 import { Program } from '@/types/program.type';
 import useSWR from 'swr';
 import axios from '@/libs/axiosInstance';
+import { TypeContext } from '@/contexts';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export default function DetailProgramPage() {
   const params = useParams();
   const programId = params.programId;
+  const {type, setType} = useContext(TypeContext);
+  setType('programs');
 
   const { data } = useSWR(`/programs/item/${programId}`, fetcher);
 

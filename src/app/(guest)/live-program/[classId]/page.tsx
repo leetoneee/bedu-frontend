@@ -1,7 +1,7 @@
 'use client';
 
 import { Breadcrumb, LessonPreview, OrderCard, Rating } from '@/components';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { Crumb } from '@/types';
@@ -10,12 +10,15 @@ import axios from '@/libs/axiosInstance';
 import { EClass } from '@/types/class.type';
 import { Lesson } from '@/types/lesson.type';
 import { Divider } from '@nextui-org/react';
+import { TypeContext } from '@/contexts';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const ClassPage = () => {
   const params = useParams();
   const classId = params.classId;
+  const {type, setType} = useContext(TypeContext);
+  setType('eclass');
 
   const { data, error } = useSWR(`/classes/item/${classId}`, fetcher);
 
