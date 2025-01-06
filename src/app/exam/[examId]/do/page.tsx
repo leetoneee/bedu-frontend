@@ -33,11 +33,6 @@ const DoExam = () => {
     [key: number]: string | string[];
   }>({});
 
-  if (!(questions.length > 0)) {
-    router.replace('/');
-    return;
-  }
-
   useEffect(() => {
     // Giả sử thời gian làm bài là 1800 giây (30 phút)
     startTimer(duration * 60);
@@ -137,6 +132,11 @@ const DoExam = () => {
     };
   }, [questions, selectedAnswers, markedQuestions]);
 
+  if (!(questions.length > 0)) {
+    router.replace('/');
+    return;
+  }
+  
   return (
     <div className="container mx-auto p-4">
       <header className="flex items-center justify-between py-4">

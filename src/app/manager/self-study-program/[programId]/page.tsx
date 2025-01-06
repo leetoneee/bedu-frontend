@@ -18,7 +18,6 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  Textarea,
   Tooltip,
   useDisclosure
 } from '@nextui-org/react';

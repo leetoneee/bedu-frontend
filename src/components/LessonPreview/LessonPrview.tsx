@@ -1,10 +1,10 @@
 'use client';
 
-import { MyProgramContext } from '@/contexts';
-import { MyProgramContextType } from '@/types';
+// import { MyProgramContext } from '@/contexts';
+// import { MyProgramContextType } from '@/types';
 import { Lesson } from '@/types/lesson.type';
-import { useRouter } from 'next/navigation';
-import { useContext } from 'react';
+// import { useRouter } from 'next/navigation';
+// import { useContext } from 'react';
 // import { FaArrowRight } from 'react-icons/fa6';
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 const LessonPreview = ({ lessons }: Props) => {
   // const { classId } = useContext(MyProgramContext) as MyProgramContextType;
 
-  const router = useRouter();
+  // const router = useRouter();
   if (!lessons) {
     return <div></div>;
   }

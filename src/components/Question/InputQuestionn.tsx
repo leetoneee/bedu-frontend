@@ -1,8 +1,8 @@
 'use client';
 
 import { Question } from '@/types/question-bank.type';
-import { Checkbox, Chip, Divider, Radio, RadioGroup } from '@nextui-org/react';
-import React, { Fragment, ReactNode, useCallback, useState } from 'react';
+import { Checkbox, Chip, Radio, RadioGroup } from '@nextui-org/react';
+import React, { Fragment, ReactNode, useCallback } from 'react';
 
 type Props = {
   question: Question;

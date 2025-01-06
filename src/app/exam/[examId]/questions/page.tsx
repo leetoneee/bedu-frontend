@@ -2,10 +2,9 @@
 
 import { classNames, InputQuestion } from '@/components';
 import { ExamContext } from '@/contexts';
-import { formatAnswer, useFormattedTime } from '@/helpers';
+import { useFormattedTime } from '@/helpers';
 import { ExamContextType, TimeContextType } from '@/types';
 import { Question } from '@/types/question-bank.type';
-import { useDisclosure } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -16,7 +15,7 @@ const DoExam = () => {
   const { questions } = useContext(
     ExamContext
   ) as ExamContextType;
-  const { remainingTime, startTimer, stopTimer } = useContext(
+  const { remainingTime, stopTimer } = useContext(
     ExamContext
   ) as TimeContextType;
   const formattedTime = useFormattedTime(remainingTime);
@@ -27,15 +26,10 @@ const DoExam = () => {
   const [markedQuestions, setMarkedQuestions] = useState<Set<number>>(
     new Set()
   );
-  
+
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | string[];
   }>({});
-
-  if (!(questions.length > 0)) {
-    router.replace('/');
-    return;
-  }
 
   // useEffect(() => {
   //   // Giả sử thời gian làm bài là 1800 giây (30 phút)
@@ -136,6 +130,11 @@ const DoExam = () => {
     };
   }, [questions, selectedAnswers, markedQuestions]);
 
+  if (!(questions.length > 0)) {
+    router.replace('/');
+    return;
+  }
+  
   return (
     <div className="container mx-auto p-4">
       <header className="flex items-center justify-between py-4">

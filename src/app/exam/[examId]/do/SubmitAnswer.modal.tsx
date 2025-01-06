@@ -8,7 +8,6 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button
 } from '@nextui-org/react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
@@ -30,15 +29,15 @@ type Props = {
 
 const SubmitAnswerModal = ({
   isOpen,
-  onClose,
-  onOpen,
+  // onClose,
+  // onOpen,
   onOpenChange,
   stats
 }: Props) => {
   const router = useRouter();
   const { auth } = useContext(AppContext) as AuthType;
   const { questions, answers } = useContext(ExamContext) as ExamContextType;
-  const { remainingTime, startTimer, stopTimer } = useContext(
+  const { remainingTime, stopTimer } = useContext(
     ExamContext
   ) as TimeContextType;
   const formattedTime = useFormattedTime(remainingTime);
@@ -48,13 +47,13 @@ const SubmitAnswerModal = ({
   const examId = Number(params.examId);
 
   const handleSubmit = async () => {
-    // if (!auth) {
-    //   toast.error('please sign in to continue');
-    //   return;
-    // }
+    if (!auth) {
+      toast.error('please sign in to continue');
+      return;
+    }
 
     const data: CreateAnswerDto[] = questions.map((question) => ({
-      userId: 10,
+      userId: auth.id,
       examId: examId,
       questionId: question.id,
       content: answers[question.id],

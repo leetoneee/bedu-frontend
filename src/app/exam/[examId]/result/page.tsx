@@ -19,7 +19,7 @@ const ExamResult = () => {
     let correctAnswers = 0;
     let wrongAnswers = 0;
 
-    questions.forEach((question, idx) => {
+    questions.forEach((question) => {
       const answer = answers[question.id];
 
       if (
@@ -39,16 +39,16 @@ const ExamResult = () => {
       }
     });
 
-    let answeredPercent = Number(
+    const answeredPercent = Number(
       ((answered / questions.length) * 100).toFixed(0)
     );
-    let notAnsweredPercent = Number(
+    const notAnsweredPercent = Number(
       ((notAnswered / questions.length) * 100).toFixed(0)
     );
-    let correctAnswersPercent = Number(
+    const correctAnswersPercent = Number(
       ((correctAnswers / questions.length) * 100).toFixed(0)
     );
-    let wrongAnswersPercent = Number(
+    const wrongAnswersPercent = Number(
       ((wrongAnswers / questions.length) * 100).toFixed(0)
     );
 
