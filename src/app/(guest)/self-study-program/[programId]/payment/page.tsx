@@ -4,7 +4,7 @@ import { AppContext } from '@/contexts';
 import { AuthType } from '@/types';
 import { User } from '@/types/user.type';
 import { Divider } from '@nextui-org/react';
-import axios from 'axios';
+import axios from '@/libs/axiosInstance';
 import React, { useContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { useParams } from 'next/navigation';
@@ -12,17 +12,33 @@ import { RadioGroup, Radio } from '@nextui-org/radio';
 import Image from 'next/image';
 import { ButtonSolid } from '@/components';
 import { Program } from '@/types/program.type';
+import { FaPaypal } from 'react-icons/fa';
+import { processPayment } from '@/services/payment.service';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
+type PaymentMethodProps = {
+  createdAt: Date,
+  deletedAt: Date,
+  description: string,
+  id: number,
+  isActive: boolean,
+  name: string,
+  updatedAt: Date,
+  }
+  
 
 const PaymentPage = () => {
   const { auth } = useContext(AppContext) as AuthType;
   const { programId } = useParams();
-  const { data: dataUser } = useSWR(`/users/item/${auth?.id}`, fetcher);
-  const { data: dataProgram } = useSWR(`/programs/item/${programId}`, fetcher);
   const [user, setUser] = useState<User>();
   const [program, setProgram] = useState<Program>();
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodProps[]>([]);
   const [selected, setSelected] = useState('');
+
+  const { data: dataUser } = useSWR(`/users/item/${auth?.id}`, fetcher);
+  const { data: dataProgram } = useSWR(`/programs/item/${programId}`, fetcher);
+  const { data: PaymentMethod } = useSWR(`/payment-method`, fetcher);
 
   useEffect(() => {
     if (dataUser) {
@@ -36,12 +52,39 @@ const PaymentPage = () => {
     }
   }, [dataProgram]);
 
+  useEffect(() => {
+    if (PaymentMethod && PaymentMethod?.metadata) {
+      console.log('Payment method: ', PaymentMethod?.metadata)
+      setPaymentMethod(PaymentMethod.metadata);
+    }
+  }, [PaymentMethod]);
+
+  const parseDollar = (price: number): number => {
+    return price / 25360;
+  }
+
   const formattedNumber = (price: number): string => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'decimal',
       maximumFractionDigits: 0
     }).format(price);
   };
+
+  const handlePay = async () => {
+    let method: string = selected;
+    console.log('method: ', method);
+    let amount: number = method === 'paypal' ? Math.round(parseDollar(program?.price || 0)) : program?.price || 0  ;
+    let content: string = `${auth?.id}-PROGRAM-${program?.id}`;
+    try {
+      const data = await processPayment({method, amount, content});
+      console.log('data: ', data.metadata);
+      if(data) {
+        window.location.href = data.metadata;
+      } 
+    } catch (error: any) {
+      console.log('error: ', error);
+    }
+  }
 
   return (
     <div className="flex flex-row">
@@ -75,16 +118,19 @@ const PaymentPage = () => {
           </div>
           <div>
             <RadioGroup value={selected} onValueChange={setSelected}>
-              <Radio value={`bank-transfer`}>Bank transfer</Radio>
-              <Radio value={`momo`}>Momo</Radio>
-              <Radio value={`zalo-pay`}>Zalo pay</Radio>
+              {paymentMethod.map((payment: PaymentMethodProps) => {
+                return (
+                <Radio value={payment.name} key={payment.name}>
+                  {payment.name === 'zalopay' ? 'Zalo Pay' : payment.name === 'paypal' ? 'Paypal' : 'Momo'}
+                </Radio>
+              )})}
             </RadioGroup>
           </div>
-          <span className="text-on-surface">
+          {/* <span className="text-on-surface">
             <strong className="text-error">*</strong> Note: If using &quot;Bank
             transfer,&quot; students need to inform the center and provide the
             transaction code for confirmation.
-          </span>
+          </span> */}
         </div>
       </div>
 
@@ -111,7 +157,7 @@ const PaymentPage = () => {
           <div className="flex w-full flex-row justify-between">
             <span className="font-medium text-on-surface">Unit price</span>
             <span className="font-bold text-outline-focus">
-              {formattedNumber(program?.price ? program?.price : 0)} VND
+            {formattedNumber(program?.price ? program?.price : 0)} VND
             </span>
           </div>
           <Divider />
@@ -127,6 +173,7 @@ const PaymentPage = () => {
           <ButtonSolid
             content="Pay"
             className="w-full rounded-md bg-on-primary !text-3xl !text-b-primary"
+            onClick={handlePay}
           />
         </div>
       </div>

@@ -17,7 +17,7 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 export default function DetailProgramPage() {
   const params = useParams();
   const programId = params.programId;
-  const {type, setType} = useContext(TypeContext);
+  const {setType} = useContext(TypeContext);
   setType('programs');
 
   const { data } = useSWR(`/programs/item/${programId}`, fetcher);
