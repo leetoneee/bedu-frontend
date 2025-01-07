@@ -1,5 +1,6 @@
-export type Comment = {
+export type CreateCommentDto = {
+  lessonId: number;
+  userId: number;
   content: string;
-  left: number;
-  right: number;
-};
+  parentCommentId: number;
+}
