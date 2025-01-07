@@ -12,9 +12,7 @@ import { toast } from 'react-toastify';
 const DoExam = () => {
   const router = useRouter();
 
-  const { questions } = useContext(
-    ExamContext
-  ) as ExamContextType;
+  const { questions } = useContext(ExamContext) as ExamContextType;
   const { remainingTime, stopTimer } = useContext(
     ExamContext
   ) as TimeContextType;
@@ -134,11 +132,14 @@ const DoExam = () => {
     router.replace('/');
     return;
   }
-  
+
   return (
     <div className="container mx-auto p-4">
       <header className="flex items-center justify-between py-4">
-        <div className="text-2xl font-bold text-purple-600">
+        <div
+          className="text-2xl font-bold text-purple-600 hover:cursor-pointer"
+          onClick={() => router.push('/')}
+        >
           B<span className="text-orange-500">education</span>
         </div>
         <div className="flex items-center space-x-4">

@@ -61,13 +61,17 @@ const ExercisesTab = ({ lessonId }: Props) => {
       setLesson(data.metadata);
       if (data.metadata.exam) {
         setExamId(data.metadata.exam.id);
+      } else {
+        setExamId(0);
       }
     }
   }, [data]);
 
   useEffect(() => {
-    if (examData && examData.metadata) {
+    if (examId !== 0 && examData && examData.metadata) {
       setExam(examData.metadata);
+    } else {
+      setExam(null);
     }
   }, [examId, examData]);
 

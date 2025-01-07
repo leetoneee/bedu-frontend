@@ -12,7 +12,7 @@ import { AuthType } from '@/types';
 const OrderCard = ({ detail }: OrderCardProps) => {
   const router = useRouter();
   const { auth } = useContext(AppContext) as AuthType;
-  const { type, setType } = useContext(TypeContext);
+  const { type } = useContext(TypeContext);
 
   const formattedNumber = (price: number): string => {
     return new Intl.NumberFormat('vi-VN', {
