@@ -57,10 +57,10 @@ const ExamDetail = () => {
       <div className="flex w-full flex-col">
         <ExamHeader activeTab={activeTab} setActiveTab={setActiveTab} />
         <Divider />
-        {activeTab === 'List of questions' && <LOQ id={Number(examId)} />}
-        {activeTab === 'Configuration' && <Config id={Number(examId)} />}{' '}
-        {activeTab === 'Statistical' && <Statistical id={Number(examId)} />}{' '}
-        {activeTab === 'Result' && <Result id={Number(examId)} />}
+        {activeTab === 'List of questions' && <LOQ examId={Number(examId)} />}
+        {activeTab === 'Configuration' && <Config examId={Number(examId)} />}{' '}
+        {activeTab === 'Statistical' && <Statistical examId={Number(examId)} />}{' '}
+        {activeTab === 'Result' && <Result examId={Number(examId)} />}
       </div>
       {/* Save Button */}
       {/* <div className="flex w-full">

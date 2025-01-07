@@ -1,14 +1,18 @@
 'use client';
 
 import { ExamContext } from '@/contexts';
-import { ExamContextType } from '@/types';
+import { useFormattedTime } from '@/helpers';
+import { ExamContextType, TimeContextType } from '@/types';
 import { CircularProgress } from '@nextui-org/react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useMemo } from 'react';
 
 const ExamResult = () => {
-  const { questions, answers } = useContext(ExamContext) as ExamContextType;
+  const { questions, answers, duration } = useContext(
+    ExamContext
+  ) as ExamContextType;
+  const { remainingTime } = useContext(ExamContext) as TimeContextType;
   const router = useRouter();
   const totalQuestions = questions.length;
 
@@ -79,9 +83,20 @@ const ExamResult = () => {
 
   return (
     <div className="mx-auto mt-10 max-w-5xl bg-white p-4 shadow-md">
+      <header className="flex items-center justify-between py-4">
+        <div
+          className="text-2xl font-bold text-purple-600 hover:cursor-pointer"
+          onClick={() => router.push('/')}
+        >
+          B<span className="text-orange-500">education</span>
+        </div>
+      </header>
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-xl font-semibold">Result Exam</h1>
-        <span className="text-sm text-blue-500 hover:cursor-pointer" onClick={() => router.push('questions')}>
+        <span
+          className="text-sm text-blue-500 hover:cursor-pointer"
+          onClick={() => router.push('questions')}
+        >
           &larr; Return to the list of questions
         </span>
       </div>
@@ -91,6 +106,12 @@ const ExamResult = () => {
             <div className="rounded border p-4">
               <p className="font-semibold text-gray-600">
                 Total questions: {totalQuestions}
+              </p>
+            </div>
+            <div className="rounded border p-4">
+              <p className="font-semibold text-gray-600">
+                Completion time:{' '}
+                {useFormattedTime(duration * 60 - remainingTime)}
               </p>
             </div>
           </div>

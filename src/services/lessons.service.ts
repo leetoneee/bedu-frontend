@@ -8,6 +8,7 @@ export type CreateLessonDto = {
   courseId: number;
   videoUrl: string;
   isActive: boolean;
+  examId: number | null;
 };
 
 export type CreateRecurringLessonDto = {

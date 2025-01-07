@@ -23,6 +23,7 @@ const LoginPage = () => {
       username: username,
       password: password
       // redirect: true,
+      // callbackUrl:
     });
     // router.replace('/manager/self-study-program');
     console.log('🚀 ~ onSubmit ~ result:', result);

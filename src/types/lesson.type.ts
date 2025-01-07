@@ -14,7 +14,7 @@ export type Lesson = {
   class: EClass;
   teacher: User;
   course: Course;
-  exam: Exam[];
+  exam: Exam;
   isActive: boolean;
 };
 

@@ -20,7 +20,7 @@ import { editExam, UpdateExamDto } from '@/services/exam.service';
 import { toast } from 'react-toastify';
 
 type Props = {
-  id: number;
+  examId: number;
   setIsModalNewTaskOpen?: (isOpen: boolean) => void;
 };
 
@@ -68,7 +68,7 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 //   }
 // ];
 
-const LOQ = ({ id }: Props) => {
+const LOQ = ({ examId }: Props) => {
   const questionRefs = useRef<(HTMLDivElement | null)[]>([]); // Create refs for each question
 
   const [exam, setExam] = useState<Exam | null>(null);
@@ -81,7 +81,7 @@ const LOQ = ({ id }: Props) => {
     // isLoading,
     // error: classError,
     // mutate: refreshEndpoint
-  } = useSWR(`/exams/item/${id}`, fetcher);
+  } = useSWR(`/exams/item/${examId}`, fetcher);
 
   useEffect(() => {
     if (!data) {

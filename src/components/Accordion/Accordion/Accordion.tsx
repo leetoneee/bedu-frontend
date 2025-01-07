@@ -6,7 +6,6 @@ type Props = {
 };
 
 const Accordion = ({ courses }: Props) => {
-  console.log("🚀 ~ Accordion ~ courses:", courses)
   return courses.map((course, index) => {
     return <CourseAccordion key={index} course={course} />;
   });
