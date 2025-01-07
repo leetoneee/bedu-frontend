@@ -1,7 +1,7 @@
 import React from 'react';
 
 type Props = {
-  id: number;
+  examId: number;
   setIsModalNewTaskOpen?: (isOpen: boolean) => void;
 };
 
@@ -31,7 +31,7 @@ const data: Record<string, any>[] = [
   { id: 5, name: 'NTTL', score: 5 }
 ];
 
-const Result = ({ id }: Props) => {
+const Result = ({ examId }: Props) => {
   const averageScore =
     data.reduce((sum, row) => sum + (row.score || 0), 0) / data.length || 0;
 
