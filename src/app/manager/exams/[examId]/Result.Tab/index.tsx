@@ -1,39 +1,42 @@
-import React from 'react';
+import { Column } from '@/types';
+import { ReportExam } from '@/types/exam.type';
+import React, { useEffect, useState } from 'react';
+import axios from '@/libs/axiosInstance';
+import useSWR from 'swr';
 
 type Props = {
-  id: number;
+  examId: number;
   setIsModalNewTaskOpen?: (isOpen: boolean) => void;
 };
 
 // Define types for columns and data
-interface Column {
-  header: string;
-  field: string;
-  sortable?: boolean;
-}
 
-interface DynamicTableProps {
-  columns: Column[];
-  data: Record<string, any>[];
-}
-
-const columns: Column[] = [
-  { header: 'No.', field: 'id', sortable: false },
-  { header: 'Full Name', field: 'name', sortable: true },
-  { header: 'Score', field: 'score', sortable: true }
+const columns: Column<ReportExam>[] = [
+  { title: 'Full name', key: 'name' },
+  { title: 'Total attempts', key: 'attempts' },
+  { title: 'Total score', key: 'total' }
 ];
 
-const data: Record<string, any>[] = [
-  { id: 1, name: 'NVB', score: 1 },
-  { id: 2, name: 'LHD', score: 2 },
-  { id: 3, name: 'TNCH', score: 3 },
-  { id: 4, name: 'LT', score: 4 },
-  { id: 5, name: 'NTTL', score: 5 }
-];
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-const Result = ({ id }: Props) => {
+const Result = ({ examId }: Props) => {
+  const [reports, setReports] = useState<ReportExam[]>([]);
+  const {
+    data
+    // isLoading,
+    // error: classError,
+    // mutate: refreshEndpoint
+  } = useSWR(`/answers/result/${examId}`, fetcher);
+
+  useEffect(() => {
+    if (data && data.metadata) {
+      setReports(data.metadata);
+    }
+  }, [data]);
+
   const averageScore =
-    data.reduce((sum, row) => sum + (row.score || 0), 0) / data.length || 0;
+    reports.reduce((sum, row) => sum + (Number(row.total) || 0), 0) /
+      reports.length || 0;
 
   return (
     <div className="flex h-full w-full flex-col gap-2 rounded rounded-t-none border-on-surface/20 bg-white p-5 shadow-sm">
@@ -45,25 +48,34 @@ const Result = ({ id }: Props) => {
               {columns.map((column, index) => (
                 <th
                   key={index}
+                  scope="col"
                   className="border border-gray-200 px-4 py-2 text-left"
                 >
-                  {column.header}
-                  {column.sortable && <i className="fas fa-sort ml-2"></i>}
+                  {column.title}
                 </th>
               ))}
+              <th
+                scope="col"
+                className="border border-gray-200 px-4 py-2 text-left"
+              >
+                Average score
+              </th>
             </tr>
           </thead>
           <tbody>
-            {data.map((row, rowIndex) => (
-              <tr key={rowIndex}>
+            {reports?.map((row, rowIndex) => (
+              <tr key={rowIndex} className="text-center align-middle">
                 {columns.map((column, colIndex) => (
                   <td
                     key={colIndex}
                     className="border border-gray-200 px-4 py-2"
                   >
-                    {row[column.field]}
+                    {row[column.key] as keyof ReportExam}
                   </td>
                 ))}
+                <td className="border border-gray-200 px-4 py-2">
+                  {(Number(row.total) / row.attempts).toFixed(2)}
+                </td>
               </tr>
             ))}
           </tbody>

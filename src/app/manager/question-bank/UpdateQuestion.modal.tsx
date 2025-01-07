@@ -16,7 +16,11 @@ import {
 } from '@nextui-org/react';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { ButtonSolid } from '@/components';
-import { editQuestion, UpdateQuestionDto } from '@/services/questions.service';
+import {
+  CreateQuestionDto,
+  editQuestion,
+  UpdateQuestionDto
+} from '@/services/questions.service';
 import { Question } from '@/types/question-bank.type';
 
 type Props = {
@@ -47,7 +51,7 @@ const UpdateQuestion = ({
   // Danh sách các câu trả lời
   const [answers, setAnswers] = useState<{ id: number; answer: string }[]>([]);
   const [pointDivision, setPointDivision] = useState<
-    { id: number; point: number }[]
+    { id: number; point: string }[]
   >([]);
   // Danh sách ID của đáp án đúng
   const [correctAnswers, setCorrectAnswers] = useState<number[]>([]);
@@ -65,24 +69,50 @@ const UpdateQuestion = ({
     }));
   };
 
-  const parseCorrectAnswers = (correctAnswers: string): number[] => {
-    const ans: number[] = [];
-    const ansArr = correctAnswers.split('/');
-    for (let i = 0; i < ansArr.length; i++) {
-      if (ansArr[i] !== '@') {
-        ans.push(i + 1);
-      }
-    }
-    return ans;
+  const parseCorrectAnswers = (correctAnswers: string): void => {
+    const correctAnswersArray = correctAnswers
+      .split('/')
+      .map((answer) => answer.trim()) // Xóa khoảng trắng thừa
+      .filter((answer) => answer !== '@' && answer.length > 0); // Loại bỏ các "@" và phần tử rỗng
+
+    console.log('possible answers: ', answers);
+    const indexes = correctAnswersArray
+      .map((phanTu) => answers.find((answer) => answer.answer === phanTu)) // Tìm đối tượng có answer khớp
+      .filter(Boolean) // Loại bỏ null hoặc undefined
+      .map((answer) => answer!.id); // Lấy id của đối tượng
+
+    setCorrectAnswers(indexes);
   };
 
   const parsePointDivision = (
     pointDivision: string
-  ): { id: number; point: number }[] => {
-    return pointDivision.split('/').map((point, index) => ({
-      id: index + 1, // ID bắt đầu từ 1
-      point: Number(point)
+  ): { id: number; point: string }[] => {
+    // return pointDivision.split('/').map((point, index) => {
+    //   if (correctAnswers.includes(index + 1)) {
+    //     return {
+    //       id: index + 1, // ID bắt đầu từ 1
+    //       point: point
+    //     };
+    //   } else {
+    //     return {
+    //       id: index + 1, // ID bắt đầu từ 1
+    //       point: '0'
+    //     };
+    //   }
+    // });
+    let division: string[] = pointDivision.split('/');
+    let point: number = 0;
+    const ans: { id: number; point: string }[] = answers.map((answer) => ({
+      id: answer.id, // Gán id từ answers
+      point: '0' // Mặc định điểm là '0'
     }));
+
+    for(let i = 0 ; i < answers.length; i++) {
+      if(correctAnswers.includes(answers[i].id)) {
+        ans[i].point = division[point++];
+      }
+    }
+    return ans;
   };
 
   useEffect(() => {
@@ -90,13 +120,19 @@ const UpdateQuestion = ({
       setContent(questionUpdate.content);
       setQuestion(questionUpdate.question);
       settotalPoints(questionUpdate.totalPoints.toString());
-      setPointDivision(parsePointDivision(questionUpdate.pointDivision));
       setAnswers(parseAnswers(questionUpdate.possibleAnswer));
-      setCorrectAnswers(parseCorrectAnswers(questionUpdate.answer));
       setAttach(questionUpdate.attach);
-      // setQuestionType(new Set([`${questionUpdate.questionType}`]));
     }
   }, [questionUpdate]);
+
+  useEffect(() => {
+    //setCorrectAnswers thông qua hàm
+    parseCorrectAnswers(questionUpdate.answer);
+  }, [answers]);
+
+  useEffect(() => {
+    setPointDivision(parsePointDivision(questionUpdate.pointDivision));
+  }, [correctAnswers])
 
   const selectedType = React.useMemo(
     () => Array.from(questionType).join(', ').replaceAll('_', ' '),
@@ -112,7 +148,11 @@ const UpdateQuestion = ({
     let answerAPI: string = '';
     if (typeQuestion === 'FillInTheBlankChoice') {
       answerAPI = possibleAnswersAPI;
+    } else if (typeQuestion === 'SingleChoice') {
+      answerAPI = answers
+        .filter((answer) => correctAnswers.includes(answer.id))[0].answer;
     } else {
+      // MultipleChoice
       answerAPI = answers
         .map((answer) =>
           correctAnswers.includes(answer.id) ? answer.answer : '@'
@@ -163,7 +203,7 @@ const UpdateQuestion = ({
       // Tổng pointDivision phải bằng totalPoints
       const totalPointsSum = pointDivision.reduce(
         (sum, point) =>
-          sum + (correctAnswers.includes(point.id) ? point.point : 0),
+          sum + Number(correctAnswers.includes(point.id) ? point.point : 0),
         0
       );
       newErrors.totalPoints =
@@ -194,7 +234,7 @@ const UpdateQuestion = ({
           : '';
       // Tổng pointDivision phải bằng totalPoints
       const totalPointssSum = pointDivision.reduce(
-        (sum, point) => sum + point.point,
+        (sum, point) => sum + Number(point.point),
         0
       );
       newErrors.totalPoints =
@@ -257,7 +297,7 @@ const UpdateQuestion = ({
 
       // Tổng pointDivision phải bằng totalPoints
       const totalPointssSum = pointDivision.reduce(
-        (sum, point) => sum + point.point,
+        (sum, point) => sum + Number(point.point),
         0
       );
       if (pointDivision.length !== 0) {
@@ -318,28 +358,39 @@ const UpdateQuestion = ({
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
-      const pointDivisionAPI = pointDivision
-        .map((division) => division.point)
-        .join('/');
+      const pointDivisionAPI = () => {
+        let arrtemp: string[] = [];
+        for (let i = 0; i < pointDivision.length; i++) {
+          if (pointDivision[i].point !== '0') {
+            arrtemp.push(pointDivision[i].point);
+          }
+        }
+        return arrtemp.join('/');
+      };
       const { answerAPI, possibleAnswersAPI } = makeAnswer(
         selectedType,
         answers,
         correctAnswers
       );
+      console.log('AnswerAPI: ', answerAPI);
+      console.log('possibleAnswers hehe: ', answers);
       const data: UpdateQuestionDto = {
         question: question,
         totalPoints: Number(totalPoints),
-        pointDivision: pointDivisionAPI,
+        pointDivision:
+          selectedType !== 'SingleChoice' ? pointDivisionAPI() : totalPoints,
         content: content,
         attach: attach,
         questionType: selectedType,
         possibleAnswer: possibleAnswersAPI,
-        answer: answerAPI
+        answer: answerAPI,
+        examId: [],
+        documentId: []
       };
-      // console.log('data: ', data);
+      console.log('data: ', data);
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
-        // Gọi API và đợi kết quả trả về
+        //Gọi API và đợi kết quả trả về
         const result = await editQuestion(questionUpdate.id, data);
         if (result) {
           handleClose();
@@ -351,7 +402,7 @@ const UpdateQuestion = ({
         console.error('🚫 ~ onSubmit ~ Error:', error);
         toast.error(
           error.response?.data?.message ||
-            'Failed to update question. Please try again.'
+            'Failed to create question. Please try again.'
         );
       } finally {
         setIsSubmitting(false); // Hoàn tất gửi yêu cầu
@@ -470,7 +521,7 @@ const UpdateQuestion = ({
     }
   };
 
-  const updatePointDivision = (id: number, newPoint: number) => {
+  const updatePointDivision = (id: number, newPoint: string) => {
     setPointDivision((prevPointDivision) => {
       // Nếu pointDivision rỗng, thêm đối tượng mới
       if (prevPointDivision.length === 0) {
@@ -641,7 +692,7 @@ const UpdateQuestion = ({
                           {/* Input chiếm toàn bộ không gian */}
                           <input
                             type="text"
-                            className="w-full flex-grow rounded-lg border p-2"
+                            className="w-full flex-grow rounded-lg border p-2 text-black"
                             placeholder="Enter answer"
                             value={answer.answer}
                             onChange={(e) => {
@@ -649,36 +700,6 @@ const UpdateQuestion = ({
                             }}
                             onFocus={(e) => e.target.select()}
                           />
-                          <div className="flex flex-row gap-2">
-                            <div className="flex flex-row">
-                              <div className="basis-[30%]">
-                                <span className="text-sm font-medium text-black">
-                                  Point
-                                  <span className="text-danger">*</span>
-                                </span>
-                              </div>
-                              <div className="relative basis-[70%]">
-                                <input
-                                  type="number"
-                                  className="w-full rounded-lg"
-                                  placeholder="Enter point..."
-                                  value={
-                                    pointDivision.find(
-                                      (point) => point.id === answer.id
-                                    )?.point
-                                  }
-                                  onChange={(e) => {
-                                    updatePointDivision(
-                                      answer.id,
-                                      e.target.value === ''
-                                        ? 0
-                                        : parseFloat(e.target.value)
-                                    );
-                                  }}
-                                />
-                              </div>
-                            </div>
-                          </div>
 
                           {/* Nút xóa */}
                           <Tooltip color="danger" content="Delete" delay={200}>
@@ -722,7 +743,7 @@ const UpdateQuestion = ({
                           {/* Input chiếm toàn bộ không gian */}
                           <input
                             type="text"
-                            className="flex-grow rounded-lg border p-2"
+                            className="flex-grow rounded-lg border p-2 text-black"
                             placeholder="Enter answer"
                             value={answer.answer}
                             onChange={(e) => {
@@ -742,7 +763,7 @@ const UpdateQuestion = ({
                               <div className="relative basis-[70%]">
                                 <input
                                   type="number"
-                                  className="w-full rounded-lg"
+                                  className="w-full rounded-lg text-black"
                                   placeholder="Enter point..."
                                   value={
                                     pointDivision.find(
@@ -753,8 +774,8 @@ const UpdateQuestion = ({
                                     updatePointDivision(
                                       answer.id,
                                       e.target.value === ''
-                                        ? 0
-                                        : parseFloat(e.target.value)
+                                        ? '0'
+                                        : e.target.value
                                     );
                                   }}
                                 />
@@ -794,7 +815,7 @@ const UpdateQuestion = ({
                         <div className="flex w-full flex-row items-center gap-4">
                           <input
                             type="text"
-                            className="flex-grow rounded-lg border p-2"
+                            className="flex-grow rounded-lg border p-2 text-black"
                             placeholder="Enter answer"
                             value={answer.answer}
                             onChange={(e) => {
@@ -814,7 +835,7 @@ const UpdateQuestion = ({
                               <div className="relative basis-[70%]">
                                 <input
                                   type="number"
-                                  className="w-full rounded-lg"
+                                  className="w-full rounded-lg text-black"
                                   placeholder="Enter point..."
                                   value={
                                     pointDivision.find(
@@ -825,8 +846,8 @@ const UpdateQuestion = ({
                                     updatePointDivision(
                                       answer.id,
                                       e.target.value === ''
-                                        ? 0
-                                        : parseFloat(e.target.value)
+                                        ? '0'
+                                        : e.target.value
                                     );
                                   }}
                                 />
