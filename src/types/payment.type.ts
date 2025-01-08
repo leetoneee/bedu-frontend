@@ -1,6 +1,6 @@
-import { EClass } from "./class.type";
-import { Program } from "./program.type";
-import { User } from "./user.type";
+import { EClass } from './class.type';
+import { Program } from './program.type';
+import { User } from './user.type';
 
 export type Payment = {
   id: number;
@@ -9,5 +9,10 @@ export type Payment = {
   program: Program;
   class: EClass;
   amount: number;
-  method: string;
-}
+  paymentMethod: {
+    id: number;
+    name: string;
+    description: string;
+  };
+  status: string;
+};
