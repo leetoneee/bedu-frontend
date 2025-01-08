@@ -17,3 +17,19 @@ export const createAnswers = async (data: CreateAnswerDto[]) => {
     throw error;
   }
 };
+
+export const getRateData = async ({
+  examId,
+  questionId
+}: {
+  examId: number;
+  questionId: number;
+}) => {
+  try {
+    const res = await axios.get(`/answers/rate/exam/${examId}/question/${questionId}`);
+    return res.data;
+  } catch (error) {
+    console.log('🚫 ~ getRateData ~ error:', error);
+    throw error;
+  }
+};

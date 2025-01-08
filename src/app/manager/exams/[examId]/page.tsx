@@ -58,8 +58,10 @@ const ExamDetail = () => {
         <ExamHeader activeTab={activeTab} setActiveTab={setActiveTab} />
         <Divider />
         {activeTab === 'List of questions' && <LOQ examId={Number(examId)} />}
-        {activeTab === 'Configuration' && <Config examId={Number(examId)} />}{' '}
-        {activeTab === 'Statistical' && <Statistical examId={Number(examId)} />}{' '}
+        {activeTab === 'Configuration' && <Config examId={Number(examId)} />}
+        {activeTab === 'Statistical' && exam && (
+          <Statistical examId={Number(examId)} nameExam={exam.title} />
+        )}
         {activeTab === 'Result' && <Result examId={Number(examId)} />}
       </div>
       {/* Save Button */}

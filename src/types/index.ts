@@ -98,3 +98,8 @@ export type TimeContextType = {
   startTimer: (duration: number) => void; // Bắt đầu đếm ngược
   stopTimer: () => void; // Dừng đồng hồ
 };
+
+export type Column<T> = {
+  title: string;
+  key: keyof T;
+};

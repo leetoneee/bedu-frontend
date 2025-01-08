@@ -12,3 +12,10 @@ export type Exam = {
   isActive: boolean;
   questions: Question[];
 }
+
+export type ReportExam = {
+  userId: number;
+  name: string;
+  attempts: number;
+  total: string;
+}
