@@ -39,6 +39,8 @@ import InputQuestion from './Question/InputQuestionn';
 import NavAccordion from './Accordion/NavAccordion/NavAccordion';
 import NavLessonPreview from './LessonPreview/NavLessonPreview';
 import LessonPreview from './LessonPreview/LessonPrview';
+import { Comment, SubComment } from '@/components/Comment';
+
 export { classNames };
 export { Sidebar };
 export { Header, NavHeader };
@@ -66,3 +68,4 @@ export { Accordion, NavAccordion, NavLessonPreview, LessonPreview };
 export { OtpInput };
 export { Schedule };
 export { InputQuestion, StaticQuestion };
+export { Comment, SubComment };

@@ -4,7 +4,7 @@ import { AppContext } from '@/contexts';
 import { AuthType } from '@/types';
 import { User } from '@/types/user.type';
 import { Divider } from '@nextui-org/react';
-import axios from 'axios';
+import axios from '@/libs/axiosInstance';
 import React, { useContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { useParams } from 'next/navigation';
