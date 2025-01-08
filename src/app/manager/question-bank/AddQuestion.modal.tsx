@@ -293,7 +293,7 @@ const AddQuestionModal = ({
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
       const pointDivisionAPI = () => {
-        let arrtemp:string[] = [];
+        const arrtemp:string[] = [];
         for(let i = 0; i < pointDivision.length; i++) {
           if(pointDivision[i].point !== '0') {
             arrtemp.push(pointDivision[i].point);

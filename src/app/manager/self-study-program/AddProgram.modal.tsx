@@ -125,6 +125,7 @@ export default function AddProgramModal({
         const data: CreateProgramDto = {
           type: selectedType.toLowerCase(),
           // code: code,
+          isActive: isPublic,
           title: name,
           description: description,
           avatar: url,

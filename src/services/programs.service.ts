@@ -10,7 +10,7 @@ export type CreateProgramDto = {
   description: string;
   sessionQuantity: number;
   courseId: number[];
-
+  isActive: boolean,
   // type is in  toeic, ielts, toefl
   type: string;
 };

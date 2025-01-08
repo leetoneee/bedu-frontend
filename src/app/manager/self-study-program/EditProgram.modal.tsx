@@ -138,7 +138,8 @@ export default function EditProgramModal({
         description: description,
         // image: url,
         sessionQuantity: Number(sessionQuantity),
-        courseId: []
+        courseId: [],
+        isActive: isPublic
       };
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu

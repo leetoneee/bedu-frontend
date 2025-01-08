@@ -100,7 +100,7 @@ const UpdateQuestion = ({
     //     };
     //   }
     // });
-    let division: string[] = pointDivision.split('/');
+    const division: string[] = pointDivision.split('/');
     let point: number = 0;
     const ans: { id: number; point: string }[] = answers.map((answer) => ({
       id: answer.id, // Gán id từ answers
@@ -359,7 +359,7 @@ const UpdateQuestion = ({
       console.log('Form is valid. Submitting...');
       // Handle form submission logic here
       const pointDivisionAPI = () => {
-        let arrtemp: string[] = [];
+        const arrtemp: string[] = [];
         for (let i = 0; i < pointDivision.length; i++) {
           if (pointDivision[i].point !== '0') {
             arrtemp.push(pointDivision[i].point);

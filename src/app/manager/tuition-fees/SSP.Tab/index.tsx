@@ -174,7 +174,7 @@ const SSPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue && cellValue.toString()}
+                {payment.paymentMethod && payment.paymentMethod.name}
               </p>
             </div>
           );

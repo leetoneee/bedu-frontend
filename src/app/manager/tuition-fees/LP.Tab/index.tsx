@@ -175,7 +175,7 @@ const LPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue.toString()}
+                {payment.paymentMethod && payment.paymentMethod.name}
               </p>
             </div>
           );

@@ -52,7 +52,7 @@ const CommentTab = ({ lessonId }: Props) => {
   }, [dataComments?.metadata]);
 
   const handleComment = async () => {
-    let reply = comment.trim();
+    const reply = comment.trim();
     if (reply === '') {
       return;
     }
