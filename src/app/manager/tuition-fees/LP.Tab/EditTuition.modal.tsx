@@ -99,7 +99,7 @@ const EditTuition = ({
       setEClass(payment.class);
       setAmount(payment.amount.toString());
       setTransactionId(payment.transactionId);
-      setMethod(new Set([payment.method]));
+      setMethod(new Set([payment.paymentMethod.name]));
     }
   }, []);
 

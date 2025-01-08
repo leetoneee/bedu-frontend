@@ -1,5 +1,4 @@
 import { formatNumberWithCommas } from '@/helpers';
-import { Payment } from '@/types/payment.type';
 import React from 'react';
 import {
   BarChart,
