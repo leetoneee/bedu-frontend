@@ -1,5 +1,14 @@
-export type Comment = {
+export type CreateCommentDto = {
+  lessonId: number;
+  userId: number;
   content: string;
-  left: number;
-  right: number;
+  parentCommentId: number;
+}
+
+export type CommentProps = {
+  commentId: number;
+  username: string;
+  content: string;
+  commentTime: Date;
+  hasChildren: boolean;
 };
