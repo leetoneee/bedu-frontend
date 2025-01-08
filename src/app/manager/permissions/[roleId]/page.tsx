@@ -2,7 +2,7 @@
 
 import { Breadcrumb } from '@/components';
 import { Crumb } from '@/types';
-import { Role } from '@/types/role.type';
+import { Permission, Resource, Role } from '@/types/role.type';
 import { Divider } from '@nextui-org/react';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -16,6 +16,8 @@ const GrantPage = () => {
   const roleId = params.roleId;
 
   const [role, setRole] = useState<Role | null>(null);
+  const [resources, setResources] = useState<Resource[]>([]);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
 
   const crumbs: Crumb[] = useMemo(() => {
     return [
@@ -37,6 +39,20 @@ const GrantPage = () => {
     // mutate: refreshEndpoint
   } = useSWR(`/role`, fetcher);
 
+  const {
+    data: permissionsData
+    // isLoading,
+    // error: classError,
+    // mutate: refreshEndpoint
+  } = useSWR(`/role/grant/${roleId}`, fetcher);
+
+  const {
+    data: resourcesData
+    // isLoading,
+    // error: classError,
+    // mutate: refreshEndpoint
+  } = useSWR(`/role/resource`, fetcher);
+
   useEffect(() => {
     if (roleData && roleData.metadata) {
       const roles: Role[] = roleData.metadata;
@@ -45,6 +61,31 @@ const GrantPage = () => {
       else setRole(null);
     }
   }, [roleData]);
+
+  useEffect(() => {
+    if (
+      resourcesData &&
+      resourcesData.metadata &&
+      resourcesData.metadata.resources
+    ) {
+      setResources(resourcesData.metadata.resources);
+    }
+  }, [resourcesData]);
+
+  useEffect(() => {
+    if (permissionsData && permissionsData.metadata) {
+      setPermissions(permissionsData.metadata);
+    }
+  }, [permissionsData]);
+
+  // Hàm kiểm tra action có tồn tại trong permissions hay không
+  const getActionType = (resourceName: string, actionType: string) => {
+    const permission = permissions.find(
+      (perm) =>
+        perm.resource === resourceName && perm.action.startsWith(actionType)
+    );
+    return permission ? permission.action.split(':')[1] : 'none'; // Trả về "own" hoặc "any"
+  };
 
   return (
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
@@ -59,56 +100,54 @@ const GrantPage = () => {
                   scope="col"
                   className="border border-gray-200 px-4 py-2 text-center"
                 >
-                  No.
+                  Resource
                 </th>
-                {/* {columns.map((column, index) => (
-                  <th
-                    key={index}
-                    scope="col"
-                    className="border border-gray-200 px-4 py-2 text-center"
-                  >
-                    {column.title}
-                  </th>
-                ))} */}
                 <th
                   scope="col"
                   className="border border-gray-200 px-4 py-2 text-center"
                 >
-                  Actions
+                  Create
+                </th>
+                <th
+                  scope="col"
+                  className="border border-gray-200 px-4 py-2 text-center"
+                >
+                  Read
+                </th>
+                <th
+                  scope="col"
+                  className="border border-gray-200 px-4 py-2 text-center"
+                >
+                  Update
+                </th>
+                <th
+                  scope="col"
+                  className="border border-gray-200 px-4 py-2 text-center"
+                >
+                  Delete
                 </th>
               </tr>
             </thead>
             <tbody>
-              {/* {roles &&
-                roles.map((row, rowIndex) => (
-                  <tr key={rowIndex} className="text-center align-middle">
-                    <td className="border border-gray-200 px-4 py-2">
-                      {rowIndex + 1}
-                    </td>
-                    {columns.map((column, colIndex) => (
-                      <td
-                        key={colIndex}
-                        className="border border-gray-200 px-4 py-2"
-                      >
-                        {row[column.key] as keyof Role}
-                      </td>
-                    ))}
-                    <td className="border border-gray-200 px-4 py-2">
-                      <Tooltip
-                        content="View list grants"
-                        className="h-full bg-on-primary"
-                        delay={1000}
-                      >
-                        <span
-                          className="flex cursor-pointer items-center justify-center text-lg text-on-primary active:opacity-50"
-                          onClick={() => router.push(`permissions/${row.id}`)}
-                        >
-                          <EyeIcon className="size-5" />
-                        </span>
-                      </Tooltip>
-                    </td>
-                  </tr>
-                ))} */}
+              {resources.map((resource) => (
+                <tr key={resource.id} className="text-center align-middle">
+                  <td className="border border-gray-200 px-4 py-2">
+                    {resource.name}
+                  </td>
+                  <td className="border border-gray-200 px-4 py-2">
+                    {getActionType(resource.name, 'create')}
+                  </td>
+                  <td className="border border-gray-200 px-4 py-2">
+                    {getActionType(resource.name, 'read')}
+                  </td>
+                  <td className="border border-gray-200 px-4 py-2">
+                    {getActionType(resource.name, 'update')}
+                  </td>
+                  <td className="border border-gray-200 px-4 py-2">
+                    {getActionType(resource.name, 'delete')}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
