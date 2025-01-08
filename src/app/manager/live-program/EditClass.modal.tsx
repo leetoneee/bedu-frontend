@@ -56,6 +56,7 @@ export default function EditClassModal({
   const [startDate, setStartDate] = useState<string>();
   const [price, setPrice] = useState<string>();
   const [lessonQuantity, setLessonQuantity] = useState<string>('');
+  const [avatar, setAvatar] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [type, setType] = useState<Selection>(new Set([]));
@@ -96,6 +97,7 @@ export default function EditClassModal({
       setStartDate(eclass.startDate.split('T')[0]);
       setLessonQuantity(eclass.lessonQuantity.toString());
       setPrice(eclass.price.toString());
+      setAvatar(eclass.avatar);
     }
   }, [eclass]);
 
@@ -197,8 +199,17 @@ export default function EditClassModal({
 
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
-        const url = await handleUploadFile();
-        if (!url) throw new Error('File upload failed');
+        let url = avatar; // Default to existing avatar
+        if (inputFileRef.current) {
+          const uploadedUrl = await handleUploadFile();
+          if (uploadedUrl) {
+            url = uploadedUrl; // Use the uploaded file URL if successful
+          } else {
+            console.warn(
+              'File upload failed. Proceeding with default avatar URL.'
+            );
+          }
+        }
         // Gọi API và đợi kết quả
         const data: UpdateClassDto = {
           type: selectedType,

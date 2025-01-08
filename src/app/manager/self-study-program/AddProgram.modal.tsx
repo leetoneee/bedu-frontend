@@ -119,8 +119,15 @@ export default function AddProgramModal({
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
         // Upload file
-        const url = await handleUploadFile();
-        if (!url) throw new Error('File upload failed');
+        // Upload file (nếu có)
+        let url = '';
+        if (inputFileRef.current) {
+          url = (await handleUploadFile()) || '';
+          if (!url) {
+            console.warn('File upload failed. Proceeding without a file URL.');
+            url = ''; // Gán giá trị mặc định nếu không upload được file
+          }
+        }
         // Gọi API và đợi kết quả
         const data: CreateProgramDto = {
           type: selectedType.toLowerCase(),
