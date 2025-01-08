@@ -4,3 +4,11 @@ export type CreateCommentDto = {
   content: string;
   parentCommentId: number;
 }
+
+export type CommentProps = {
+  commentId: number;
+  username: string;
+  content: string;
+  commentTime: Date;
+  hasChildren: boolean;
+};

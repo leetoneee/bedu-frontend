@@ -24,7 +24,7 @@ const SubComment = ({ comment  }: { comment : CommentProps }) => {
         </div>
         <div className="w-[97%]">
           <span className="font-bold text-outline-focus">
-            {'Username tam'}
+            {comment.username}
           </span>
         </div>
       </div>

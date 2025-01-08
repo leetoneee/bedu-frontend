@@ -3,44 +3,90 @@
 import ButtonBase from '@/components/Button/ButtonBase';
 import axios from '@/libs/axiosInstance';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import useSWR from 'swr';
+import { useContext, useEffect, useState } from 'react';
+import useSWR, { mutate } from 'swr';
 import { ArrowTurnLeftDownIcon } from '@heroicons/react/24/outline';
 import { Input } from '@nextui-org/react';
 import { ButtonSolid, SubComment } from '@/components';
-
-type CommentProps = {
-  commentId: number;
-  username: string;
-  content: string;
-  commentTime: Date;
-  hasChildren: boolean;
-};
+import { CreateCommentDto, CommentProps } from '@/types/comment.type';
+import { AuthType } from '@/types';
+import { AppContext } from '@/contexts';
+import { createComment } from '@/services/comments.service';
+import { toast } from 'react-toastify';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const Comment = ({
   comment,
-  lessionId
+  lessonId
 }: {
   comment: CommentProps;
-  lessionId: string;
+  lessonId: string;
 }) => {
   const [commentReply, setCommentReply] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [user, setUser] = useState(); // được sử dụng để render tạm thời
+  const [subComments, setSubComments] = useState<CommentProps[]>([]);
+  const [expanded, setExpanded] = useState(false);
 
-  const { data: dataSubComment } = useSWR(
-    `/comment/parent/${comment.commentId}?lessonId=${lessionId}`,
+  const { auth } = useContext(AppContext) as AuthType;
+  const { data: dataUser } = useSWR(`/users/item/${auth?.id}`, fetcher);
+  let { data: dataSubComment } = useSWR(
+    `/comment/parent/${comment.commentId}?lessonId=${lessonId}`,
     fetcher
   );
-  const [subComments, setSubComments] = useState<CommentProps[]>([]);
+
+  useEffect(() => {
+    if (dataUser) {
+      setUser(dataUser.metadata);
+    }
+  }, [dataUser]);
   useEffect(() => {
     if (dataSubComment && dataSubComment.metadata)
       setSubComments(dataSubComment.metadata);
   }, [dataSubComment?.metadata]);
 
-  const [expanded, setExpanded] = useState(false);
   const handleReply = () => {
     setExpanded((prev) => (prev = !prev));
+  };
+
+  const handleComment = async () => {
+    let reply = commentReply.trim();
+    if (reply === '') {
+      return;
+    }
+
+    const data: CreateCommentDto = {
+      lessonId: Number(lessonId),
+      userId: auth.id,
+      content: commentReply.trim(),
+      parentCommentId: comment.commentId
+    };
+
+    const newComment: CommentProps = {
+      commentId: Date.now(), // Sử dụng tạm ID để hiển thị
+      username: dataUser.metadata.name,
+      content: commentReply.trim(),
+      commentTime: new Date(),
+      hasChildren: false
+    };
+
+    try {
+      setIsSubmitting(true);
+      const result = await createComment(data);
+      // Hiển thị tạm comment mới
+      setSubComments((prev) => [...prev, newComment]);
+      mutate(`/comment/parent/${comment.commentId}?lessonId=${lessonId}`);
+    } catch (error: any) {
+      console.error('🚫 ~ onSubmit ~ Error:', error);
+      toast.error(
+        error.response?.data?.message ||
+          'Failed to create comment. Please try again.'
+      );
+    } finally {
+      setIsSubmitting(false); // Hoàn tất gửi yêu cầu
+      setCommentReply('');
+    }
   };
 
   return (
@@ -62,7 +108,7 @@ const Comment = ({
       </div>
       <div className="flex flex-row gap-4">
         <div className="h-[30px] w-[3%]"></div>
-        <div className="w-[97%]">
+        <div className="w-[90%]">
           <span className="text-on-surface">{comment.content}</span>
         </div>
       </div>
@@ -82,11 +128,11 @@ const Comment = ({
       {expanded && (
         <div className="">
           {subComments &&
-            subComments.map((comment: CommentProps) => (
-              <div className="flex flex-row py-2">
+            subComments.map((subComment: CommentProps) => (
+              <div className="flex flex-row py-2" key={subComment.commentId}>
                 <div className="w-[3%]"></div>
                 <div className="w-[97%]">
-                  <SubComment comment={comment} />
+                  <SubComment comment={subComment} />
                 </div>
               </div>
             ))}
@@ -105,7 +151,8 @@ const Comment = ({
 
                 <ButtonSolid
                   className="w-[15%] rounded-md bg-outline-focus !text-b-primary"
-                  content="Send comment"
+                  content={isSubmitting ? 'Submitting' : 'Send comment'}
+                  onClick={handleComment}
                 />
               </div>
             </div>
