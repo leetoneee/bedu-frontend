@@ -8,7 +8,6 @@ import {
   ModalFooter,
   ModalContent
 } from '@nextui-org/react';
-import { StaticQuestion } from '@/components';
 
 type Props = {
   isOpen: boolean;
