@@ -37,7 +37,7 @@ const Result = ({ examId }: Props) => {
 
   const averageScore =
     reports.reduce(
-      (sum, row) => sum + (Number(row.total) / row.attempts || 0),
+      (sum, row) => sum + (Number(row.total) || 0),
       0
     ) / reports.length || 0;
 
