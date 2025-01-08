@@ -1,8 +1,13 @@
-import { Divider } from '@nextui-org/react';
+import { Divider, Tooltip, useDisclosure } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
 import axios from '@/libs/axiosInstance';
 import useSWR from 'swr';
 import ScoreStaticChart from '@/components/Charts/ScoreStaticChart';
+import { Question } from '@/types/question-bank.type';
+import { getRateData } from '@/services/answers.service';
+import { EyeIcon } from '@heroicons/react/24/outline';
+import ViewQuestionModal from './ViewQuestion.modal';
+import ViewListModal from './ViewList.modal';
 
 type Props = {
   examId: number;
@@ -18,11 +23,69 @@ type BasicStatis = {
   totalTries: number;
 };
 
+type CorrectAndIncorrectRate = {
+  question: Question;
+  totalStudent: number;
+  totalAttempt: number;
+  totalNotAttempt: number;
+  rightStudent: number;
+  wrongStudent: number;
+  listOfStudentsHaveNotDone: string[];
+  wrongStudentList: string[];
+};
+
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const Statistical = ({ examId, nameExam }: Props) => {
+  //!  CONTROL View question modal
+  const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(
+    null
+  );
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<
+    number | null
+  >(null);
+  const {
+    isOpen: isOpenQ,
+    onOpen: onOpenQ,
+    onOpenChange: onOpenChangeQ,
+    onClose: onCloseQ
+  } = useDisclosure();
+  const handleViewQuestionModal = (question: Question, index: number) => {
+    setSelectedQuestion(question);
+    setSelectedQuestionIndex(index);
+    onOpenQ();
+  };
+  const handleCloseViewQuestionModal = () => {
+    onCloseQ();
+    setSelectedQuestion(null);
+    setSelectedQuestionIndex(null);
+  };
+
+  //! CONTROL View list modal
+  const [selectedList, setSelectedList] = useState<string[] | null>(null);
+  const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
+  const {
+    isOpen: isOpenL,
+    onOpen: onOpenL,
+    onOpenChange: onOpenChangeL,
+    onClose: onCloseL
+  } = useDisclosure();
+  const handleViewListModal = (list: string[], title: string) => {
+    setSelectedList(list);
+    setSelectedTitle(title);
+    onOpenL();
+  };
+  const handleCloseViewListModal = () => {
+    onCloseL();
+    setSelectedList(null);
+    setSelectedTitle(null);
+  };
+
   const [basic, setBasic] = useState<BasicStatis | null>(null);
   const [scoresDistribution, setScoresDistribution] = useState<number[]>([]);
+  const [questionIds, setQuestionIds] = useState<number[]>([]);
+  const [rateData, setRateData] = useState<CorrectAndIncorrectRate[]>([]);
+
   const {
     data: basicData
     // isLoading,
@@ -37,6 +100,13 @@ const Statistical = ({ examId, nameExam }: Props) => {
     // mutate: refreshEndpoint
   } = useSWR(`/answers/scoreDistributor/${examId}`, fetcher);
 
+  const {
+    data: examData
+    // isLoading,
+    // error: classError,
+    // mutate: refreshEndpoint
+  } = useSWR(`/exams/item/${examId}`, fetcher);
+
   useEffect(() => {
     if (basicData && basicData.metadata) {
       setBasic(basicData.metadata);
@@ -48,6 +118,30 @@ const Statistical = ({ examId, nameExam }: Props) => {
       setScoresDistribution(scoreDisData.metadata);
     }
   }, [scoreDisData]);
+
+  useEffect(() => {
+    if (examData && examData.metadata) {
+      if (examData.metadata.questions.length > 0) {
+        const questions: Question[] = examData.metadata.questions;
+        const ids = questions.map((question) => question.id);
+        setQuestionIds(ids);
+      }
+    }
+  }, [examData]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      for (const id of questionIds) {
+        try {
+          const response = await getRateData({ examId, questionId: id });
+          setRateData((prevRateData) => [...prevRateData, response.metadata]);
+        } catch (error) {
+          console.error(`Error fetching data for ID ${id}:`, error);
+        }
+      }
+    };
+    fetchData();
+  }, [questionIds, examId]);
 
   //! Frequency table
   const totalParticipants = basic?.studentJoinIn;
@@ -86,7 +180,7 @@ const Statistical = ({ examId, nameExam }: Props) => {
   return (
     <div className="flex h-full w-full flex-col gap-2 rounded rounded-t-none border-on-surface/20 bg-white p-5 shadow-sm">
       {/* Code ở đây */}
-      <div className="flex w-full flex-col gap-4">
+      <div className="flex w-full flex-col gap-6">
         <div className="flex w-full flex-col gap-2">
           <span className="text-xl font-semibold text-on-surface">
             Basic statistics
@@ -270,8 +364,180 @@ const Statistical = ({ examId, nameExam }: Props) => {
           <span className="text-xl font-semibold text-on-surface">
             Table of Corect and Incorrect Rates
           </span>
+          <div className="overflow-x-auto">
+            <table className="min-w-full border-collapse border border-gray-200">
+              <thead>
+                <tr className="bg-blue-100">
+                  <th className="border border-gray-200 px-4 py-2">No.</th>
+                  <th className="border border-gray-200 px-4 py-2">
+                    Question ID
+                  </th>
+                  <th className="border border-gray-200 px-4 py-2">
+                    Total Students
+                  </th>
+                  <th className="border border-gray-200 px-4 py-2">
+                    Attempted
+                  </th>
+                  <th className="border border-gray-200 px-4 py-2">
+                    Not Attempted
+                  </th>
+                  <th className="border border-gray-200 px-4 py-2">Correct</th>
+                  <th className="border border-gray-200 px-4 py-2">
+                    Incorrect
+                  </th>
+                  <th className="border border-gray-200 px-4 py-2">
+                    Incompletion Rate (%)
+                  </th>
+                  <th className="border border-gray-200 px-4 py-2">
+                    Incorrect List
+                  </th>
+                  <th className="border border-gray-200 px-4 py-2">
+                    Not Attempted List
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {rateData &&
+                  rateData.map((item, index) => (
+                    <tr key={index} className="bg-white">
+                      <td className="border border-gray-200 px-4 py-2 text-center">
+                        {index + 1}
+                      </td>
+                      <td className="flex flex-nowrap items-center justify-between gap-1 text-nowrap border border-gray-200 px-4 py-2 text-center">
+                        Question {index + 1}
+                        <Tooltip
+                          content="Watch question"
+                          className="bg-on-primary"
+                          delay={1000}
+                        >
+                          <span
+                            className="flex cursor-pointer items-center justify-center text-lg text-on-primary active:opacity-50"
+                            onClick={() =>
+                              handleViewQuestionModal(item.question, index)
+                            }
+                          >
+                            <EyeIcon className="size-5" />
+                          </span>
+                        </Tooltip>
+                      </td>
+                      <td className="border border-gray-200 px-4 py-2 text-center">
+                        {item.totalStudent}
+                      </td>
+                      <td className="border border-gray-200 px-4 py-2 text-center">
+                        {item.totalAttempt}
+                      </td>
+                      <td className="border border-gray-200 px-4 py-2 text-center">
+                        {item.totalNotAttempt}
+                      </td>
+                      <td className="border border-gray-200 px-4 py-2 text-center">
+                        {item.rightStudent}
+                      </td>
+                      <td className="border border-gray-200 px-4 py-2 text-center">
+                        {item.wrongStudent}
+                      </td>
+                      <td className="border border-gray-200 px-4 py-2 text-center">
+                        {item.totalStudent > 0
+                          ? (
+                              (item.totalNotAttempt / item.totalStudent) *
+                              100
+                            ).toFixed(2)
+                          : 'N/A'}
+                      </td>
+                      <td className="border border-gray-200 px-4 py-2">
+                        {item.wrongStudentList.length > 0 ? (
+                          <Tooltip
+                            content="Watch incorrect list"
+                            className="h-full bg-on-primary"
+                            delay={1000}
+                          >
+                            <span
+                              className="flex cursor-pointer items-center justify-center text-lg text-on-primary active:opacity-50"
+                              onClick={() =>
+                                handleViewListModal(
+                                  item.wrongStudentList,
+                                  'Incorrect List'
+                                )
+                              }
+                            >
+                              <EyeIcon className="size-5" />
+                            </span>
+                          </Tooltip>
+                        ) : (
+                          <Tooltip
+                            content="Empty list"
+                            className="bg-danger"
+                            delay={1000}
+                          >
+                            <span
+                              className="flex cursor-pointer items-center justify-center text-lg text-danger active:opacity-50"
+                              onClick={() => {}}
+                            >
+                              <EyeIcon className="size-5" />
+                            </span>
+                          </Tooltip>
+                        )}
+                      </td>
+                      <td className="border border-gray-200 px-4 py-2 text-center">
+                        {item.listOfStudentsHaveNotDone.length > 0 ? (
+                          <Tooltip
+                            content="Empty list"
+                            className="bg-on-primary"
+                            delay={1000}
+                          >
+                            <span
+                              className="flex cursor-pointer items-center justify-center text-lg text-on-primary active:opacity-50"
+                              onClick={() =>
+                                handleViewListModal(
+                                  item.listOfStudentsHaveNotDone,
+                                  'Not Attempted List'
+                                )
+                              }
+                            >
+                              <EyeIcon className="size-5" />
+                            </span>
+                          </Tooltip>
+                        ) : (
+                          <Tooltip
+                            content="Empty list"
+                            className="bg-danger"
+                            delay={1000}
+                          >
+                            <span
+                              className="flex cursor-pointer items-center justify-center text-lg text-danger active:opacity-50"
+                              onClick={() => {}}
+                            >
+                              <EyeIcon className="size-5" />
+                            </span>
+                          </Tooltip>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
+      {selectedQuestion && selectedQuestionIndex !== null && (
+        <ViewQuestionModal
+          index={selectedQuestionIndex}
+          isOpen={isOpenQ}
+          onClose={handleCloseViewQuestionModal}
+          onOpen={onOpenQ}
+          onOpenChange={onOpenChangeQ}
+          question={selectedQuestion}
+        />
+      )}
+      {selectedList && selectedTitle && (
+        <ViewListModal
+          isOpen={isOpenL}
+          onClose={handleCloseViewListModal}
+          onOpen={onOpenL}
+          onOpenChange={onOpenChangeL}
+          list={selectedList}
+          title={selectedTitle}
+        />
+      )}
     </div>
   );
 };
