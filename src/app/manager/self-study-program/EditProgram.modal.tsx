@@ -53,7 +53,7 @@ export default function EditProgramModal({
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [type, setType] = useState<Selection>(new Set([]));
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [avatar, setAvatar] = useState<string>('');
   const [errors, setErrors] = useState<{
     name: string;
     code: string;
@@ -76,6 +76,7 @@ export default function EditProgramModal({
       setIsPublic(program.isActive);
       setType(new Set([`${program.type}`]));
       setSessionQuantity(program.sessionQuantity.toString());
+      setAvatar(program.avatar);
       // setPrice(program.price.toString());
     }
   }, [program]);
@@ -130,13 +131,26 @@ export default function EditProgramModal({
   const handleSubmit = async () => {
     if (validateInputs()) {
       console.log('Form is valid. Submitting...');
-      // Handle form submission logic here
+      // Handle form submission logic here        // Upload file (nếu có)
+      let url = avatar; // Use the existing `avatar` as default
+      if (inputFileRef.current) {
+        const uploadedUrl = await handleUploadFile();
+        if (uploadedUrl) {
+          url = uploadedUrl; // Update with uploaded file URL if successful
+        } else {
+          console.warn(
+            'File upload failed. Proceeding with default avatar URL.'
+          );
+        }
+      }
+
       const data: UpdateProgramDto = {
         type: selectedType,
         // code: code,
         title: name,
         description: description,
         // image: url,
+        avatar: url,
         sessionQuantity: Number(sessionQuantity),
         courseId: [],
         isActive: isPublic

@@ -179,8 +179,17 @@ export default function AddClassModal({
 
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
-        const url = await handleUploadFile();
-        if (!url) throw new Error('File upload failed');
+        // Upload file (nếu có)
+        // Handle file upload if applicable
+        let url = '';
+        if (inputFileRef.current) {
+          const uploadedUrl = await handleUploadFile();
+          if (uploadedUrl) {
+            url = uploadedUrl; // Use the uploaded file URL
+          } else {
+            console.warn('File upload failed. Proceeding without a file URL.');
+          }
+        }
         // Gọi API và đợi kết quả
         const data: CreateClassDto = {
           type: selectedType.toLowerCase(),
