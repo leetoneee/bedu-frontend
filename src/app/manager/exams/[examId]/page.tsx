@@ -24,7 +24,7 @@ const ExamDetail = () => {
   const [activeTab, setActiveTab] = useState<string>('List of questions');
 
   const {
-    data,
+    data
     // isLoading,
     // error: classError,
     // mutate: refreshEndpoint
@@ -43,12 +43,12 @@ const ExamDetail = () => {
     ];
   }, [examId, exam]);
 
-    useEffect(() => {
-      if (data?.metadata) {
-        setExam(data.metadata);
-        // setLessons(data.metadata.lesson);
-      }
-    }, [data]);
+  useEffect(() => {
+    if (data?.metadata) {
+      setExam(data.metadata);
+      // setLessons(data.metadata.lesson);
+    }
+  }, [data]);
 
   return (
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
@@ -57,10 +57,12 @@ const ExamDetail = () => {
       <div className="flex w-full flex-col">
         <ExamHeader activeTab={activeTab} setActiveTab={setActiveTab} />
         <Divider />
-        {activeTab === 'List of questions' && <LOQ id={Number(examId)} />}
-        {activeTab === 'Configuration' && <Config id={Number(examId)} />}{' '}
-        {activeTab === 'Statistical' && <Statistical id={Number(examId)} />}{' '}
-        {activeTab === 'Result' && <Result id={Number(examId)} />}
+        {activeTab === 'List of questions' && <LOQ examId={Number(examId)} />}
+        {activeTab === 'Configuration' && <Config examId={Number(examId)} />}
+        {activeTab === 'Statistical' && exam && (
+          <Statistical examId={Number(examId)} nameExam={exam.title} />
+        )}
+        {activeTab === 'Result' && <Result examId={Number(examId)} />}
       </div>
       {/* Save Button */}
       {/* <div className="flex w-full">

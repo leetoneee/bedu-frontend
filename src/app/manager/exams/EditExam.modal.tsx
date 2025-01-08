@@ -162,7 +162,7 @@ export default function EditExamModal({
         console.error('🚫 ~ onSubmit ~ Error:', error);
         toast.error(
           error.response?.data?.message ||
-            'Failed to create exam. Please try again.'
+            'Failed to edit exam. Please try again.'
         );
       } finally {
         setIsSubmitting(false); // Hoàn tất gửi yêu cầu
@@ -412,7 +412,7 @@ export default function EditExamModal({
               onPress={handleSubmit}
               className="w-1/2 rounded-lg border border-outline bg-on-primary py-2 text-[16px] font-medium text-white"
             >
-              {isSubmitting ? 'Submitting...' : 'Create'}
+              {isSubmitting ? 'Submitting...' : 'Update'}
             </Button>
           </div>
         </ModalFooter>

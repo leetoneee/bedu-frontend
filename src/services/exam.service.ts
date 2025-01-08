@@ -41,3 +41,13 @@ export const deleteExam = async (id: number) => {
     throw error;
   }
 };
+
+export const findExamByCode = async (code: string) => {
+  try {
+    const res = await axios.get(`/exams/item/${code}`);
+    return res.data;
+  } catch (error) {
+    console.log('🚫 ~ findExamByCode ~ error:', error);
+    throw error;
+  }
+};

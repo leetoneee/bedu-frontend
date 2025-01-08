@@ -102,7 +102,8 @@ export default function AddLessonModal({
         courseId: courseId,
         title: name,
         videoUrl: url,
-        isActive: isPublic
+        isActive: isPublic,
+        examId: null
       };
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu

@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Question } from './question-bank.type';
 
 export type ButtonProps = {
   content?: string;
@@ -74,11 +75,31 @@ export type UserAuth = {
 export type AuthType = {
   auth: UserAuth;
   setAuth: React.Dispatch<React.SetStateAction<UserAuth | undefined>>;
-}
+};
 
 export type MyProgramContextType = {
   programId: string;
   setProgramId: React.Dispatch<React.SetStateAction<string>>;
   classId: string;
   setClassId: React.Dispatch<React.SetStateAction<string>>;
-}
+};
+
+export type ExamContextType = {
+  questions: Question[];
+  setQuestions: React.Dispatch<React.SetStateAction<Question[]>>;
+  duration: number;
+  setDuration: React.Dispatch<React.SetStateAction<number>>;
+  answers: { [key: number]: string };
+  setAnswers: React.Dispatch<React.SetStateAction<{ [key: number]: string }>>;
+};
+
+export type TimeContextType = {
+  remainingTime: number; // Thời gian còn lại (giây)
+  startTimer: (duration: number) => void; // Bắt đầu đếm ngược
+  stopTimer: () => void; // Dừng đồng hồ
+};
+
+export type Column<T> = {
+  title: string;
+  key: keyof T;
+};

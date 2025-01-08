@@ -46,8 +46,8 @@ const handler = NextAuth({
   ],
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60 // 24 hours
+    // maxAge: 30 * 24 * 60 * 60, // 30 days
+    // updateAge: 24 * 60 * 60 // 24 hours
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === 'development',
@@ -66,7 +66,7 @@ const handler = NextAuth({
     },
     async session({ session, token }) {
       session.user = token as any;
-      session.expires = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000); // 1 days
+      session.expires = new Date(Date.now() + 1 * 25 * 60 * 1000); // 1 days
       return session;
     }
   },

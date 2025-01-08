@@ -11,7 +11,7 @@ import useSWR from 'swr';
 import Image from 'next/image';
 
 type Props = {
-  id: number;
+  examId: number;
   setIsModalNewTaskOpen?: (isOpen: boolean) => void;
 };
 
@@ -25,7 +25,7 @@ const scroringTypes = [{ key: 'highest', label: 'Highest score' }];
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-const Config = ({ id }: Props) => {
+const Config = ({ examId }: Props) => {
   const [name, setName] = useState<string>('');
   const [duration, setDuration] = useState<string>('');
   const [maxTries, setMaxTries] = useState<string>('');
@@ -59,7 +59,7 @@ const Config = ({ id }: Props) => {
     [type]
   );
 
-  const endpoint = `/exams/item/${id}`;
+  const endpoint = `/exams/item/${examId}`;
 
   const {
     data,
@@ -141,7 +141,7 @@ const Config = ({ id }: Props) => {
       try {
         setIsSubmitting(true); // Bắt đầu gửi yêu cầu
         // Gọi API và đợi kết quả
-        const result = await editExam(id, data);
+        const result = await editExam(examId, data);
         if (result) {
           toast.success('Exam updated successfully.');
           refreshEndpoint(); // Refresh dữ liệu

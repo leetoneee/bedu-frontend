@@ -13,9 +13,7 @@ import { AuthType } from '@/types';
 
 const LoginPage = () => {
   const { data: session } = useSession();
-  const { setAuth } = useContext(
-    AppContext
-  ) as AuthType;
+  const { setAuth } = useContext(AppContext) as AuthType;
 
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -23,8 +21,9 @@ const LoginPage = () => {
   const onSubmit = async () => {
     const result = await signIn('credentials', {
       username: username,
-      password: password,
+      password: password
       // redirect: true,
+      // callbackUrl:
     });
     // router.replace('/manager/self-study-program');
     console.log('🚀 ~ onSubmit ~ result:', result);

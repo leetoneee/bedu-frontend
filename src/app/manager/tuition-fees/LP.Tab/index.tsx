@@ -143,7 +143,7 @@ const LPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {payment.user.name}
+                {payment.user && payment.user.name}
               </p>
             </div>
           );
@@ -151,7 +151,7 @@ const LPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {payment.program.title}
+                {payment.program && payment.program.title}
               </p>
             </div>
           );
@@ -159,7 +159,7 @@ const LPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {payment.class.name}
+                {payment.class && payment.class.name}
               </p>
             </div>
           );
@@ -382,17 +382,15 @@ const LPTab = () => {
         onCreated={handleCreated}
       />
       {selectedPayment && (
-        <EditTuition 
-        onOpen={onOpenE}
-        isOpen={isOpenE}
-        onOpenChange={onOpenChangeE}
-        onClose={handleCloseEditModal}
-        payment={selectedPayment}
-        onEdited={handleEdited}
+        <EditTuition
+          onOpen={onOpenE}
+          isOpen={isOpenE}
+          onOpenChange={onOpenChangeE}
+          onClose={handleCloseEditModal}
+          payment={selectedPayment}
+          onEdited={handleEdited}
         />
-      )
-
-      }
+      )}
       {selectedPayment && (
         <DeletePaymentModal
           onOpen={onOpenD}

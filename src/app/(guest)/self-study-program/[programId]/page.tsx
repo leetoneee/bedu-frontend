@@ -5,17 +5,20 @@ import Image from 'next/image';
 import { Crumb } from '@/types';
 import { useParams } from 'next/navigation';
 import { Divider } from '@nextui-org/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { Course } from '@/types/course.type';
 import { Program } from '@/types/program.type';
 import useSWR from 'swr';
 import axios from '@/libs/axiosInstance';
+import { TypeContext } from '@/contexts';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 export default function DetailProgramPage() {
   const params = useParams();
   const programId = params.programId;
+  const {type, setType} = useContext(TypeContext);
+  setType('programs');
 
   const { data } = useSWR(`/programs/item/${programId}`, fetcher);
 
@@ -82,7 +85,7 @@ export default function DetailProgramPage() {
             />
 
             <div className="absolute left-0 top-0 flex h-full w-full flex-col justify-center gap-4 p-16 text-surface xsm:px-4 sm:px-10 md:px-24 lg:px-36">
-              <div className="text-3xl font-bold">{program?.title}</div>
+              <div className="text-3xl font-bold">{program?.title} - {program?.code}</div>
               <div className="text-2xl font-semibold">
                 {program?.description}
               </div>
@@ -167,7 +170,7 @@ export default function DetailProgramPage() {
                 <div className="flex h-[106px] w-[450px] justify-between rounded-[20px] border-2 border-outline xsm:w-[300px] sm:w-[400px] md:w-[400px]">
                   <div className="flex w-full flex-col justify-center truncate px-6">
                     <div className="truncate font-semibold text-on-primary sm:text-lg md:text-2xl lg:text-3xl">
-                      Toeic 700+ {/**Chỗ cần sửa */}
+                      {program?.type.toUpperCase()}
                     </div>
                     <div className="truncate text-on-surface sm:text-sm md:text-base lg:text-lg">
                       Commitment to output

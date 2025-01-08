@@ -125,7 +125,7 @@ const SSPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue.toString()}
+                {cellValue && cellValue.toString()}
               </p>
             </div>
           );
@@ -133,7 +133,7 @@ const SSPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue.toString()}
+                {cellValue && cellValue.toString()}
               </p>
             </div>
           );
@@ -142,7 +142,7 @@ const SSPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {payment.user.name}
+                {payment.user && payment.user.name}
               </p>
             </div>
           );
@@ -150,7 +150,7 @@ const SSPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {payment.program.title}
+                {payment.program && payment.program.title}
               </p>
             </div>
           );
@@ -158,7 +158,7 @@ const SSPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {payment.class.name}
+                {payment.class && payment.class.name}
               </p>
             </div>
           );
@@ -166,7 +166,7 @@ const SSPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {formatNumberWithCommas(cellValue.toString())} VND
+                {cellValue && formatNumberWithCommas(cellValue.toString())} VND
               </p>
             </div>
           );
@@ -174,7 +174,7 @@ const SSPTab = () => {
           return (
             <div className="flex flex-col">
               <p className="text-bold text-sm capitalize">
-                {cellValue.toString()}
+                {cellValue && cellValue.toString()}
               </p>
             </div>
           );
@@ -200,7 +200,7 @@ const SSPTab = () => {
             </div>
           );
         default:
-          return cellValue.toString();
+          return cellValue && cellValue.toString();
       }
     },
     []

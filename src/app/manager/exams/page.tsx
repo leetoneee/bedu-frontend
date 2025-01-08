@@ -154,6 +154,14 @@ export default function ExamsPage() {
             </p>
           </div>
         );
+        case 'code':
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-sm capitalize">
+                {`EX${exam.id}`}
+              </p>
+            </div>
+          );
       case 'title':
         return (
           <div className="flex flex-col">
