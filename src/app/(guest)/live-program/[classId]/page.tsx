@@ -17,7 +17,7 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 const ClassPage = () => {
   const params = useParams();
   const classId = params.classId;
-  const {type, setType} = useContext(TypeContext);
+  const {setType} = useContext(TypeContext);
   setType('eclass');
 
   const { data, error } = useSWR(`/classes/item/${classId}`, fetcher);
