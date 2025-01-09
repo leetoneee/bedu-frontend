@@ -10,19 +10,35 @@ import useSWR from 'swr';
 import { useParams } from 'next/navigation';
 import { RadioGroup, Radio } from '@nextui-org/radio';
 import Image from 'next/image';
-import { ButtonSolid } from '@/components';
+import { ButtonSolid } from '@/components';;
+import { processPayment } from '@/services/payment.service';
 import { EClass } from '@/types/class.type';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
+type PaymentMethodProps = {
+  createdAt: Date,
+  deletedAt: Date,
+  description: string,
+  id: number,
+  isActive: boolean,
+  name: string,
+  updatedAt: Date,
+  }
+  
+
 const PaymentPage = () => {
   const { auth } = useContext(AppContext) as AuthType;
   const { classId } = useParams();
-  const { data: dataUser } = useSWR(`/users/item/${auth?.id}`, fetcher);
-  const { data: dataClass } = useSWR(`/classes/item/${classId}`, fetcher);
   const [user, setUser] = useState<User>();
   const [eclass, setEClass] = useState<EClass>();
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodProps[]>([]);
   const [selected, setSelected] = useState('');
+
+  const { data: dataUser } = useSWR(`/users/item/${auth?.id}`, fetcher);
+  const { data: dataClass } = useSWR(`/classes/item/${classId}`, fetcher);
+  const { data: PaymentMethod } = useSWR(`/payment-method`, fetcher);
+
   useEffect(() => {
     if (dataUser) {
       setUser(dataUser.metadata);
@@ -35,12 +51,39 @@ const PaymentPage = () => {
     }
   }, [dataClass]);
 
+  useEffect(() => {
+    if (PaymentMethod && PaymentMethod?.metadata) {
+      console.log('Payment method: ', PaymentMethod?.metadata)
+      setPaymentMethod(PaymentMethod.metadata);
+    }
+  }, [PaymentMethod]);
+
+  const parseDollar = (price: number): number => {
+    return price / 25360;
+  }
+
   const formattedNumber = (price: number): string => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'decimal',
       maximumFractionDigits: 0
     }).format(price);
   };
+
+  const handlePay = async () => {
+    let method: string = selected;
+    console.log('method: ', method);
+    let amount: number = method === 'paypal' ? Math.round(parseDollar(eclass?.price || 0)) : eclass?.price || 0  ;
+    let content: string = `${auth?.id}-CLASS-${eclass?.id}`;
+    try {
+      const data = await processPayment({method, amount, content});
+      console.log('data: ', data.metadata);
+      if(data) {
+        window.location.href = data.metadata;
+      } 
+    } catch (error: any) {
+      console.log('error: ', error);
+    }
+  }
 
   return (
     <div className="flex flex-row">
@@ -74,14 +117,19 @@ const PaymentPage = () => {
           </div>
           <div>
             <RadioGroup value={selected} onValueChange={setSelected}>
-              <Radio value={`bank-transfer`}>Bank transfer</Radio>
+              {paymentMethod.map((payment: PaymentMethodProps) => {
+                return (
+                <Radio value={payment.name} key={payment.name}>
+                  {payment.name === 'zalopay' ? 'Zalo Pay' : payment.name === 'paypal' ? 'Paypal' : 'Momo'}
+                </Radio>
+              )})}
             </RadioGroup>
           </div>
-          <span className="text-on-surface">
+          {/* <span className="text-on-surface">
             <strong className="text-error">*</strong> Note: If using &quot;Bank
             transfer,&quot; students need to inform the center and provide the
             transaction code for confirmation.
-          </span>
+          </span> */}
         </div>
       </div>
 
@@ -108,7 +156,7 @@ const PaymentPage = () => {
           <div className="flex w-full flex-row justify-between">
             <span className="font-medium text-on-surface">Unit price</span>
             <span className="font-bold text-outline-focus">
-              {formattedNumber(eclass?.price ? eclass?.price : 0)} VND
+            {formattedNumber(eclass?.price ? eclass?.price : 0)} VND
             </span>
           </div>
           <Divider />
@@ -124,6 +172,7 @@ const PaymentPage = () => {
           <ButtonSolid
             content="Pay"
             className="w-full rounded-md bg-on-primary !text-3xl !text-b-primary"
+            onClick={handlePay}
           />
         </div>
       </div>
