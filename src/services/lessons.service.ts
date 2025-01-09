@@ -80,3 +80,21 @@ export const creatRecord = async (data: CreateRecordDto) => {
     throw error;
   }
 };
+
+export type ReScheduleLessonDto = {
+  classId: number;
+  lessonId: number;
+  // google's api properties
+  startDate: Date; // Ngày bắt đầu do người dùng chọn
+  endDate: Date; // Giờ kết thúc (HH:mm)
+}
+
+export const editReschedule = async (data: ReScheduleLessonDto) => {
+  try {
+    const res = await axios.patch(`/lessons/reschedule/`, data);
+    return res.data;
+  } catch (error) {
+    console.log('🚫 ~ editLesson ~ error:', error);
+    throw error;
+  }
+};

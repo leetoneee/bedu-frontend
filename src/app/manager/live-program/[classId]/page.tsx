@@ -44,6 +44,8 @@ import AddLessonModal from './AddLesson.modal';
 import { toast } from 'react-toastify';
 import ListStudent from './list-student.comp';
 import { formatNumberWithCommas } from '@/helpers';
+import UpdateLessonModal from '@/app/manager/live-program/[classId]/UpdateLesson.modal';
+import { CreateRecurringLessonDto } from '@/services/lessons.service';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -53,6 +55,12 @@ const EClassDetail = () => {
   const router = useRouter();
   //!  CONTROL Add modal
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenE,
+    onOpen: onOpenE,
+    onOpenChange: onOpenChangeE,
+    onClose: onCloseE
+  } = useDisclosure();
 
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [eclass, setEClass] = useState<EClass>();
@@ -84,6 +92,18 @@ const EClassDetail = () => {
     }
   }, [data]);
 
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(
+      null
+    );
+
+    const handleEditClick = (lesson: Lesson) => {
+      setSelectedLesson(lesson);
+      onOpenE();
+    };
+    const handleCloseEditModal = () => {
+      onCloseE();
+      setSelectedLesson(null);
+    };
   const [filterLessonName, setFilterLessonName] = useState<string>('');
   const hasSearchFilterName = Boolean(filterLessonName);
   const [filterStartDate, setFilterStartDate] = useState<CalendarDate>();
@@ -185,7 +205,10 @@ const EClassDetail = () => {
                 </span>
               </Tooltip>
               <Tooltip content="Edit" color="warning" delay={1000}>
-                <span className="cursor-pointer text-lg text-on-secondary active:opacity-50">
+                <span
+                  className="cursor-pointer text-lg text-on-secondary active:opacity-50"
+                  onClick={() => handleEditClick(lesson)}
+                >
                   <PencilIcon className="size-5" />
                 </span>
               </Tooltip>
@@ -318,10 +341,10 @@ const EClassDetail = () => {
     refreshEndpoint();
   };
 
-  // const handleEdited = () => {
-  //   toast.success('Lesson edited successfully!');
-  //   refreshEndpoint();
-  // };
+  const handleEdited = () => {
+    toast.success('Lesson edited successfully!');
+    refreshEndpoint();
+  };
 
   // const handleDeleted = () => {
   //   toast.success('Lesson deleted successfully!');
@@ -330,6 +353,7 @@ const EClassDetail = () => {
 
   // const loadingState =
   //   isLoading || data?.metadata.lesson.length === 0 ? 'loading' : 'idle';
+
   return (
     <main className="flex flex-col items-center gap-4 p-4 sm:items-start">
       <Breadcrumb crumbs={crumbs} />
@@ -561,6 +585,17 @@ const EClassDetail = () => {
           eclassType={eclass.type}
           onOpenChange={onOpenChange}
           onCreated={handleCreated}
+        />
+      )}
+      {eclass && (
+        <UpdateLessonModal
+          isOpen={isOpenE}
+          onClose={onCloseE}
+          onOpen={handleCloseEditModal}
+          eclassId={eclass.id}
+          lessonUpdate={selectedLesson}
+          onOpenChange={onOpenChange}
+          onEdit={handleEdited}
         />
       )}
     </main>
