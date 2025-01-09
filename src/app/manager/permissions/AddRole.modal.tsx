@@ -24,12 +24,7 @@ type Props = {
 
 // const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-const AddRoleModal = ({
-  isOpen,
-  onOpenChange,
-  onClose,
-  onCreated
-}: Props) => {
+const AddRoleModal = ({ isOpen, onOpenChange, onClose, onCreated }: Props) => {
   // State
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -144,10 +139,10 @@ const AddRoleModal = ({
             </svg>
           </div>
           <div className="ml-5">
-            <div className="text-lg font-semibold">Add user to program</div>
-            <div className="text-wrap text-sm font-normal">
+            <div className="text-lg font-semibold">Add role</div>
+            {/* <div className="text-wrap text-sm font-normal">
               Add user to the program to give them access to the program content
-            </div>
+            </div> */}
           </div>
         </ModalHeader>
         <ModalBody>
