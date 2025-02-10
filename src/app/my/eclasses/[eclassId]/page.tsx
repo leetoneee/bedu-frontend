@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { Crumb, MyProgramContextType } from '@/types';
@@ -8,7 +8,12 @@ import useSWR from 'swr';
 import axios from '@/libs/axiosInstance';
 import { EClass } from '@/types/class.type';
 import { Lesson } from '@/types/lesson.type';
-import { Breadcrumb, NavLessonPreview, Rating } from '@/components';
+import {
+  Breadcrumb,
+  ButtonSolid,
+  NavLessonPreview,
+  Rating
+} from '@/components';
 import { Divider, Spinner } from '@nextui-org/react';
 import { MyProgramContext } from '@/contexts';
 
@@ -18,7 +23,7 @@ const ClassDetailPage = () => {
   const { setClassId } = useContext(MyProgramContext) as MyProgramContextType;
   const params = useParams();
   const classId = params.eclassId;
-
+  const router = useRouter();
   const { data, error, isLoading } = useSWR(
     `/classes/item/${classId}`,
     fetcher
@@ -207,8 +212,16 @@ const ClassDetailPage = () => {
               </div>
             </div>
             <div>
-              <div className="pb-6 pt-10 text-3xl font-bold text-on-surface xsm:px-4 sm:px-10 md:px-24 lg:px-36">
-                Class detail
+              <div className="flex flex-row items-center justify-start gap-4 pb-6 pt-10 text-3xl font-bold text-on-surface xsm:px-4 sm:px-10 md:px-24 lg:px-36">
+                <span className="text-3xl font-bold text-on-surface">
+                  Class detail
+                </span>
+                <ButtonSolid
+                  content="Outcome"
+                  className="shadow-m/d my-auto h-14 rounded-xl bg-blue-500 text-white"
+                  // iconLeft={<PlusIcon className="size-6 text-white" />}
+                  onClick={() => router.push(`${classId}/outcome`)}
+                />
               </div>
               <div className="flex h-full w-full flex-col place-content-center justify-center xsm:px-4 sm:px-10 md:px-24 lg:px-36">
                 {isLoading && <Spinner />}
