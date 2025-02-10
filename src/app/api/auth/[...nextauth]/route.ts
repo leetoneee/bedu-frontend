@@ -26,7 +26,7 @@ const handler = NextAuth({
           method: 'POST',
           body: JSON.stringify(credentials),
           headers: { 'Content-Type': 'application/json' }
-        });
+        });``
         const data = await res.json();
         // If no error and we have user data, return it
         if (res.ok && data.metadata) {
