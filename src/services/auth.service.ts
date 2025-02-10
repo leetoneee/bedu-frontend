@@ -22,6 +22,21 @@ export type SignUpDto = {
   password: string;
 };
 
+export type SignInDto = {
+  username: string;
+  password: string;
+};
+
+export const signIn = async (data: SignInDto) => {
+  try {
+    const res = await axios.post(`/auth/login`, data);
+    return res.data;
+  } catch (error) {
+    console.log('🚫 ~ login ~ error:', error);
+    throw error;
+  }
+};
+
 export const signUp = async (data: SignUpDto) => {
   try {
     const res = await axios.post(`/auth/signup`, data);

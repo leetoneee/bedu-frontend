@@ -10,12 +10,13 @@ import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import SubmitAnswerModal from './SubmitAnswer.modal';
+import { signIn } from 'next-auth/react';
 
 const DoExam = () => {
   const router = useRouter();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
-  const { questions, duration, setAnswers } = useContext(
+  const { questions, setQuestions, duration, setAnswers } = useContext(
     ExamContext
   ) as ExamContextType;
   const { remainingTime, startTimer, stopTimer } = useContext(
@@ -52,6 +53,7 @@ const DoExam = () => {
 
   useEffect(() => {
     setAnswers((prevAnswers) => {
+      if (!selectedQuestion) return {};
       const updatedAnswers = formatAnswer(
         selectedAnswers[selectedQuestion.id],
         selectedQuestion.possibleAnswer.split('/'),
@@ -64,6 +66,41 @@ const DoExam = () => {
       };
     });
   }, [selectedAnswers]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: {
+      preventDefault: () => void;
+      returnValue: string;
+    }) => {
+      // Hiển thị hộp thoại xác nhận
+      event.preventDefault();
+      event.returnValue = ''; // Cần thiết để trình duyệt hiển thị hộp thoại mặc định
+    };
+
+    const handleUnload = () => {
+      // Thực hiện hành động khi người dùng xác nhận reload
+      console.log('User confirmed reload');
+      handleReload();
+    };
+
+    // Lắng nghe sự kiện beforeunload
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    // Lắng nghe sự kiện unload
+    window.addEventListener('unload', handleUnload);
+
+    return () => {
+      // Hủy bỏ lắng nghe khi component bị unmount
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('unload', handleUnload);
+    };
+  }, []);
+
+  const handleReload = () => {
+    setQuestions([]);
+    setAnswers({});
+    handleTimeUp();
+    router.replace('/');
+  };
 
   // Hàm xử lý khi thời gian hết
   const handleTimeUp = () => {
@@ -133,10 +170,10 @@ const DoExam = () => {
   }, [questions, selectedAnswers, markedQuestions]);
 
   if (!(questions.length > 0)) {
-    router.replace('/');
+    router.back()
     return;
   }
-  
+
   return (
     <div className="container mx-auto p-4">
       <header className="flex items-center justify-between py-4">

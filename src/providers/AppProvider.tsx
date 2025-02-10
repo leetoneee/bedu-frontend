@@ -4,8 +4,6 @@ import { AppContext } from '@/contexts';
 import { UserAuth } from '@/types';
 import { useState } from 'react';
 
-
-
 function AppProvider({ children }: { children: React.ReactNode }) {
   const [auth, setAuth] = useState<UserAuth>();
 
@@ -13,7 +11,7 @@ function AppProvider({ children }: { children: React.ReactNode }) {
     <AppContext.Provider
       value={{
         auth,
-        setAuth
+        setAuth,
       }}
     >
       {children}

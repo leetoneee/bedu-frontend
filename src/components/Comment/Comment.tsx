@@ -31,7 +31,7 @@ const Comment = ({
 
   const { auth } = useContext(AppContext) as AuthType;
   const { data: dataUser } = useSWR(`/users/item/${auth?.id}`, fetcher);
-  let { data: dataSubComment } = useSWR(
+  const { data: dataSubComment } = useSWR(
     `/comment/parent/${comment.commentId}?lessonId=${lessonId}`,
     fetcher
   );
@@ -51,7 +51,7 @@ const Comment = ({
   };
 
   const handleComment = async () => {
-    let reply = commentReply.trim();
+    const reply = commentReply.trim();
     if (reply === '') {
       return;
     }

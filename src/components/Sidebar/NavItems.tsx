@@ -9,7 +9,8 @@ import {
   DocumentChartBarIcon,
   ChatBubbleLeftRightIcon,
   UsersIcon,
-  BellIcon
+  BellIcon,
+  ClipboardDocumentIcon
 } from '@heroicons/react/24/outline';
 import { GoTasklist } from 'react-icons/go';
 
@@ -70,13 +71,13 @@ export const NavItems = () => {
       active: isNavItemActive(pathname, '/manager/revenue-report'),
       group: 'system'
     },
-    {
-      name: 'Feedback Report',
-      href: '/manager/feedback-report',
-      icon: <ChatBubbleLeftRightIcon className="size-6" />,
-      active: isNavItemActive(pathname, '/manager/feedback-report'),
-      group: 'system'
-    },
+    // {
+    //   name: 'Feedback Report',
+    //   href: '/manager/feedback-report',
+    //   icon: <ChatBubbleLeftRightIcon className="size-6" />,
+    //   active: isNavItemActive(pathname, '/manager/feedback-report'),
+    //   group: 'system'
+    // },
     {
       name: 'Tuition Fees',
       href: '/manager/tuition-fees',
@@ -91,11 +92,18 @@ export const NavItems = () => {
       active: isNavItemActive(pathname, '/manager/accounts'),
       group: 'system'
     },
+    // {
+    //   name: 'Notification',
+    //   href: '/manager/notification',
+    //   icon: <BellIcon className="size-6" />,
+    //   active: isNavItemActive(pathname, '/manager/notification'),
+    //   group: 'system'
+    // }
     {
-      name: 'Notification',
-      href: '/manager/notification',
-      icon: <BellIcon className="size-6" />,
-      active: isNavItemActive(pathname, '/manager/notification'),
+      name: 'Permissions',
+      href: '/manager/permissions',
+      icon: <ClipboardDocumentIcon className="size-6" />,
+      active: isNavItemActive(pathname, '/manager/permissions'),
       group: 'system'
     }
   ];
